@@ -1,0 +1,22 @@
+チームID
+App ID Prefix
+N2A3SVHK8H
+キーID
+OEMZ7REEIO85
+Issuer ID
+f66360c2-5bf2-47a5-91c6-d4b3dd2c6bb5
+デベロッパID
+f66360c2-5bf2-47a5-91c6-d4b3dd2c6bb5
+keyID
+RCVBMKHUR8
+Y:\maui\FMES\ApiKey_OEMZ7REEIO85.p8
+
+
+名前
+FMES
+
+Issuer ID
+f66360c2-5bf2-47a5-91c6-d4b3dd2c6bb5
+
+名前作成者　　　　　　　　keyID
+FES　SuekaneKatsushi　　X8T2537WY9

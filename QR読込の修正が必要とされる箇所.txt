@@ -1,0 +1,21 @@
+QR読込の修正が必要とされる箇所
+
+ソリューション全体をtakoをキーワードとして検索すれば出て来ます。
+MauiProgram
+SashizuAdd
+SashizuPage
+PageMaching
+MainPage
+configPage
+Info.plist
+上記7ファイルとなります。
+
+現象としてはイニシャライズ部分のエラーと各処理部分で
+using ZXing.Net.Maui;を宣言してるに拘わらず、'Views' が名前空間 'ZXing.Net.Maui' に存在しません
+と初歩的な部分でエラーがでてしまっております。
+お手数ですが宜しくお願い致します。
+
+Info.plistはInfo.plistに
+<key>NSCameraUsageDescription</key>
+<string>QRコードをスキャンするためにカメラを使用します。</string>
+を付加しようとして失敗してしまい元のデフォの物に戻しました。

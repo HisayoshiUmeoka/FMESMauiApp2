@@ -1,0 +1,43 @@
+using Microsoft.Maui.Controls;
+
+namespace MauiApp
+{
+    public class MainPage : ContentPage
+    {
+        public MainPage()
+        {
+            // Gridの作成
+            var grid = new Grid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition { Height = GridLength.Star },
+                    new RowDefinition { Height = GridLength.Auto }
+                },
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = GridLength.Star },
+                    new ColumnDefinition { Width = GridLength.Star }
+                }
+            };
+
+            // ボタンを追加（1行目・1列目）
+            var button1 = new Button { Text = "Button 1" };
+            grid.Children.Add(button1, 0, 0);
+
+            // ラベルを追加（2行目・2列目）
+            var label = new Label { Text = "Hello, .NET MAUI!", FontSize = 20, HorizontalOptions = LayoutOptions.Center };
+            grid.Children.Add(label, 1, 1);
+
+            // 画像を追加（3行目・1列目から2列目まで）
+            var image = new Image { Source = "dotnet_bot.png", HeightRequest = 100 };
+            Grid.SetRow(image, 2);
+            Grid.SetColumnSpan(image, 2);
+            grid.Children.Add(image);
+
+            // Gridをページのコンテンツに設定
+            Content = grid;
+        }
+    }
+}

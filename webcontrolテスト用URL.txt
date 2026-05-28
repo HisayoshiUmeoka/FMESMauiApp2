@@ -1,0 +1,7 @@
+"https://fmes.5ms.cloud/users/tabreport1/1"
+
+"https://fmes.5ms.cloud/users/taboption2/ja/1"
+"https://fmes.5ms.cloud/users/taboption2/ja/1"
+
+
+		wURL	"https://fmes.5ms.cloud/users/dailyreports/ja/1/2025-01-26"	string

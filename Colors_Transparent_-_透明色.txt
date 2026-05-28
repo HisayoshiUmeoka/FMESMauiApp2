@@ -1,0 +1,28 @@
+Colors.Transparent - 透明色
+Colors.Black - 黒色
+Colors.White - 白色
+Colors.Red - 赤色
+Colors.Green - 緑色
+Colors.Blue - 青色
+Colors.Yellow - 黄色
+Colors.Orange - オレンジ色
+Colors.Purple - 紫色
+Colors.Pink - ピンク色
+Colors.Gray - グレー色
+グラデーションで使用される色:
+
+Colors.LightGray - 明るいグレー
+Colors.DarkGray - 暗いグレー
+Colors.LightBlue - 明るい青
+Colors.DarkBlue - 暗い青
+Colors.LightGreen - 明るい緑
+Colors.DarkGreen - 暗い緑
+特殊色:
+
+Colors.Brown - 茶色
+Colors.Cyan - シアン
+Colors.Magenta - マゼンタ
+Colors.Lime - ライム
+Colors.Teal - ティール
+Colors.Navy - ネイビー
+Colors.Olive - オリーブ
