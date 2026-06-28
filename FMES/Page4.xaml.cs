@@ -1384,7 +1384,10 @@ public partial class Page4 : ContentPage
                             //buttonEnd,
                         }
                 };
-                sv = new ScrollView { Content = layout1 };
+                sv = new ScrollView {
+                    Orientation = ScrollOrientation.Both,
+                    Content = layout1 
+                };
                 Content = sv;
 
                 //imgView.Clicked += 

@@ -1352,6 +1352,13 @@ public partial class Page5 : ContentPage
                             buttonEnd,
                         }
                 };
+                sv = new ScrollView
+                {
+                    Orientation = ScrollOrientation.Both,
+                    Content = layout1
+                };
+                Content = sv;
+
                 //imgView.Clicked += 
                 buttonEnd.Clicked += EndButtonClicked;
             }
