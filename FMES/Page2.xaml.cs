@@ -2396,8 +2396,8 @@ public partial class Page2 : ContentPage
                 };
                 absLay = new AbsoluteLayout
                 {
-                    HorizontalOptions = LayoutOptions.FillAndExpand,
-                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    HorizontalOptions = LayoutOptions.StartAndExpand,
+                    VerticalOptions = LayoutOptions.StartAndExpand,
                     Margin = new Thickness(0),
                     ZIndex = 0,
 
@@ -2406,7 +2406,9 @@ public partial class Page2 : ContentPage
                 imgView = new Image
                 {
                     Source = ImageSource.FromUri(new Uri(uri)),
-                    HorizontalOptions = LayoutOptions.Center,
+                    Aspect = Aspect.AspectFit,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    VerticalOptions = LayoutOptions.Fill,
                 };
                 int z = 0;
                 absLay.Children.Add(imgView);

@@ -1253,8 +1253,8 @@ public partial class Page5 : ContentPage
                 };
                 absLay = new AbsoluteLayout
                 {
-                    HorizontalOptions = LayoutOptions.FillAndExpand,
-                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    HorizontalOptions = LayoutOptions.StartAndExpand,
+                    VerticalOptions = LayoutOptions.StartAndExpand,
                     Margin = new Thickness(0),
                     ZIndex = 0,
 
@@ -1268,8 +1268,9 @@ public partial class Page5 : ContentPage
                 {
                     Source = ImageSource.FromUri(new Uri(uri + cacheBuster)),
 
-                    HorizontalOptions = LayoutOptions.Center,
-
+                    Aspect = Aspect.AspectFit,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    VerticalOptions = LayoutOptions.Fill,
                 };
                 int z = 0;
                 absLay.Children.Add(imgView);
