@@ -1,0 +1,575 @@
+//////////////////////////////////////////////////////////////////////
+// システムにインストールされているフォント一覧を取得する
+// FontList.cpp
+//////////////////////////////////////////////////////////////////////
+#define WINVER 0x0400
+#include <afxwin.h>
+#include "FontList.h"
+
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[]=__FILE__;
+#define new DEBUG_NEW
+#endif
+
+//////////////////////////////////////////////////////////////////////
+// 構築/消滅
+//////////////////////////////////////////////////////////////////////
+
+CFontList::CFontList()
+{
+
+}
+
+CFontList::~CFontList()
+{
+	Reset();
+	ResetTmpFont() ;
+}
+
+void CFontList::Reset()
+{
+	int		i;
+
+	for(i = 0; i < m_aFontAll.GetSize(); i++)
+		delete m_aFontAll.GetAt(i);
+
+	m_aFontAll.RemoveAll();
+	m_aFontSel.RemoveAll();
+}
+
+void CFontList::ResetTmpFont()
+{
+	int	i	;
+	for(i = 0; i < m_aTmpFont.GetSize(); i++)
+		delete m_aTmpFont.GetAt(i);
+	m_aTmpFont.RemoveAll();
+}
+
+// 該当フォントリスト取得
+//	adwCharSet
+//		ANSI_CHARSET		欧文
+//		SHIFTJIS_CHARSET	日本語
+//		FONTLIST_LANG_ALL	全言語
+//		FONTLIST_FONT_ORG	既存フォント
+//		FONTLIST_FONT_TMP	一時フォント
+void CFontList::SelectFontList(CDWordArray &adwSelect)
+{
+	CDWordArray		dwCsCur;
+	FONTDEF*		pFontCur;
+	BYTE			cCharSetCur;
+	BOOL			bAll;
+	BOOL			bSelFont;
+	int				i, j, k;
+	int				nEn, nJa, nLang, nAllEn, nAllLang;
+	int				nSel;
+
+	m_aFontSel.RemoveAll();
+
+	// 全言語
+	bAll = adwSelect.GetSize() == 0;
+	for(i = 0; i < adwSelect.GetSize(); i++) {
+		if(adwSelect.GetAt(i) == FONTLIST_LANG_ALL) {
+			bAll = TRUE;
+			break;
+		}
+	}
+
+	// 全フォントループ
+	for(i = 0; i < m_aFontAll.GetSize(); i++) {
+		pFontCur = m_aFontAll.GetAt(i);
+		if(pFontCur->sFaceName.Left(1) == _T("@"))	// 縦フォントは除外
+			continue;
+		if (m_Ini) {
+			if(pFontCur->bFavorite == FALSE && m_Ini->DispMode == 1)
+				continue;
+			if(pFontCur->bCandidate == FALSE && m_Ini->DispMode == 2)
+				continue;
+		}
+
+		// フォントによる選択
+		bSelFont = FALSE;
+		for(k = 0; k < adwSelect.GetSize(); k++) {
+			switch(adwSelect.GetAt(k)) {
+			case FONTLIST_FONT_ORG:
+				if(pFontCur->eInstallMode == INSTALLMODE_ORG)
+					bSelFont = TRUE;
+				break;
+			case FONTLIST_FONT_TMP:
+				if(pFontCur->eInstallMode == INSTALLMODE_TMP)
+					bSelFont = TRUE;
+				break;
+			}
+		}
+		if(!bSelFont)
+			continue;
+
+		// キャラクタセット検索＆設定
+		// 選択が欧文＋日本語の場合、日本語を優先
+		nEn = nJa = nLang = nAllEn = nAllLang = -1;
+		for(j = 0; j < pFontCur->acCharSet.GetSize(); j++) {
+			cCharSetCur = pFontCur->acCharSet.GetAt(j);	// カレントキャラクタ
+			if(bAll) {
+				if(cCharSetCur == ANSI_CHARSET || cCharSetCur == DEFAULT_CHARSET)
+					nAllEn= j;
+				if(cCharSetCur >= FONTLIST_CHARSET_LANG)
+					nAllLang = j;
+			}
+			for(k = 0; k < adwSelect.GetSize(); k++) {
+				if((int)adwSelect.GetAt(k) >= 0) {
+					switch(adwSelect.GetAt(k)) {
+					case ANSI_CHARSET:
+						if(cCharSetCur == ANSI_CHARSET || cCharSetCur == DEFAULT_CHARSET)
+							nEn = j;
+						break;
+					case SHIFTJIS_CHARSET:
+						if(cCharSetCur == SHIFTJIS_CHARSET || bAll)
+							nJa = j;
+						break;
+					default:
+						if(adwSelect.GetAt(k) == cCharSetCur || bAll)
+							nLang = j;
+						break;
+					}
+				}
+			}
+		}
+		// 一致判定
+		// 優先順位 JA→他言語→ALL→EN
+		nSel = -1;
+		if(nJa >= 0)
+			nSel = nJa;
+		else if(nLang >= 0)
+			nSel = nLang;
+		else if(nEn >= 0)
+			nSel = nEn;
+		else if(nAllLang >= 0)
+			nSel = nAllLang;
+		else if(nAllEn >= 0)
+			nSel = nAllEn;
+		if(nSel >= 0) {
+			pFontCur->nSelIndex = nSel;
+			m_aFontSel.Add(pFontCur);
+		}
+	}
+}
+
+// ログフォント取得
+//	nIndex		I	フォント一覧インデックス
+//	pLogFont	I/O	LOGFONT
+void CFontList::GetLogFont(int nIndex, LOGFONT *pLogFont)
+{
+	FONTDEF*	pFontDef;
+	int			nSelIndex;
+
+	memset(pLogFont, 0x00, sizeof(LOGFONT));
+
+	pFontDef  = m_aFontSel.GetAt(nIndex);
+	nSelIndex = pFontDef->nSelIndex;
+
+	pLogFont->lfCharSet = pFontDef->acCharSet.GetAt(nSelIndex);
+	pLogFont->lfWeight  = pFontDef->adwWeight.GetAt(nSelIndex);
+	pLogFont->lfItalic  = pFontDef->acItalic. GetAt(nSelIndex);
+	_tcscpy(pLogFont->lfFaceName, pFontDef->sFaceName);
+};
+
+// フォント一覧取得
+//	bOrgFont	I	TRUE:既存フォントとして読み込み FALSE:差分読み込み
+void CFontList::GetFontList(BOOL bOrgFont)
+{
+	int			i, j;
+	FONTDEF*	pFontCur;
+	CString		bs;
+	CDWordArray	adwCharSet;
+
+	Reset();
+
+	HDC hDC = ::GetDC(NULL);
+	LOGFONT lf = { 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("") };
+	EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)EnumFontFamExProc, (DWORD)this, 0);
+	::ReleaseDC(NULL, hDC);
+
+	if(bOrgFont)
+		m_asFontFaceOrg.RemoveAll();
+
+	for(i = 0; i < m_aFontAll.GetSize(); i++) {
+		pFontCur = m_aFontAll.GetAt(i);
+		pFontCur->eInstallMode = INSTALLMODE_ORG;
+		if(bOrgFont) {
+			m_asFontFaceOrg.Add(pFontCur->sFaceName);
+		}
+		else {
+			for(j = 0; j < m_asFontFaceOrg.GetSize(); j++) {
+				if(pFontCur->sFaceName.CompareNoCase(m_asFontFaceOrg.GetAt(j)) == 0)
+					break;
+			}
+			if(j >= m_asFontFaceOrg.GetSize())
+				pFontCur->eInstallMode = INSTALLMODE_TMP;
+		}
+	}
+
+	adwCharSet.Add(FONTLIST_LANG_ALL);
+	adwCharSet.Add(FONTLIST_FONT_ORG);
+	adwCharSet.Add(FONTLIST_FONT_TMP);
+	SelectFontList(adwCharSet);
+}
+
+// フォント羅列コールバック
+int CALLBACK CFontList::EnumFontFamExProc(ENUMLOGFONTEX *lpElfe, NEWTEXTMETRICEX *lpNtme, DWORD dwFontType, LPARAM lParam)
+{
+	CFontList *pParent = (CFontList*)lParam;
+	FONTDEF*	pFontCur;
+	int			i, nComp;
+	BYTE		cItalic;
+	CString		sFaceName;
+
+#if 0	// print fonts list out
+	static int nNo = 1;
+	CString	sFonttype;
+	if(dwFontType & DEVICE_FONTTYPE)
+		sFonttype += "D";
+	if(dwFontType & RASTER_FONTTYPE)
+		sFonttype += "R";
+	if(dwFontType & TRUETYPE_FONTTYPE)
+		sFonttype += "T";
+	FILE *fp = fopen("FontList.txt", nNo == 1 ? "wt" : "a+t");
+	fprintf(fp, "%3u %3u %-20s %-32s "
+		"H=%3u W=%3u E=%3u O=%3u We=%3u I=%3u U=%3u S=%3u CS=%3u OP=%3u CP=%3u Q=%3u P=%3u "
+		"FontType=%02X(%s) "
+		"Style=%s FullName=%s\n",
+		nNo,
+		lpElfe->elfLogFont.lfCharSet,
+		lpElfe->elfScript,
+		lpElfe->elfLogFont.lfFaceName,
+		lpElfe->elfLogFont.lfHeight,
+		lpElfe->elfLogFont.lfWidth,
+		lpElfe->elfLogFont.lfEscapement,
+		lpElfe->elfLogFont.lfOrientation,
+		lpElfe->elfLogFont.lfWeight,
+		lpElfe->elfLogFont.lfItalic,
+		lpElfe->elfLogFont.lfUnderline,
+		lpElfe->elfLogFont.lfStrikeOut,
+		lpElfe->elfLogFont.lfCharSet,
+		lpElfe->elfLogFont.lfOutPrecision,
+		lpElfe->elfLogFont.lfClipPrecision,
+		lpElfe->elfLogFont.lfQuality,
+		lpElfe->elfLogFont.lfPitchAndFamily,
+		dwFontType,
+		(LPCSTR)sFonttype,
+		lpElfe->elfStyle,
+		lpElfe->elfFullName
+		);
+	fclose(fp);
+	nNo++;
+#endif
+
+	cItalic = 0;
+	if(lpElfe->elfLogFont.lfItalic != 0 || _tcsicmp((LPCTSTR)lpElfe->elfStyle, FONTLIST_ITALIC) == 0)
+		cItalic = 1;
+
+	// フォント名 lfFaceName/elfFullName どちらを使うのが良いか？
+	sFaceName = lpElfe->elfLogFont.lfFaceName;
+	//sFaceName = lpElfe->elfFullName;
+
+	pFontCur = NULL;
+	for(i = 0; i < pParent->m_aFontAll.GetSize(); i++) {
+		nComp = pParent->m_aFontAll.GetAt(i)->sFaceName.CompareNoCase(sFaceName);
+		if(nComp == 0) {
+			pFontCur = pParent->m_aFontAll.GetAt(i);
+			break;
+		}
+		else if(nComp > 0)
+			break;
+	}
+
+	int	j;
+	CString	csFonFe;
+	if(pFontCur == NULL) {
+		pFontCur = new FONTDEF;
+		pFontCur->sFaceName = sFaceName;
+		pFontCur->bFavorite = FALSE;
+		pFontCur->bCandidate = FALSE;
+		if (pParent->m_Ini) {
+			if (pParent->m_Ini->Favorite.GetCount() > 0) {
+				for (j = 0 ; j < pParent->m_Ini->Favorite.GetCount() ; j++) {
+					POSITION wPos	= pParent->m_Ini->Favorite.FindIndex(j) ;
+					if (wPos != NULL) {
+						csFonFe = pParent->m_Ini->Favorite.GetAt(wPos);
+						if (csFonFe != "") {
+							if (csFonFe.Compare(sFaceName) == 0) {
+								pFontCur->bFavorite = TRUE;
+								break ;
+							}
+						}
+					}
+				}
+			}
+		}
+		pParent->m_aFontAll.InsertAt(i, pFontCur);
+	}
+
+	pFontCur->asScript.Add(lpElfe->elfScript);
+	pFontCur->acCharSet.Add(lpElfe->elfLogFont.lfCharSet);
+	pFontCur->adwWeight.Add(lpElfe->elfLogFont.lfWeight);
+	pFontCur->acItalic.Add(cItalic);
+
+	return 1;
+}
+
+int CFontList::AddFont(LPCTSTR pName, LPCTSTR pFName)
+{
+	int				i			,
+					i_ret		;
+	FONTDEF			*pFontCur	;
+//	FONTDEF			*pFontNew	;
+//	FONTDEFARRAY	tmpFontBfr	;
+	POSITION		pos			;
+	CStringList		clTmpFont	;
+	BOOL			bFund = FALSE	;
+	CString			csComp		,
+					csFontF		;
+
+	// まずは追加前をコピー
+	if (pFName) {
+		for(i = 0; i < m_aFontAll.GetSize(); i++) {
+			pFontCur = m_aFontAll.GetAt(i);
+			if(pFontCur != NULL) {
+				csComp = pFontCur->sFaceName ;
+				clTmpFont.AddTail (csComp) ;
+			}
+		}
+	}
+
+	// テンポラリーでフォントの追加
+	i_ret = AddFontResource(pName);
+
+	if (pFName) {
+		// フォントリスト更新
+		GetFontList(FALSE);
+
+		// 更新差分の比較
+		for(i = 0; i < m_aFontAll.GetSize(); i++) {
+			pFontCur = m_aFontAll.GetAt(i);
+			if(pFontCur != NULL) {
+				bFund = FALSE ;
+				csComp = pFontCur->sFaceName ;
+				if ((pos = clTmpFont.Find (csComp)) != NULL) {
+					bFund = TRUE ;
+				}
+				if (bFund == FALSE) {
+					// 既存フォント以外の場合
+//					pFontCur->sFileName = pFName ;
+//					m_aFontAll.SetAt(i, pFontCur);
+					// 同一レコードの検索と登録
+					csFontF = pFName ;
+					FindUpdateTmpFontList(csComp, csFontF) ;
+				}
+			}
+		}
+		clTmpFont.RemoveAll () ;
+	}
+
+	return (i_ret) ;
+}
+
+BOOL CFontList::RemoveFont(LPCTSTR pName)
+{
+	CString csFontF	;
+	csFontF = pName ;
+	FindRemoveTmpFontList(csFontF) ;
+	return RemoveFontResource(pName);
+}
+
+// 表示不適格な文字を削除する
+CString CFontList::AvailableChar(int nIndex, LPCTSTR pText)
+{
+	FONTDEF*	pFontCur;
+	int			cCharSet;
+
+	pFontCur = m_aFontSel.GetAt(nIndex);
+	cCharSet = pFontCur->acCharSet.GetAt(pFontCur->nSelIndex);
+
+#ifndef _UNICODE
+	CByteArray	dst;
+	int			i, nByte;
+
+	for(i = 0; pText[i] != '\0'; i++) {
+		nByte = 1;
+		if(_ismbclegal((UCHAR)pText[i] << 8 | (UCHAR)pText[i + 1])) {
+			nByte = 2;
+			if(cCharSet == SHIFTJIS_CHARSET) {
+				dst.Add(pText[i]);
+				dst.Add(pText[i + 1]);
+			}
+			else
+				dst.Add('?');
+		}
+		else
+			dst.Add(pText[i]);
+		i += nByte - 1;
+	}
+	dst.Add('\0');
+
+	return (LPCSTR)dst.GetData();
+#else
+	CWordArray	dst;
+	int			i;
+
+	for(i = 0; pText[i] != '\0'; i++) {
+		if(pText[i] >= 0x80) {
+			if(cCharSet == SHIFTJIS_CHARSET)
+				dst.Add(pText[i]);
+			else
+				dst.Add('?');
+		}
+		else {
+			dst.Add(pText[i]);
+		}
+	}
+	dst.Add('\0');
+
+	return dst.GetData();
+#endif
+}
+
+int CFontList::FindUpdateTmpFontList(CString csFontN, CString csFontF)
+{
+	int			i			,
+				iRet = -1	;
+	BOOL	bFund = FALSE	;
+	TMPFONTDEF	*pTmpFont	;
+	for (i = 0 ; i < m_aTmpFont.GetSize() ; i++) {
+		pTmpFont = m_aTmpFont.GetAt(i);
+		if(pTmpFont != NULL) {
+			if (csFontN.CompareNoCase (pTmpFont->sFaceName) == 0) {
+				bFund = TRUE ;
+				iRet = i ;
+				break ;
+			}
+		}
+	}
+	if (bFund == FALSE) {
+		pTmpFont = new TMPFONTDEF;
+		pTmpFont->sFaceName = csFontN ;
+		pTmpFont->sFileName = csFontF ;
+		m_aTmpFont.InsertAt(i, pTmpFont);
+		iRet = i ;
+	}
+	return (iRet) ;
+}
+
+CString CFontList::GetTmpFontName(CString csFontN)
+{
+	int		i	;
+	TMPFONTDEF	*pTmpFont	;
+	CString		csFontF		;
+	csFontF = "" ;
+	for (i = 0 ; i < m_aTmpFont.GetSize() ; i++) {
+		pTmpFont = m_aTmpFont.GetAt(i);
+		if(pTmpFont != NULL) {
+			if (csFontN.CompareNoCase (pTmpFont->sFaceName) == 0) {
+				csFontF = pTmpFont->sFileName ;
+				break ;
+			}
+		}
+	}
+	return (csFontF) ;
+}
+
+void CFontList::FindRemoveTmpFontList(CString csFontF)
+{
+	int			i			;
+	TMPFONTDEF	*pTmpFont	;
+	for (i = 0 ; i < m_aTmpFont.GetSize() ; i++) {
+		pTmpFont = m_aTmpFont.GetAt(i);
+		if(pTmpFont != NULL) {
+			if (csFontF.CompareNoCase (pTmpFont->sFileName) == 0) {
+				delete pTmpFont ;
+				m_aTmpFont.RemoveAt (i) ;
+				i-- ;
+			}
+		}
+	}
+}
+
+BOOL CFontList::SetFontFavoriteAt(int nIndex, BOOL bVal)
+{
+	BOOL	bRet;
+	CString csName = m_aFontSel.GetAt(nIndex)->sFaceName;
+	if (!m_Ini) {
+		return FALSE ;
+	}
+	POSITION pos = m_Ini->Favorite.Find(csName) ;
+	if (pos != NULL) {
+		if (bVal == FALSE) {
+			m_Ini->Favorite.RemoveAt(pos) ;
+		}
+		bRet = TRUE;
+	}
+	else {
+		bRet = TRUE;
+		if (bVal == TRUE) {
+			if (m_Ini->Favorite.GetCount() < m_Ini->FavMax) {
+				m_Ini->Favorite.AddTail(csName) ;
+				bRet = TRUE;
+			}
+			else {
+				bRet = FALSE;
+			}
+		}
+	}
+	if (bRet = TRUE) {
+		m_aFontSel.GetAt(nIndex)->bFavorite = bVal;
+		int		i	;
+		for (i = 0 ; i < m_aFontAll.GetCount() ; i++) {
+			if (m_aFontAll.GetAt(i)->sFaceName.Compare(csName) == 0) {
+				m_aFontAll.GetAt(i)->bFavorite = bVal;
+				break ;
+			}
+		}
+	}
+	return bRet;
+}
+
+void CFontList::SetFontCandidateAt(int nIndex, BOOL bVal)
+{
+	m_aFontSel.GetAt(nIndex)->bCandidate = bVal;
+	int		i	;
+	CString csName = m_aFontSel.GetAt(nIndex)->sFaceName;
+	for (i = 0 ; i < m_aFontAll.GetCount() ; i++) {
+		if (m_aFontAll.GetAt(i)->sFaceName.Compare(csName) == 0) {
+			m_aFontAll.GetAt(i)->bCandidate = bVal;
+			break ;
+		}
+	}
+}
+
+CString CFontList::GetTempFontFile(int nIndex)
+{
+	int		i	;
+	CString csName = m_aFontSel.GetAt(nIndex)->sFaceName;
+	for (i = 0 ; i < m_aTmpFont.GetCount() ; i++) {
+		if (m_aTmpFont.GetAt(i)->sFaceName.Compare(csName) == 0) {
+			return m_aTmpFont.GetAt(i)->sFileName ;
+		}
+	}
+	return CString(_T(""));
+}
+
+void CFontList::ChangeFontInstaledlModeAt(int nIndex) {
+	m_aFontSel.GetAt(nIndex)->eInstallMode = INSTALLMODE_ORG;
+	int		i	;
+	CString csName = m_aFontSel.GetAt(nIndex)->sFaceName;
+	for (i = 0 ; i < m_aFontAll.GetCount() ; i++) {
+		if (m_aFontAll.GetAt(i)->sFaceName.Compare(csName) == 0) {
+			m_aFontAll.GetAt(i)->eInstallMode = INSTALLMODE_ORG;
+			break ;
+		}
+	}
+	for (i = 0 ; i < m_aTmpFont.GetCount() ; i++) {
+		if (m_aTmpFont.GetAt(i)->sFaceName.Compare(csName) == 0) {
+			m_aTmpFont.RemoveAt(i);
+			break ;
+		}
+	}
+}

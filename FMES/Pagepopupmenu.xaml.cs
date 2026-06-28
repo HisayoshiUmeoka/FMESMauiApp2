@@ -1,272 +1,359 @@
-using System.Globalization;
+Ôªøusing System;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
-namespace FMES;
-
-public partial class Pagepopupmenu : ContentPage
+namespace FMES
 {
-    private Label labelVer;
-    private Button buttonConfig;
-    private Button buttonUserchange;
-    private Button buttonLogout;
-    private Button buttonback;
-
-    public Pagepopupmenu()
+    public partial class Pagepopupmenu : ContentPage
     {
-        InitializeComponent();
-        Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
+        private Label labelVer;
+        private Button buttonConfig;
+        private Button buttonUserchange;
+        private Button buttonLogout;
+        private Button buttonback;
 
-        this.BackgroundColor = Colors.White;
-
-        //AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
-
-        labelVer = new Label
+        public Pagepopupmenu()
         {
-            //Text = "Version :" + DependencyService.Get<IAssemblyService>().GetVersionName() + "  Version Code:" + DependencyService.Get<IAssemblyService>().GetVersionCode().ToString(),
-            //Text = "Version :" + DependencyService.Get<IAssemblyService>().GetVersionCode().ToString(),
-            Text = "Version Name:" + AppInfo.VersionString,
+            InitializeComponent();
+            // „Çª„Éº„Éï„Ç®„É™„Ç¢„ÇíÁÑ°ÂäπÂåñ
+            Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-            FontSize = 15,
-            HorizontalOptions = LayoutOptions.Fill,
-            VerticalOptions = LayoutOptions.End // íÜâõÇ…îzíuÇ∑ÇÈÅiècï˚å¸
-        };
-        buttonConfig = new Button
-        {
-            Margin = new Thickness(0, 5, 0, 5),
-            //Text = AppResources.IDM141,//"Å@ä¬ã´ê›íËÅ@",
-            Text = "Å@ä¬ã´ê›íËÅ@",
-            FontSize = 20,
-            //TextColor = Colors.Black,
-            //BackgroundColor = Colors.DodgerBlue,
-            //BackgroundColor = Colors.Blue,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
+            // ContentPage„ÅÆ„Éë„Éá„Ç£„É≥„Ç∞„Çí0„Å´
+            this.Padding = new Thickness(0);
 
-            HorizontalOptions = LayoutOptions.Fill,
-            //VerticalOptions = LayoutOptions.CenterAndExpand // íÜâõÇ…îzíuÇ∑ÇÈÅiècï˚å¸Åj
-        };
-        buttonUserchange = new Button
-        {
-            Margin = new Thickness(0, 5, 0, 5),            //Text = AppResources.IDM142,//"Å@ÉÜÅ[ÉUÅ[êÿë÷Å@",
-            Text = "Å@ÉÜÅ[ÉUÅ[êÿë÷Å@",
-            FontSize = 20,
-            //TextColor = Colors.Black,
-            //BackgroundColor = Colors.DodgerBlue,
-            //BackgroundColor = Colors.Blue,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
+            Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-            HorizontalOptions = LayoutOptions.Fill,
-            //VerticalOptions = LayoutOptions.CenterAndExpand // íÜâõÇ…îzíuÇ∑ÇÈÅiècï˚å¸Åj
-        };
-        buttonLogout = new Button
-        {
-            Margin = new Thickness(0, 5, 0, 5),
-            //Text = AppResources.IDM143,//"Å@ÉçÉOÉAÉEÉgÅ@",
-            Text = "Å@ÉçÉOÉAÉEÉgÅ@",
-            FontSize = 20,
-            //TextColor = Colors.Black,
-            //BackgroundColor = Colors.DodgerBlue,
-            //BackgroundColor = Colors.Blue,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
+            // „Éö„Éº„Ç∏ÂÖ®‰Ωì„ÅØÁôΩËÉåÊôØÔºàË¶ÅÊ±Ç„Å©„Åä„ÇäÔºâ
+            //            this.BackgroundColor = Color.FromArgb("#D1D5DB");
+            App.Current.UserAppTheme = AppTheme.Light;
+            Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
 
-            HorizontalOptions = LayoutOptions.Fill,
-            //VerticalOptions = LayoutOptions.CenterAndExpand // íÜâõÇ…îzíuÇ∑ÇÈÅiècï˚å¸Åj
-        };
-        buttonback = new Button
-        {
-            Margin = new Thickness(0, 5, 0, 5),            //Text = AppResources.IDM032,//"Å@ñﬂÇÈÅ@",
-            Text = "Å@ñﬂÇÈÅ@",
-            FontSize = 20,
-            //TextColor = Colors.Black,
-            //BackgroundColor = Colors.DodgerBlue,
-            //BackgroundColor = Colors.Blue,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
-
-            HorizontalOptions = LayoutOptions.Fill,
-            //VerticalOptions = LayoutOptions.CenterAndExpand // íÜâõÇ…îzíuÇ∑ÇÈÅiècï˚å¸Åj
-        };
-
-        buttonConfig.Clicked += ConfigButtonClicked;
-        buttonUserchange.Clicked += UserButtonClicked;
-        buttonLogout.Clicked += LogoutButtonClicked;
-        buttonback.Clicked += backButtonClicked;
-
-
-
-
-        this.Content = new ScrollView
-        {
-            Content = new VerticalStackLayout
+            // „É¢„ÉÄ„É≥„Å™„Ç∞„É©„Éá„Éº„Ç∑„Éß„É≥ËÉåÊôØ
+            this.Background = new LinearGradientBrush
             {
-                Padding = new Thickness(0, 0, 0, 0),
-
-                BackgroundColor = Colors.White,
-                Children = {
-                    labelVer,
-                    //user1,
-                    buttonConfig,
-                    buttonUserchange,
-                    buttonLogout,
-                    buttonback,
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
                 }
-            }
-        };
-
-    }
+            };
 
 
+            // Version „É©„Éô„É´ÔºàÂ∞è„Åï„ÇÅÔºâ
+            labelVer = new Label
+            {
+                Text = "Version Name: " + AppInfo.VersionString,
+                FontSize = 12,
+                TextColor = Color.FromArgb("#6B7280"), // muted gray
+                HorizontalOptions = LayoutOptions.Center
+            };
 
+            // „Éú„Çø„É≥ÂÖ±ÈÄö„ÅÆË®≠ÂÆöÔºà„É¢„ÉÄ„É≥ÂåñÔºâ
+            buttonConfig = new Button
+            {
+                Text = "settings",
+                FontSize = 16,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Margin = new Thickness(0),
+                Padding = new Thickness(12, 0),
+                //BackgroundColor = GetBackColorParts(),
+                //TextColor = GetTextColorParts(),
+                                TextColor = Color.FromArgb("#3B82F6"),
+                BackgroundColor = Colors.White,
+                BorderColor = Color.FromArgb("#3B82F6"),
+                BorderWidth = 1.5,
 
-    async void ConfigButtonClicked(object sender, EventArgs s)
-    {
-        freeThis();
-        Application.Current.MainPage = new configPage();
-    }
-    async void UserButtonClicked(object sender, EventArgs s)
-    {
-        freeThis();
-        Application.Current.MainPage = new MainPage();
-    }
-    async void LogoutButtonClicked(object sender, EventArgs s)
-    {
-        clsGlobalVar.g_Operator=string.Empty;
-        clsGlobalVar.g_UserID = 0;
-        clsGlobalVar.g_SasizuNo = string.Empty;
-        clsGlobalVar.g_KouteiID = 0;
-        clsGlobalVar.g_lastSashizuKind = 0;
-        clsGlobalVar.g_SasizuID = 0;
-        clsGlobalVar.g_SasizuID = 0;
-        clsGlobalVar.g_KouteiVer = 0;
-        clsGlobalVar.g_lastSashizuKind = 0;
+            };
 
-        freeThis();
-        Application.Current.MainPage = new MainPage();
-    }
-    async void backButtonClicked(object sender, EventArgs s)
-    {
+            buttonUserchange = new Button
+            {
+                Text = "„É¶„Éº„Ç∂„ÉºÂàáÊõø",
+                FontSize = 16,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Margin = new Thickness(0),
+                Padding = new Thickness(12, 0),
+                BackgroundColor = Colors.White,
+                TextColor = Color.FromArgb("#111827"),
+                BorderColor = Color.FromArgb("#E5E7EB"),
+                BorderWidth = 1
+            };
 
-        if (clsGlobalVar.g_BackPage == "MainPage")
-        {
+            buttonLogout = new Button
+            {
+                Text = "„É≠„Ç∞„Ç¢„Ç¶„Éà",
+                FontSize = 16,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Margin = new Thickness(0),
+                Padding = new Thickness(12, 0),
+                BackgroundColor = Colors.White,
+                TextColor = Color.FromArgb("#DC2626"),
+                BorderColor = Color.FromArgb("#FEE2E2"),
+                BorderWidth = 1
+            };
 
-            freeThis();
-            Application.Current.MainPage = new MainPage();
+            buttonback = new Button
+            {
+                Text = "Êàª„Çã",
+                FontSize = 16,
+                HeightRequest = 44,
+                CornerRadius = 10,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Margin = new Thickness(0),
+                Padding = new Thickness(12, 0),
+                BackgroundColor = Colors.White,
+                TextColor = Color.FromArgb("#374151"),
+                BorderColor = Color.FromArgb("#E5E7EB"),
+                BorderWidth = 1
+            };
+
+            // „Ç§„Éô„É≥„Éà„ÅØ„Åù„ÅÆ„Åæ„Åæ
+            buttonConfig.Clicked += ConfigButtonClicked;
+            buttonUserchange.Clicked += UserButtonClicked;
+            buttonLogout.Clicked += LogoutButtonClicked;
+            buttonback.Clicked += backButtonClicked;
+
+            // „É¢„ÉÄ„É≥„Å™„Ç´„Éº„ÉâÈ¢®„É¨„Ç§„Ç¢„Ç¶„Éà„Çí‰∏≠Â§Æ„Å´ÈÖçÁΩÆ
+            var menuCard = new Frame
+            {
+                CornerRadius = 16,
+                HasShadow = true,
+                Padding = new Thickness(20),
+                Margin = new Thickness(20),
+                BackgroundColor = Colors.White,
+                BorderColor = Color.FromArgb("#E6EEF8"),
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 12,
+                    Children =
+                    {
+                        new HorizontalStackLayout
+                        {
+                            Spacing = 0,
+                            VerticalOptions = LayoutOptions.Center,
+                            HorizontalOptions = LayoutOptions.Fill,
+                            Children =
+                            {
+                                new Label
+                                {
+                                    Text = "„É°„Éã„É•„Éº",
+                                    FontSize = 18,
+                                    FontAttributes = FontAttributes.Bold,
+                                    TextColor = Color.FromArgb("#0F172A"),
+                                    HorizontalOptions = LayoutOptions.StartAndExpand,
+                                    VerticalOptions = LayoutOptions.Center
+                                },
+                                // Á©∫ÁôΩ„Çπ„Éö„Éº„Çπ„ÇíÂèñ„Çä„Å§„Å§Èñâ„Åò„ÇãÊåôÂãï„ÅØÊó¢Â≠ò„ÅÆÊàª„Çã„Éú„Çø„É≥„ÅßÂØæÂøú„Åó„Å¶„ÅÑ„Çã„Åü„ÇÅÁúÅÁï•
+                            }
+                        },
+                        buttonConfig,
+                        buttonUserchange,
+                        buttonLogout,
+                        buttonback
+                    }
+                }
+            };
+
+            // „Éö„Éº„Ç∏ÂÖ®‰Ωì„ÅÆÊßãÊàê
+            this.Content = new ScrollView
+            {
+                BackgroundColor = Colors.White,
+                Content = new VerticalStackLayout
+                {
+                    Padding = new Thickness(20, 24),
+                    Spacing = 16,
+                    VerticalOptions = LayoutOptions.Start,
+                    Children =
+                    {
+                        // ‰∏äÈÉ®„Å´‰ΩôÁôΩ„ÇíÂèñ„Çä„ÄÅ„Ç´„Éº„Éâ„Çí‰∏≠Â§ÆÂØÑ„Åõ„Å´Ë¶ã„Åõ„Çã
+                        new VerticalStackLayout
+                        {
+                            HorizontalOptions = LayoutOptions.FillAndExpand,
+                            Children =
+                            {
+                                menuCard
+                            }
+                        },
+
+                        // „Éï„ÉÉ„Çø„ÉºÔºö„Éê„Éº„Ç∏„Éß„É≥Ë°®Á§∫„Å®‰ΩôÁôΩ
+                        new VerticalStackLayout
+                        {
+                            Spacing = 4,
+                            HorizontalOptions = LayoutOptions.FillAndExpand,
+                            VerticalOptions = LayoutOptions.EndAndExpand,
+                            Children =
+                            {
+                                labelVer,
+                                new Label
+                                {
+                                    Text = "Copyright ¬© Five Motion Systems, Inc.",
+                                    FontSize = 11,
+                                    TextColor = Color.FromArgb("#9CA3AF"),
+                                    HorizontalOptions = LayoutOptions.Center
+                                }
+                            }
+                        }
+                    }
+                }
+            };
         }
-        else if (clsGlobalVar.g_BackPage == "SashizuPage")
-        {
-            freeThis();
-            Application.Current.MainPage = new SashizuPage();
-        }
-        else if (clsGlobalVar.g_BackPage == "ComLogin")
-        {
-            freeThis();
-            Application.Current.MainPage = new ComLogin();
-        }
-        else if (clsGlobalVar.g_BackPage == "ConfigPage")
+
+        async void ConfigButtonClicked(object sender, EventArgs s)
         {
             freeThis();
             Application.Current.MainPage = new configPage();
         }
-        else if (clsGlobalVar.g_BackPage == "Page1")
+        async void UserButtonClicked(object sender, EventArgs s)
         {
-            freeThis();
-            Application.Current.MainPage = new Page1();
-        }
-        else if (clsGlobalVar.g_BackPage == "Page1_5")
-        {
-            freeThis();
-            Application.Current.MainPage = new Page1_5();
-        }
-        else if (clsGlobalVar.g_BackPage == "Page2")
-        {
-            freeThis();
-            Application.Current.MainPage = new Page2();
-        }
-        else if (clsGlobalVar.g_BackPage == "Page3")
-        {
-            freeThis();
-            Application.Current.MainPage = new Page3();
-        }
-        else if (clsGlobalVar.g_BackPage == "Page4")
-        {
-            freeThis();
-            Application.Current.MainPage = new Page4();
-        }
-        else if (clsGlobalVar.g_BackPage == "Page5")
-        {
-            freeThis();
-            Application.Current.MainPage = new Page5();
-        }
-        else if (clsGlobalVar.g_BackPage == "PageMaching")
-        {
-            freeThis();
-            Application.Current.MainPage = new PageMaching();
-        }
-        else if (clsGlobalVar.g_BackPage == "PageNo")
-        {
-            freeThis();
-            Application.Current.MainPage = new PageNo();
-        }
-        else if (clsGlobalVar.g_BackPage == "PageWeb")
-        {
-            freeThis();
-            Application.Current.MainPage = new PageWeb();
-        }
-        else if (clsGlobalVar.g_BackPage == "PageWeb")
-        {
-            freeThis();
-            Application.Current.MainPage = new PageWeb();
-        }
-        else if (clsGlobalVar.g_BackPage == "webPage2")
-        {
-            freeThis();
-            Application.Current.MainPage = new webPage2();
-        }
-        else if (clsGlobalVar.g_BackPage == "SashizuAdd")
-        {
-            freeThis();
-            Application.Current.MainPage = new SashizuAdd();
-        }
-        else
-        {
-            //ÉoÉOÇÃèÍçáÇ±Ç±Ç…óàÇÈ
             freeThis();
             Application.Current.MainPage = new MainPage();
         }
+        async void LogoutButtonClicked(object sender, EventArgs s)
+        {
+            clsGlobalVar.g_Operator=string.Empty;
+            clsGlobalVar.g_UserID = 0;
+            clsGlobalVar.g_SasizuNo = string.Empty;
+            clsGlobalVar.g_KouteiID = 0;
+            clsGlobalVar.g_lastSashizuKind = 0;
+            clsGlobalVar.g_SasizuID = 0;
+            clsGlobalVar.g_SasizuID = 0;
+            clsGlobalVar.g_KouteiVer = 0;
+            clsGlobalVar.g_lastSashizuKind = 0;
 
-    }
-    private void freeThis()
-    {
-        GC.Collect();
-    }
+            freeThis();
+            Application.Current.MainPage = new MainPage();
+        }
+        async void backButtonClicked(object sender, EventArgs s)
+        {
 
-    private Color GetBackColorParts()
-    {
-        Color wCol = Colors.White;
-#if IOS
-                //wCol = Colors.DodgerBlue;
-                wCol = Colors.Blue;
-#else
-        wCol = Colors.DodgerBlue;
-        //wCol = Colors.Blue;
-#endif
+            if (clsGlobalVar.g_BackPage == "MainPage")
+            {
 
-        return wCol;
-    }
+                freeThis();
+                Application.Current.MainPage = new MainPage();
+            }
+            else if (clsGlobalVar.g_BackPage == "SashizuPage")
+            {
+                freeThis();
+                Application.Current.MainPage = new SashizuPage();
+            }
+            else if (clsGlobalVar.g_BackPage == "ComLogin")
+            {
+                freeThis();
+                Application.Current.MainPage = new ComLogin();
+            }
+            else if (clsGlobalVar.g_BackPage == "ConfigPage")
+            {
+                freeThis();
+                Application.Current.MainPage = new configPage();
+            }
+            else if (clsGlobalVar.g_BackPage == "Page1")
+            {
+                freeThis();
+                Application.Current.MainPage = new Page1();
+            }
+            else if (clsGlobalVar.g_BackPage == "Page1_5")
+            {
+                freeThis();
+                Application.Current.MainPage = new Page1_5();
+            }
+            else if (clsGlobalVar.g_BackPage == "Page2")
+            {
+                freeThis();
+                Application.Current.MainPage = new Page2();
+            }
+            else if (clsGlobalVar.g_BackPage == "Page3")
+            {
+                freeThis();
+                Application.Current.MainPage = new Page3();
+            }
+            else if (clsGlobalVar.g_BackPage == "Page4")
+            {
+                freeThis();
+                Application.Current.MainPage = new Page4();
+            }
+            else if (clsGlobalVar.g_BackPage == "Page5")
+            {
+                freeThis();
+                Application.Current.MainPage = new Page5();
+            }
+            else if (clsGlobalVar.g_BackPage == "PageMaching")
+            {
+                freeThis();
+                Application.Current.MainPage = new PageMaching();
+            }
+            else if (clsGlobalVar.g_BackPage == "PageNo")
+            {
+                freeThis();
+                Application.Current.MainPage = new PageNo();
+            }
+            else if (clsGlobalVar.g_BackPage == "PageWeb")
+            {
+                freeThis();
+                Application.Current.MainPage = new PageWeb();
+            }
+            else if (clsGlobalVar.g_BackPage == "PageWeb")
+            {
+                freeThis();
+                Application.Current.MainPage = new PageWeb();
+            }
+            else if (clsGlobalVar.g_BackPage == "webPage2")
+            {
+                freeThis();
+                Application.Current.MainPage = new webPage2();
+            }
+            else if (clsGlobalVar.g_BackPage == "SashizuAdd")
+            {
+                freeThis();
+                Application.Current.MainPage = new SashizuAdd();
+            }
+            else
+            {
+                //ÊÉ≥ÂÆöÂ§ñ„ÅÆ„Ç±„Éº„Çπ„ÅØ„É°„Ç§„É≥„Å∏
+                freeThis();
+                Application.Current.MainPage = new MainPage();
+            }
 
-    private Color GetTextColorParts()
-    {
-        Color wCol = Colors.White;
-#if IOS
-                //wCol = Colors.Black;
-                wCol = Colors.White;
-#else
-        //wCol = Colors.White;
-        wCol = Colors.Black;
+        }
+        private void freeThis()
+        {
+            GC.Collect();
+        }
 
-#endif
+        private Color GetBackColorParts()
+        {
+            Color wCol = Colors.White;
+    #if IOS
+                    //wCol = Colors.DodgerBlue;
+                    wCol = Colors.Blue;
+    #else
+            wCol = Colors.DodgerBlue;
+            //wCol = Colors.Blue;
+    #endif
 
-        return wCol;
+            return wCol;
+        }
+
+        private Color GetTextColorParts()
+        {
+            Color wCol = Colors.White;
+    #if IOS
+                    //wCol = Colors.Black;
+                    wCol = Colors.White;
+    #else
+            //wCol = Colors.White;
+            wCol = Colors.Black;
+
+    #endif
+
+            return wCol;
+        }
     }
 }

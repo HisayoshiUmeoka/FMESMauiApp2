@@ -29,11 +29,26 @@ public partial class Page1 : ContentPage
     private bool doingNow = false;
 
     public Page1()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-        this.BackgroundColor = Colors.White;
+        //        this.BackgroundColor = Color.FromArgb("#D1D5DB");
+        App.Current.UserAppTheme = AppTheme.Light;
+        Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+        // モダンなグラデーション背景
+        this.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+        };
+
 
         //        AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 3;
@@ -42,7 +57,9 @@ public partial class Page1 : ContentPage
         labelUser = new Label
         {
             Text = clsGlobalVar.g_Operator,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
+
             TextColor = Colors.Black,
             FontSize = 22,
             VerticalOptions = LayoutOptions.Center,
@@ -55,7 +72,8 @@ public partial class Page1 : ContentPage
             //Text = "メニュー",
             ImageSource = "icon80x80.png",
             FontSize = 20,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             HorizontalOptions = LayoutOptions.End,
             //VerticalOptions = LayoutOptions.center // 中央に配置する（縦方向）
             VerticalOptions = LayoutOptions.Center // 中央に配置する（縦方向）
@@ -64,7 +82,8 @@ public partial class Page1 : ContentPage
         ContentMenu = new HorizontalStackLayout()
         {
             HorizontalOptions = LayoutOptions.End,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             Children = {
                         labelUser,
                         buttonMenu,
@@ -98,20 +117,20 @@ public partial class Page1 : ContentPage
                 wsashizuNo = "その他";
             }
 
-                label3 = new Label
-                {
-                    //Text = "　　" + AppResources.IDM030 + "：" + wsashizuNo,
-                    Text = "　　" + "指図番号" + "：" + wsashizuNo,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
-                    TextColor = Colors.Black,
-                    FontSize = 16,
-                    VerticalOptions = LayoutOptions.Center,
-                    HorizontalOptions = LayoutOptions.Fill,
-                };
+            label3 = new Label
+            {
+                //Text = "　　" + AppResources.IDM030 + "：" + wsashizuNo,
+                Text = "　　" + "指図番号" + "：" + wsashizuNo,
+                Margin = new Thickness(0, 5, 0, 5),
+                Padding = new Thickness(0, 0, 0, 0),
+                BackgroundColor = Colors.White,
+                TextColor = Colors.Black,
+                FontSize = 16,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Fill,
+            };
 
-                layout1 = new VerticalStackLayout
+            layout1 = new VerticalStackLayout
             {
                 //Orientation = StackOrientation.Vertical,
                 Margin = new Thickness(0, 5, 0, 5),
@@ -119,7 +138,7 @@ public partial class Page1 : ContentPage
 
                 BackgroundColor = Colors.White,
             };
-                //layout1.Children.Add(ContentMenu);
+            //layout1.Children.Add(ContentMenu);
             layout1.Children.Add(label3);
 
             foreach (clsKaisou wKaisou in lstKaisou._Datas)
@@ -127,19 +146,28 @@ public partial class Page1 : ContentPage
                 Button butn = new Button
                 {
                     //Text = wKaisou._kaisouName,
-                    Text = (wKaisou._done == 1) ? wKaisou._kaisouName + "　"+ GetDispTime(wKaisou._TotalTime): wKaisou._kaisouName,
-                    FontSize = 16,
-                    Margin = new Thickness(0, 5, 0, 5),
+                    Text = (wKaisou._done == 1) ? wKaisou._kaisouName + "　" + GetDispTime(wKaisou._TotalTime) : wKaisou._kaisouName,
+                    //FontSize = 16,
+                    //Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.Fill,
                     TextColor = GetTextColor(wKaisou),
                     BackgroundColor = GetBackColor(wKaisou),
+                    FontSize = 14,
+
+                    BorderColor =  GetBorderColor(wKaisou),
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
+
+
                     //WidthRequest=150,
 
                 };
                 butn.Clicked += ItemButtonClicked;
-            //    //layout1.Children.Add(ContentMenu);
+                //    //layout1.Children.Add(ContentMenu);
                 layout1.Children.Add(butn);
                 Lstbutton.Add(butn);
                 //LstTime.Add(lbW);
@@ -149,13 +177,17 @@ public partial class Page1 : ContentPage
             {
                 //Text = AppResources.IDM107,
                 Text = "別工程へ",
-                FontSize = 22,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),                //VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Fill,
-                //HorizontalOptions = LayoutOptions.Center,
+                FontSize = 14,
                 TextColor = Colors.Black,
                 BackgroundColor = Colors.LightGreen,
+                //BorderColor = Colors.LightGreen,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
+                HorizontalOptions = LayoutOptions.Fill,
+                //HorizontalOptions = LayoutOptions.Center,
             };
             buttonNext.Clicked += NextButtonClicked;
 
@@ -174,14 +206,17 @@ public partial class Page1 : ContentPage
             {
                 //Text = AppResources.IDM119,
                 Text = "ビーコンマッチ登録",
-                FontSize = 16,
-                //Margin = new Thickness(0, 5, 0, 5),Margin = new Thickness(0, 5, 0, 5),,
-                //Padding = new Thickness(0, 0, 0, 0),
-                //VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Fill,
-                //HorizontalOptions = LayoutOptions.Center,
+                FontSize = 14,
                 TextColor = Colors.Black,
                 BackgroundColor = Colors.LightGreen,
+                //BorderColor = Colors.LightGreen,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
+                HorizontalOptions = LayoutOptions.Fill,
+                //HorizontalOptions = LayoutOptions.Center,
             };
             buttonMaching.Clicked += BeaconUpDateButtonClicked;
 
@@ -218,14 +253,17 @@ public partial class Page1 : ContentPage
             buttonEnd = new Button
             {
                 Text = wEnd,
-                FontSize = 22,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),
-                //VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Fill,
-                //HorizontalOptions = LayoutOptions.Center,
+                FontSize = 14,
                 TextColor = Colors.Black,
                 BackgroundColor = Colors.LightGreen,
+                //BorderColor = Colors.LightGreen,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
+                HorizontalOptions = LayoutOptions.Fill,
+                //HorizontalOptions = LayoutOptions.Center,
             };
             buttonEnd.Clicked += EndButtonClicked;
             //layout1.Children.Add(ContentMenu);
@@ -234,14 +272,19 @@ public partial class Page1 : ContentPage
             {
                 //Text = AppResources.IDM149,
                 Text = "プレビュー",
-                FontSize = 22,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),
-                //VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Fill,
-                //HorizontalOptions = LayoutOptions.Center,
+                FontSize = 14,
                 TextColor = Colors.Black,
                 BackgroundColor = Colors.LightGreen,
+                //BackgroundColor = Colors.White,
+                //TextColor = Color.FromArgb("#10B981"),
+                //BorderColor = Color.FromArgb("#10B981"),
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
+                HorizontalOptions = LayoutOptions.Fill,
+                //HorizontalOptions = LayoutOptions.Center,
             };
             buttonpreview.Clicked += PreviewButtonClicked;
             if (clsGlobalVar.g_SasizuNo != "-2" && clsGlobalVar.g_SasizuNo != "-1")
@@ -270,15 +313,18 @@ public partial class Page1 : ContentPage
                 TextColor = Colors.Black,
                 FontSize = 22,
                 VerticalOptions = LayoutOptions.Center,
-                            HorizontalOptions = LayoutOptions.Fill,
+                HorizontalOptions = LayoutOptions.Fill,
             };
             buttonNext = new Button
             {
                 //Text = AppResources.IDM107,
                 Text = "別工程へ",
-                FontSize = 22,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),
+                FontSize = 14,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
                 //VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 //HorizontalOptions = LayoutOptions.Center,
@@ -292,9 +338,12 @@ public partial class Page1 : ContentPage
             {
                 //Text = AppResources.IDM026,
                 Text = "次の指図番号へ",
-                FontSize = 22,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),
+                FontSize = 14,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
                 //VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 //HorizontalOptions = LayoutOptions.Center,
@@ -306,9 +355,14 @@ public partial class Page1 : ContentPage
             {
                 //Text = AppResources.IDM149,
                 Text = "プレビュー",
-                FontSize = 22,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),
+                FontSize = 14,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
+                //Margin = new Thickness(0, 5, 0, 5),
+                //Padding = new Thickness(0, 0, 0, 0),
                 //VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 //HorizontalOptions = LayoutOptions.Center,
@@ -390,7 +444,37 @@ public partial class Page1 : ContentPage
         wCol = Colors.Black;
 
 #endif
-
+        wCol = Colors.White;
+        return wCol;
+    }
+    private Color GetBackColor2(clsKaisou wKaisou)
+    {
+        Color wCol = Colors.White;
+        if (wKaisou._during == 0)
+        {
+            //進行中
+            wCol = Colors.White;
+        }
+        else if (wKaisou._during == 1)
+        {
+            wCol = Colors.White;
+        }
+        else if (wKaisou._during == 2)
+        {
+            wCol = Colors.White;
+        }
+        else if (wKaisou._during == 3)
+        {
+            wCol = Colors.White;
+        }
+        else if (wKaisou._during == 4)
+        {
+            wCol = Colors.White;
+        }
+        else if (wKaisou._during == 5)
+        {
+            wCol = GetBackColorParts();
+        }
         return wCol;
     }
     private Color GetBackColor(clsKaisou wKaisou)
@@ -419,10 +503,42 @@ public partial class Page1 : ContentPage
         }
         else if (wKaisou._during == 5)
         {
+            wCol = GetBackColorParts();//Colors.Blue;
+        }
+        return wCol;
+    }
+    private Color GetBorderColor(clsKaisou wKaisou)
+    {
+        Color wCol = Colors.LightGray;
+        if (wKaisou._during == 0)
+        {
+            //進行中
+            wCol = Colors.LightGray;
+        }
+        else if (wKaisou._during == 1)
+        {
+            wCol = Colors.LightGray;
+            //wCol = Colors.LightGreen;
+        }
+        else if (wKaisou._during == 2)
+        {
+            wCol = Colors.Gray;
+        }
+        else if (wKaisou._during == 3)
+        {
+            wCol = Colors.DarkGreen;
+        }
+        else if (wKaisou._during == 4)
+        {
+            wCol = Colors.Red;
+        }
+        else if (wKaisou._during == 5)
+        {
             wCol = GetBackColorParts();
         }
         return wCol;
     }
+
     private Color GetBackColor(int index)
     {
         Color wCol = Colors.White;

@@ -1,0 +1,796 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 17, 1\r\n"
+    "#pragma code_page(932)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\LookFont.rc2""  // Microsoft Visual C++ 以外のツールで編集されたリソース\r\n"
+    "#include ""l.jpn\\afxres.rc""          // 標準のコンポーネント\r\n"
+    "#include ""l.jpn\\afxprint.rc""        // 印刷/印刷プレビュー リソース\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\LookFont.ico"
+IDR_LOOKFOTYPE          ICON    DISCARDABLE     "res\\LookFontDoc.ico"
+IDI_ICON_LOOKFONT       ICON    DISCARDABLE     "res\\icon_loo.ico"
+IDI_ICON_LICENCE        ICON    DISCARDABLE     "res\\icon_licence.ico"
+IDI_ICON_CAUTION        ICON    DISCARDABLE     "res\\icon_CAUTION.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+IDR_TOOLBAR_FONTSELECT  BITMAP  DISCARDABLE     "res\\toolbar_fontselect.bmp"
+IDB_BITMAP_LOOKFONT     BITMAP  DISCARDABLE     "res\\LookFont.bmp"
+IDB_SN_KEY              BITMAP  DISCARDABLE     "res\\sn_key.bmp"
+IDB_BITMAP_UNLOCK       BITMAP  DISCARDABLE     "res\\unlock02.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  24, 24
+BEGIN
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_MENU_TMPFONT_INSTALL
+    BUTTON      ID_MENU_TMPFONT_UNINSTALL
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+END
+
+IDR_TOOLBAR_FONTSELECT TOOLBAR DISCARDABLE  36, 24
+BEGIN
+    BUTTON      ID_MENU_SEL_LANG_EN
+    BUTTON      ID_MENU_SEL_LANG_JA
+    BUTTON      ID_MENU_SEL_LANG_ALL
+    SEPARATOR
+    BUTTON      ID_MENU_SEL_FONT_TMP
+    BUTTON      ID_MENU_SEL_FONT_ORG
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "ﾌｧｲﾙ(&F)"
+    BEGIN
+        MENUITEM "印刷（&P）.\tCtrl+P",         ID_FILE_PRINT
+        MENUITEM "印刷ﾌﾟﾚﾋﾞｭｰ",                 ID_FILE_PRINT_PREVIEW
+        MENUITEM "ﾌﾟﾘﾝﾀの設定(&R)",             ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "設定(&C)",                    ID_MENU_SETTING
+        MENUITEM SEPARATOR
+        MENUITEM "アップデートチェック",        ID_MENU_UPDATE_CHECK
+        MENUITEM SEPARATOR
+        MENUITEM "ｱﾌﾟﾘｹｰｼｮﾝの終了(&X)",         ID_APP_EXIT
+    END
+    POPUP "編集(&E)"
+    BEGIN
+        MENUITEM "ｺﾋﾟｰ(&C)\tCtrl+C",            ID_EDIT_COPY
+        MENUITEM "ﾌｫﾝﾄ名をｺﾋﾟｰ(&F)",            ID_MENU_COPYFONTFACE
+        MENUITEM "貼り付け(&P)\tCtrl+V",        ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "プロパティ",                  ID_MENU_PROPATY
+    END
+    POPUP "ﾌｫﾝﾄ(&C)"
+    BEGIN
+        MENUITEM "ﾌｫﾝﾄの一時ｲﾝｽﾄｰﾙ(&T)",        ID_MENU_TMPFONT_INSTALL
+        MENUITEM "CD/ﾌｫﾙﾀﾞ検索 一時ｲﾝｽﾄｰﾙ",     ID_MENU_TMPFONT_FIND
+        MENUITEM SEPARATOR
+        MENUITEM "一時ﾌｫﾝﾄのｱﾝｲﾝｽﾄｰﾙ(&U)",      ID_MENU_TMPFONT_UNINSTALL
+    END
+    POPUP "表示(&V)"
+    BEGIN
+        MENUITEM "ﾂｰﾙ ﾊﾞｰ(&T)",                 ID_VIEW_TOOLBAR
+        MENUITEM "ﾌｫﾝﾄ選択ﾊﾞｰ(&S)",             ID_VIEW_FONTSELECTBAR
+        MENUITEM "ﾃｷｽﾄ入力ﾊﾞｰ(&C)",             ID_VIEW_TEXTCTRLBAR
+    END
+    POPUP "ﾍﾙﾌﾟ(&H)"
+    BEGIN
+        MENUITEM "オンラインヘルプﾟ(&H)\tF1",   ID_HELP
+        MENUITEM "バージョン情報(&A)...",       ID_APP_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "プラス・エス サイト",         ID_MENU_PLUSS
+        MENUITEM "サポート サイト",             ID_MENU_SUPPORT
+    END
+END
+
+IDR_MENU_RCLICK MENU DISCARDABLE 
+BEGIN
+    POPUP "0"
+    BEGIN
+        MENUITEM "コピー",                      ID_EDIT_COPY
+        MENUITEM "フォント名をコピー",          ID_MENU_COPYFONTFACE
+        MENUITEM SEPARATOR
+        MENUITEM "プロパティ",                  ID_MENU_PROPATY
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 264, 65
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "バージョン情報"
+FONT 9, "ＭＳ ゴシック"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,10,20,20
+    LTEXT           "Version",IDC_STATIC,106,11,32,8,SS_NOPREFIX | 
+                    SS_CENTERIMAGE
+    LTEXT           "Copyright (C) 2006-2009",IDC_STATIC,41,25,101,8,
+                    SS_CENTERIMAGE
+    DEFPUSHBUTTON   "OK",IDOK,211,44,40,14,WS_GROUP
+    LTEXT           "",ID_FILE_VERSION,146,11,58,8,SS_CENTERIMAGE
+    LTEXT           "Static",IDC_STATIC_URL,149,25,99,8,SS_CENTERIMAGE
+    CONTROL         "",IDC_STATIC,"Static",SS_GRAYRECT | SS_SUNKEN,12,38,239,
+                    2
+    LTEXT           "ﾌﾟﾛﾀﾞｸﾄｷｰ：",IDC_STATIC,13,46,45,8,SS_CENTERIMAGE
+    LTEXT           "",IDC_STATIC_LICENCE_INFO,60,46,144,8,SS_CENTERIMAGE
+    ICON            IDI_ICON_LOOKFONT,IDC_STATIC,43,7,21,20,SS_REALSIZEIMAGE
+    CTEXT           "Static",IDC_STATIC_ACT,214,11,36,8,SS_CENTERIMAGE
+END
+
+IDD_DIALOG_TEXTCTRL DIALOG DISCARDABLE  0, 0, 147, 17
+STYLE WS_CHILD
+FONT 12, "ＭＳ Ｐゴシック"
+BEGIN
+    EDITTEXT        IDC_EDIT_DISPTEXT,5,3,100,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO_FONTSIZE,110,3,30,415,CBS_DROPDOWN | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_DIALOG_SETTING_UPDATE DIALOG DISCARDABLE  0, 0, 229, 85
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "自動アップデート"
+FONT 9, "ＭＳ ゴシック"
+BEGIN
+    CONTROL         "１日１回初回起動時に更新をチェック",
+                    IDC_CHECK_AUTOUPDATE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,35,159,10
+    LTEXT           "※アップデート機能はライセンス認証後に機能します。",
+                    IDC_STATIC,7,15,205,8
+END
+
+IDD_DIALOG_SNKEY DIALOG DISCARDABLE  0, 0, 341, 153
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "プロダクトキー入力"
+FONT 9, "ＭＳ ゴシック"
+BEGIN
+    GROUPBOX        "プロダクトキー",IDC_STATIC,86,34,241,33
+    EDITTEXT        IDC_EDIT_PROKEY1,92,46,35,14,ES_UPPERCASE | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PROKEY2,140,46,35,14,ES_UPPERCASE | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PROKEY3,188,46,35,14,ES_UPPERCASE | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PROKEY4,236,46,35,14,ES_UPPERCASE | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PROKEY5,284,46,35,14,ES_UPPERCASE | 
+                    ES_AUTOHSCROLL
+    PUSHBUTTON      "ＰＬＵＳ Ｓ \nサポートサイト",IDC_BUTTON_ACT1,80,120,64,
+                    31,BS_MULTILINE
+    PUSHBUTTON      "オンライン\n 自動認証",IDC_BUTTON_ACT2,144,120,64,31,
+                    BS_MULTILINE
+    PUSHBUTTON      "Fax  Email\n 手動認証",IDC_BUTTON_ACT3,208,120,64,31,
+                    BS_MULTILINE
+    PUSHBUTTON      "閉じる",IDCANCEL,276,120,64,31
+    DEFPUSHBUTTON   "OK",IDOK,323,97,17,14,NOT WS_VISIBLE | WS_DISABLED
+    CONTROL         147,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,0,0,
+                    75,153
+    LTEXT           "プロダクトキー（半角英数字）を入力し、初回起動時より１０日以内に\n何れかの方法でライセンス認証を完了して下さい。\n※ 期日を過ぎると、認証完了までメイン画面は起動しなくなります。",
+                    IDC_STATIC,80,6,257,26
+    CTEXT           "－",IDC_STATIC,129,46,9,14,SS_CENTERIMAGE
+    CTEXT           "－",IDC_STATIC,177,46,9,14,SS_CENTERIMAGE
+    CTEXT           "－",IDC_STATIC,225,46,9,14,SS_CENTERIMAGE
+    CTEXT           "－",IDC_STATIC,273,46,9,14,SS_CENTERIMAGE
+    LTEXT           "オンライン認証では、プロダクトキーと自動生成したコンピュータＩＤのみを送信致します。 個人情報やプライバシーを侵害する様な情報は一切含まれておりません。",
+                    IDC_STATIC,101,72,232,23
+    ICON            IDI_ICON_CAUTION,IDC_STATIC,77,73,21,20,SS_CENTERIMAGE
+    CONTROL         "",IDC_STATIC,"Static",SS_GRAYRECT | SS_SUNKEN,74,116,
+                    267,2
+    LTEXT           "認証残日数：",IDC_STATIC_LEAVE1,83,100,48,12,
+                    SS_CENTERIMAGE
+    RTEXT           "10",IDC_STATIC_LIMITDAYS,133,100,10,12,SS_CENTERIMAGE
+    LTEXT           "日",IDC_STATIC_LEAVE2,148,100,10,12,SS_CENTERIMAGE
+END
+
+IDD_DIALOG_UNLOCK DIALOG DISCARDABLE  0, 0, 341, 153
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Fax E-mail認証"
+FONT 9, "ＭＳ ゴシック"
+BEGIN
+    DEFPUSHBUTTON   "ＯＫ",IDOK,291,120,48,31,WS_DISABLED
+    PUSHBUTTON      "キャンセル",IDCANCEL,242,120,48,31
+    CONTROL         150,IDC_STATIC,"Static",SS_BITMAP,0,0,75,153
+    LTEXT           "インターネット経由によるオンライン認証が出来ない場合は、プロダクトキーと、下記のユーザーコード２つを、Ｆａｘ又はＥメールにて弊社サポートまでお知らせ下さい。　弊社サポートよりお知らせする、Ｒｅｇコード２つを入力する事でライセンス認証が完了します。\nまた弊社のWebページより手動で取得する事も可能です。",
+                    IDC_STATIC,79,4,254,40
+    CONTROL         "",IDC_STATIC,"Static",SS_GRAYRECT | SS_SUNKEN,76,116,
+                    265,2
+    LTEXT           "ユーザーコード１：",IDC_STATIC,92,48,73,13,
+                    SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_USER_CODE_1,167,48,94,13,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "ユーザーコード２：",IDC_STATIC,92,64,73,13,
+                    SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_USER_CODE_2,167,64,94,13,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "Ｒｅｇコード１：",IDC_STATIC,92,82,73,13,SS_CENTERIMAGE
+    LTEXT           "Ｒｅｇコード２：",IDC_STATIC,92,98,73,13,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_REG_KEY_1,167,82,94,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_REG_KEY_2,167,98,94,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Ｗｅｂから\n手動で取得",IDC_BUTTON_GETWEB,77,120,48,31,
+                    BS_MULTILINE
+    PUSHBUTTON      " Ｆａｘ用\nＰＤＦ表示",IDC_BUTTON_FAX,126,120,48,31,
+                    BS_MULTILINE
+    PUSHBUTTON      "Ｅｍａｉｌ\n フォーム",IDC_BUTTON_EMAIL,175,120,48,31,
+                    BS_MULTILINE
+END
+
+IDD_DIALOG_FIND DIALOG DISCARDABLE  0, 0, 243, 110
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "CD/ﾌｫﾙﾀﾞ検索 一時ｲﾝｽﾄｰﾙ"
+FONT 9, "ＭＳ ゴシック"
+BEGIN
+    DEFPUSHBUTTON   "実行",IDOK,122,89,50,14
+    PUSHBUTTON      "キャンセル",IDCANCEL,186,89,50,14
+    PUSHBUTTON      "ＣＤ／フォルダ",IDC_BUTTON_SEARCHPATH,7,7,63,14
+    EDITTEXT        IDC_EDIT_FINDPATH,72,8,164,13,ES_AUTOHSCROLL
+    GROUPBOX        "検索対象拡張子",IDC_STATIC,7,29,229,53
+    CONTROL         "*.ttf",IDC_CHECK_EXT1,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,15,42,36,10
+    CONTROL         "*.ttc",IDC_CHECK_EXT2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,60,42,36,10
+    CONTROL         "*.fon",IDC_CHECK_EXT3,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,105,42,36,10
+    CONTROL         "*.pfm",IDC_CHECK_EXT4,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,150,42,36,10
+    CONTROL         "*.otf",IDC_CHECK_EXT5,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,195,42,36,10
+    CONTROL         "その他　*.",IDC_CHECK_EXT6,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,15,65,52,10
+    EDITTEXT        IDC_EDIT_EXTETC,69,64,19,12,ES_AUTOHSCROLL
+    LTEXT           "",IDC_STATIC,14,57,216,2,SS_SUNKEN | NOT WS_GROUP
+END
+
+IDD_DIALOG_USER DIALOG DISCARDABLE  0, 0, 278, 372
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "オンラインユーザー登録"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    GROUPBOX        "ユーザー情報　（「*」は必須項目）",IDC_STATIC,7,44,264,
+                    288
+    LTEXT           "オンラインユーザー登録は、SSL128ビット暗号化通信を、インターネット経由で送信します。　尚、ウィルス防止ソフト等による個人情報のブロックが適用となっている場合、通信がブロックされ、正しくユーザー登録されない場合がございます。　設定をお確かめの上、通信がブロックされない状態で実行して下さい。",
+                    IDC_STATIC,32,7,239,33
+    LTEXT           "会社名：",IDC_STATIC,13,58,25,8
+    EDITTEXT        IDC_EDIT_COMPANY,40,55,137,13,ES_AUTOHSCROLL
+    LTEXT           "（全角）\n　例：（有）プラス・エス",IDC_STATIC,180,54,
+                    88,15
+    LTEXT           "ご氏名",IDC_STATIC,13,77,21,8
+    LTEXT           "姓：",IDC_STATIC,38,77,11,8
+    EDITTEXT        IDC_EDIT_NAME1,51,74,50,13,ES_AUTOHSCROLL
+    LTEXT           "名：",IDC_STATIC,114,77,11,8
+    EDITTEXT        IDC_EDIT_NAME2,126,74,50,13,ES_AUTOHSCROLL
+    LTEXT           "（* 全角）\n　例：日本　太郎",IDC_STATIC,180,73,88,15
+    LTEXT           "性別：",IDC_STATIC,14,96,18,8
+    COMBOBOX        IDC_COMBO_SEX,40,93,38,52,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "（* リスト選択）",IDC_STATIC,180,96,43,8
+    LTEXT           "生年月日：",IDC_STATIC,14,113,32,8
+    LTEXT           "西暦",IDC_STATIC,55,113,15,8
+    EDITTEXT        IDC_EDIT_BIRTH1,73,110,20,13,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "年",IDC_STATIC,95,113,8,8
+    EDITTEXT        IDC_EDIT_BIRTH2,108,110,12,13,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "月",IDC_STATIC,122,113,8,8
+    EDITTEXT        IDC_EDIT_BIRTH3,135,110,12,13,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "日",IDC_STATIC,150,113,8,8
+    LTEXT           "（* 半角数字）\n　例：西暦 1960年 12月 2日",IDC_STATIC,
+                    180,109,88,15
+    LTEXT           "ご住所",IDC_STATIC,15,132,21,8
+    LTEXT           "郵便番号：",IDC_STATIC,38,132,32,8
+    EDITTEXT        IDC_EDIT_ZIP1,73,129,17,13,ES_AUTOHSCROLL
+    CTEXT           "－",IDC_STATIC,94,132,8,8
+    EDITTEXT        IDC_EDIT_ZIP2,106,129,20,13,ES_AUTOHSCROLL
+    LTEXT           "（* 半角数字）\n　例：338-0002",IDC_STATIC,180,127,88,
+                    15
+    LTEXT           "都道府県：",IDC_STATIC,38,151,32,8
+    COMBOBOX        IDC_COMBO_PREF,73,148,48,189,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "（* リスト選択）",IDC_STATIC,180,151,43,8
+    LTEXT           "市区町村：",IDC_STATIC,38,168,32,8
+    EDITTEXT        IDC_EDIT_ADR1,73,165,104,13,ES_AUTOHSCROLL
+    LTEXT           "（* 全角）\n　例：さいたま市中央区下落合",IDC_STATIC,
+                    180,164,88,15
+    LTEXT           "丁目番地：",IDC_STATIC,38,187,32,8
+    EDITTEXT        IDC_EDIT_ADR2,73,184,104,13,ES_AUTOHSCROLL
+    LTEXT           "（* 全角）\n　例：６－１１－８",IDC_STATIC,180,183,88,
+                    15
+    LTEXT           "建物部屋番号：",IDC_STATIC,24,206,46,8
+    EDITTEXT        IDC_EDIT_ADR3,73,203,104,13,ES_AUTOHSCROLL
+    LTEXT           "（全角）\n　例：ハイデンス吉田３０６号",IDC_STATIC,180,
+                    202,88,15
+    LTEXT           "電話番号：",IDC_STATIC,15,225,32,8
+    EDITTEXT        IDC_EDIT_PHONE1,50,222,26,13,ES_AUTOHSCROLL
+    CTEXT           "－",IDC_STATIC,80,225,8,8
+    EDITTEXT        IDC_EDIT_PHONE2,92,222,26,13,ES_AUTOHSCROLL
+    CTEXT           "－",IDC_STATIC,122,225,8,8
+    EDITTEXT        IDC_EDIT_PHONE3,134,222,26,13,ES_AUTOHSCROLL
+    LTEXT           "（* 半角数字）\n　例：048－857－6711",IDC_STATIC,180,
+                    221,88,15
+    LTEXT           "Fax番号：",IDC_STATIC,15,244,29,8
+    EDITTEXT        IDC_EDIT_FAX1,50,241,26,13,ES_AUTOHSCROLL
+    CTEXT           "－",IDC_STATIC,80,244,8,8
+    EDITTEXT        IDC_EDIT_FAX2,92,241,26,13,ES_AUTOHSCROLL
+    CTEXT           "－",IDC_STATIC,122,244,8,8
+    EDITTEXT        IDC_EDIT_FAX3,134,241,26,13,ES_AUTOHSCROLL
+    LTEXT           "（半角数字）\n　例：048－857－6716",IDC_STATIC,180,240,
+                    88,15
+    LTEXT           "Eメール：",IDC_STATIC,15,263,27,8
+    EDITTEXT        IDC_EDIT_EMAIL,50,260,127,13,ES_AUTOHSCROLL
+    LTEXT           "（* 半角英数字）\n　例：support@pluss-inc.com",
+                    IDC_STATIC,180,259,88,15
+    LTEXT           "職業：",IDC_STATIC,14,282,18,8
+    COMBOBOX        IDC_COMBO_OCCU,50,279,91,115,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "（* リスト選択）",IDC_STATIC,180,282,43,8
+    LTEXT           "職種：",IDC_STATIC,14,299,18,8
+    COMBOBOX        IDC_COMBO_JOB,50,296,91,118,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "（* リスト選択）",IDC_STATIC,180,299,43,8
+    LTEXT           "DM送信：",IDC_STATIC,14,316,28,8
+    COMBOBOX        IDC_COMBO_DM,50,313,48,62,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "（* リスト選択）",IDC_STATIC,180,316,43,8
+    PUSHBUTTON      "オンライン\nユーザー登録\n（自動送信）",IDOK,165,336,51,
+                    29,BS_MULTILINE
+    PUSHBUTTON      "キャンセル",IDCANCEL,220,336,51,29
+    PUSHBUTTON      "ユーザー登録ページで登録",IDC_BUTTON_REGIST,7,336,51,29,
+                    BS_MULTILINE
+    PUSHBUTTON      "プライバシー・ポリシー閲覧",IDC_BUTTON_PRIVACY,61,336,
+                    51,29,BS_MULTILINE
+    ICON            IDI_ICON_CAUTION,IDC_STATIC,9,12,18,21,SS_CENTERIMAGE
+END
+
+IDD_DIALOG_FONTINFO DIALOG DISCARDABLE  0, 0, 227, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "フォント・プロパティ"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,213,60,7,14,NOT WS_VISIBLE | WS_DISABLED
+    PUSHBUTTON      "閉じる",IDCANCEL,84,60,50,14
+    LTEXT           "フォント名：",IDC_STATIC,7,9,35,8
+    LTEXT           "インストール種別：",IDC_STATIC,7,45,54,8
+    LTEXT           "ファイル名：",IDC_STATIC,7,27,35,8
+    EDITTEXT        IDC_EDIT_FONT1,46,7,174,13,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_FONT2,46,25,174,13,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "",IDC_STATIC_KIND,63,45,157,8,SS_CENTERIMAGE
+END
+
+IDR_MAINFRAME DIALOG DISCARDABLE  0, 0, 330, 16
+STYLE WS_CHILD
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    LTEXT           "TODO: ﾀﾞｲｱﾛｸﾞ ﾊﾞｰをﾚｲｱｳﾄしてください。",IDC_STATIC,12,4,
+                    300,8
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,3,0,0
+ PRODUCTVERSION 2009,4,10,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "Comments", "www.pluss-inc.com\0"
+            VALUE "CompanyName", "有限会社　プラス・エス\0"
+            VALUE "FileDescription", "LookFont\0"
+            VALUE "FileVersion", "1, 3, 0, 0\0"
+            VALUE "InternalName", "LookFont\0"
+            VALUE "LegalCopyright", "Copyright (C) 2006-2009 PLUS S Inc.\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "LookFont.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "LookFont\0"
+            VALUE "ProductVersion", "2009, 4, 10, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 257
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 58
+    END
+
+    IDD_DIALOG_TEXTCTRL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 140
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 10
+    END
+
+    IDD_DIALOG_SETTING_UPDATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 222
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 78
+    END
+
+    IDD_DIALOG_FIND, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 236
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_DIALOG_USER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 271
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 365
+    END
+
+    IDD_DIALOG_FONTINFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_TEXTCTRL DLGINIT
+BEGIN
+    IDC_COMBO_FONTSIZE, 0x403, 2, 0
+0x0036, 
+    IDC_COMBO_FONTSIZE, 0x403, 2, 0
+0x0037, 
+    IDC_COMBO_FONTSIZE, 0x403, 2, 0
+0x0038, 
+    IDC_COMBO_FONTSIZE, 0x403, 2, 0
+0x0039, 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3131, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3231, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3431, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3831, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3132, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3432, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3633, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3834, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3036, "\000" 
+    IDC_COMBO_FONTSIZE, 0x403, 3, 0
+0x3237, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_MAINFRAME           "LookFont\n\nLookFo\n\n\nLookFont.Document\nLookFo Document"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "LookFont"
+    AFX_IDS_IDLEMESSAGE     "ﾚﾃﾞｨ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "上書"
+    ID_INDICATOR_REC        "記録"
+    ID_INDICATOR_KANA       "ｶﾅ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "新規にﾌｧｲﾙを作成\n新規ﾌｧｲﾙ"
+    ID_FILE_OPEN            "既存のﾌｧｲﾙを開く\n開く"
+    ID_FILE_CLOSE           "作業中のﾌｧｲﾙを閉じる\n閉じる"
+    ID_FILE_SAVE            "作業中のﾌｧｲﾙを上書きして保存\n保存"
+    ID_FILE_SAVE_AS         "作業中のﾌｧｲﾙを新しい名前で保存\n名前をつけて保存"
+    ID_FILE_PAGE_SETUP      "印刷ｵﾌﾟｼｮﾝの変更\nﾍﾟｰｼﾞ ﾚｲｱｳﾄの設定"
+    ID_FILE_PRINT_SETUP     "ﾌﾟﾘﾝﾀ/印刷ｵﾌﾟｼｮﾝの変更\n印刷設定"
+    ID_FILE_PRINT           "ﾌｫﾝﾄ一覧のを印刷\n印刷"
+    ID_FILE_PRINT_PREVIEW   "印刷ｲﾒｰｼﾞを表示\n印刷ﾌﾟﾚﾋﾞｭｰ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "ﾌﾟﾛｸﾞﾗﾑの情報、ﾊﾞｰｼﾞｮﾝそして著作権を表示\nﾊﾞｰｼﾞｮﾝ情報"
+    ID_APP_EXIT             "ｱﾌﾟﾘｹｰｼｮﾝを終了し、ﾌｧｲﾙの保存を指示\n終了"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE2       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE3       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE4       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE5       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE6       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE7       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE8       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE9       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE10      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE11      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE12      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE13      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE14      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE15      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE16      "指定のﾌｧｲﾙを開く"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "次のｳｨﾝﾄﾞｳに切り替える\n次のﾍﾟｲﾝ"
+    ID_PREV_PANE            "前のｳｨﾝﾄﾞｳに切り替える\n前のﾍﾟｲﾝ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "作業中のｳｨﾝﾄﾞｳを分割\n分割"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "選択範囲を消去\n消去"
+    ID_EDIT_CLEAR_ALL       "すべて消去\nすべて消去"
+    ID_EDIT_COPY            "選択ﾌｫﾝﾄの文字をｺﾋﾟｰしてｸﾘｯﾌﾟﾎﾞｰﾄﾞに保存\nｺﾋﾟｰ"
+    ID_EDIT_CUT             "選択範囲を切り取ってｸﾘｯﾌﾟﾎﾞｰﾄﾞに保存\n切り取り"
+    ID_EDIT_FIND            "指定した文字列の検索\n検索"
+    ID_EDIT_PASTE           "ｸﾘｯﾌﾟﾎﾞｰﾄﾞの内容を貼り付け\n貼り付け"
+    ID_EDIT_PASTE_SPECIAL   "ｵﾌﾟｼｮﾝを設定してｸﾘｯﾌﾟﾎﾞｰﾄﾞの内容を貼り付け\n形式を選択して貼り付け"
+    ID_EDIT_REPEAT          "直前に行った動作を繰り返す\n繰り返し"
+    ID_EDIT_REPLACE         "指定した文字列を他の文字列で置換\n置換"
+    ID_EDIT_SELECT_ALL      "ﾌｧｲﾙ内のすべてを選択\nすべて選択"
+    ID_EDIT_UNDO            "直前に行った動作を元に戻す\n元に戻す"
+    ID_EDIT_REDO            "直前に行った動作を繰り返す\n繰り返す"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "ﾂｰﾙ ﾊﾞｰの 表示/非表示\nﾂｰﾙ ﾊﾞｰの表示切り替え"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "ｳｨﾝﾄﾞｳのｻｲｽﾞを変更"
+    AFX_IDS_SCMOVE          "ｳｨﾝﾄﾞｳの位置を変更"
+    AFX_IDS_SCMINIMIZE      "ｳｨﾝﾄﾞｳを最小化する"
+    AFX_IDS_SCMAXIMIZE      "ｳｨﾝﾄﾞｳを最大化する"
+    AFX_IDS_SCNEXTWINDOW    "次のｳｨﾝﾄﾞｳに切り替える"
+    AFX_IDS_SCPREVWINDOW    "前のｳｨﾝﾄﾞｳに切り替える"
+    AFX_IDS_SCCLOSE         "作業中のｳｨﾝﾄﾞｳを閉じ、変更したﾌｧｲﾙの保存を指示"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "印刷ﾌﾟﾚﾋﾞｭｰ ﾓｰﾄﾞの終わり\nﾌﾟﾚﾋﾞｭｰのｷｬﾝｾﾙ"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDP_OLE_INIT_FAILED     "OLE の初期化に失敗しました。 OLE ﾗｲﾌﾞﾗﾘのﾊﾞｰｼﾞｮﾝが正しいことを確認してください。"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "ｳｨﾝﾄﾞｳを通常のｻｲｽﾞに戻す"
+    AFX_IDS_SCTASKLIST      "ｱﾌﾟﾘｹｰｼｮﾝの切り替え"
+    IDS_DISPTEXT_JA         "Aaあぁアァ亜宇"
+    IDS_DISPTEXT_EN         "Sample string"
+    IDS_AUI_URL             "http://ss.pluss-inc.com/update/lookfont/AutoUpdate.dat"
+    IDS_AUI_VER             "01030"
+    IDS_SETTING_DIALOG      "設定"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TEXTCTRLBAR     "ﾃｷｽﾄ入力ﾊﾞｰの 表示/非表示\nﾃｷｽﾄ入力ﾊﾞｰの表示切り替え"
+    ID_VIEW_FONTSELECTBAR   "ﾌｫﾝﾄ選択ﾊﾞｰの 表示/非表示\nﾌｫﾝﾄ選択ﾊﾞｰの表示切り替え"
+    ID_MENU_COPYFONTFACE    "選択ﾌｫﾝﾄ名をｺﾋﾟｰしてｸﾘｯﾌﾟﾎﾞｰﾄﾞに保存\nﾌｫﾝﾄ名ｺﾋﾟｰ"
+    ID_MENU_TMPFONT_INSTALL "フォントを一時的にインストール\nフォントを一時的にインストール"
+    ID_MENU_TMPFONT_UNINSTALL 
+                            "一時的にインストールしたフォントのアンインストール\n一時的にインストールしたフォントのアンインストール"
+    ID_MENU_SEL_LANG_EN     "欧文フォントを表示\n欧文フォントを表示"
+    ID_MENU_SEL_LANG_JA     "日本語フォントを表示\n日本語フォントを表示"
+    ID_MENU_SEL_LANG_ALL    "全ての言語フォントを表示\n全ての言語フォントを表示"
+    ID_MENU_SEL_FONT_TMP    "一時インストールしたフォントを表示\n一時インストールしたフォントを表示"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OLE_INSERT_NEW       "ｵﾌﾞｼﾞｪｸﾄの作成と貼り付け\n新規ｵﾌﾞｼﾞｪｸﾄ"
+    ID_OLE_EDIT_LINKS       "ﾘﾝｸされたｵﾌﾞｼﾞｪｸﾄの編集\nｵﾌﾞｼﾞｪｸﾄ編集"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OLE_VERB_FIRST       "埋め込みまたはﾘﾝｸしたｵﾌﾞｼﾞｪｸﾄの表示"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_MENU_SEL_FONT_ORG    "既存フォントを表示\n既存フォントを表示"
+    ID_MENU_TMPFONT_FIND    "指定パス以下のフォントを検索し一時的にインストール\n指定パス以下のフォントを一時的にインストール"
+    ID_MENU_PROPATY         "選択フォントのプロパティを表示\nプロパティ"
+END
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE 17, 1
+#pragma code_page(932)
+#endif //_WIN32
+#include "res\LookFont.rc2"  // Microsoft Visual C++ 以外のツールで編集されたリソース
+#include "l.jpn\afxres.rc"          // 標準のコンポーネント
+#include "l.jpn\afxprint.rc"        // 印刷/印刷プレビュー リソース
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

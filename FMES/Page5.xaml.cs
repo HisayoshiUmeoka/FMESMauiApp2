@@ -45,7 +45,22 @@ public partial class Page5 : ContentPage
 		InitializeComponent();
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-        this.BackgroundColor = Colors.White;
+        //        this.BackgroundColor = Color.FromArgb("#D1D5DB");
+        App.Current.UserAppTheme = AppTheme.Light;
+        Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+        // モダンなグラデーション背景
+        this.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+        };
+
 
         //AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 8;
@@ -64,7 +79,9 @@ public partial class Page5 : ContentPage
         labelUser = new Label
         {
             Text = clsGlobalVar.g_Operator,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
+
             TextColor = Colors.Black,
             FontSize = 22,
             VerticalOptions = LayoutOptions.Center,
@@ -77,7 +94,8 @@ public partial class Page5 : ContentPage
             //Text = "メニュー",
             ImageSource = "icon80x80.png",
             FontSize = 20,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             HorizontalOptions = LayoutOptions.End,
             //VerticalOptions = LayoutOptions.center // 中央に配置する（縦方向）
             VerticalOptions = LayoutOptions.Center // 中央に配置する（縦方向）
@@ -86,7 +104,8 @@ public partial class Page5 : ContentPage
         ContentMenu = new HorizontalStackLayout()
         {
             HorizontalOptions = LayoutOptions.End,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             Children = {
                         labelUser,
                         buttonMenu,
@@ -107,7 +126,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -117,7 +136,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -129,7 +148,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -141,9 +160,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -155,9 +177,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -170,7 +195,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -187,7 +212,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -206,7 +231,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -216,7 +241,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -228,7 +253,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -237,11 +262,14 @@ public partial class Page5 : ContentPage
 
                 dropdown1 = new Picker
                 {
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     //Title = AppResources.IDM033,
                     Title = "ライン選択",
+                    MinimumWidthRequest = 200,
+                    Margin = new Thickness(20, 0, 20, 0),
+
                     VerticalOptions = LayoutOptions.Start
                 };
                 //var ar = Enumerable.Range(0, 100).Select(n => string.Format("item-{0}", n)).ToList();
@@ -261,9 +289,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -276,7 +307,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -294,7 +325,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -319,7 +350,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -329,7 +360,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -341,7 +372,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -357,9 +388,13 @@ public partial class Page5 : ContentPage
                     Button butn = new Button
                     {
                         Text = wKaisou._kaisouName,
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+
+                        BorderColor = GetBorderColor(wKaisou),
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         VerticalOptions = LayoutOptions.Center,
                                     HorizontalOptions = LayoutOptions.Fill,
                         TextColor = GetTextColor(wKaisou),
@@ -377,9 +412,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -393,9 +431,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -414,7 +455,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -424,7 +465,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -436,7 +477,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -445,7 +486,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -455,9 +496,12 @@ public partial class Page5 : ContentPage
                 buttonPass = new Button
                 {
                     Text = GetPassButtonStr(lstKaisou._Header._iPass),
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -470,9 +514,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -484,9 +531,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -499,7 +549,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -521,7 +571,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -542,7 +592,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -552,7 +602,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -564,7 +614,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -574,7 +624,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -584,9 +634,12 @@ public partial class Page5 : ContentPage
                 buttonPass = new Button
                 {
                     Text = GetPassButtonStr(lstKaisou._Header._iPass),
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -599,9 +652,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -613,10 +669,15 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
-                                HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
                     TextColor = Colors.Black,
                     BackgroundColor = Colors.LightGreen,
                 };
@@ -626,7 +687,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -647,7 +708,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -668,7 +729,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -678,7 +739,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -690,7 +751,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -699,7 +760,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -709,12 +770,14 @@ public partial class Page5 : ContentPage
                 txtVal1 = new Entry
                 {
                     Keyboard = Keyboard.Text,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 26,
                     //HorizontalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Center,
                     HorizontalTextAlignment = TextAlignment.End,
+                    MinimumWidthRequest = 200,
+                    Margin = new Thickness(20, 0, 20, 0),
                     Placeholder = GetKetaStr(lstKaisou._Header._KetaSei, lstKaisou._Header._KetaShou),
                     Text = GetFormatedStrByKeta(lstKaisou._Header._KetaSei, lstKaisou._Header._KetaShou, lstKaisou._Header._dVal),
                 };
@@ -722,7 +785,7 @@ public partial class Page5 : ContentPage
                 {
                     dropdown1 = new Picker
                     {
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         TextColor = Colors.Black,
                         FontSize = 26,
                         //Title = AppResources.IDM039,
@@ -742,7 +805,7 @@ public partial class Page5 : ContentPage
                 label6 = new Label
                 {
                     Text = lstKaisou._Header._InputUnit,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 26,
                     VerticalOptions = LayoutOptions.Center,
@@ -754,6 +817,7 @@ public partial class Page5 : ContentPage
                     Content2 = new StackLayout()
                     {
                         Orientation = StackOrientation.Horizontal,
+                        HorizontalOptions = LayoutOptions.Center,
                         Children = {
                         txtVal1,
                         dropdown1,
@@ -779,9 +843,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -793,9 +860,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -808,7 +878,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -828,7 +898,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -849,7 +919,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -859,7 +929,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -871,7 +941,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -880,7 +950,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -890,14 +960,15 @@ public partial class Page5 : ContentPage
                 txtVal1 = new Entry
                 {
                     Keyboard = Keyboard.Text,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 26,
-                                HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Center,
                     VerticalOptions = LayoutOptions.Center,
-                    Margin = new Thickness(20, 0, 20, 0),
+                    Margin = new Thickness(30, 0, 20, 0),
                     //Placeholder = GetKetaStr(lstKaisou._Header._KetaSei, lstKaisou._Header._KetaShou),
                     //Placeholder = AppResources.IDM071,
+                    MinimumWidthRequest = 300,
                     Placeholder = "文字列入力",
                     Text = ConvStr2Disp(lstKaisou._Header._strVal),
                 };
@@ -907,6 +978,7 @@ public partial class Page5 : ContentPage
                     layout1 = new StackLayout()
                     {
                         Orientation = StackOrientation.Horizontal,
+                        HorizontalOptions = LayoutOptions.Center,
                         Children = {
                                 txtVal1,
                                 //buttonOCR,
@@ -916,9 +988,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -936,9 +1011,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -951,7 +1029,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -972,7 +1050,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -993,7 +1071,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -1003,7 +1081,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1015,7 +1093,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1023,11 +1101,13 @@ public partial class Page5 : ContentPage
                 };
                 dropdown1 = new Picker
                 {
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     //Title = AppResources.IDM040,
                     Title = "未選択",
+                    MinimumWidthRequest = 200,
+                    Margin = new Thickness(20, 0, 20, 0),
                     VerticalOptions = LayoutOptions.Start
                 };
                 //var ar = Enumerable.Range(0, 100).Select(n => string.Format("item-{0}", n)).ToList();
@@ -1039,7 +1119,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1049,9 +1129,12 @@ public partial class Page5 : ContentPage
                 buttonPass = new Button
                 {
                     Text = GetPassButtonStr(lstKaisou._Header._iPass),
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -1064,9 +1147,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -1078,9 +1164,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -1093,7 +1182,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -1113,7 +1202,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -1134,7 +1223,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -1144,7 +1233,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1156,7 +1245,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1164,8 +1253,10 @@ public partial class Page5 : ContentPage
                 };
                 absLay = new AbsoluteLayout
                 {
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Start,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    Margin = new Thickness(0),
+                    ZIndex = 0,
 
                 };
                 string cacheBuster = $"?t={DateTime.UtcNow.Ticks}";
@@ -1185,7 +1276,7 @@ public partial class Page5 : ContentPage
                 //imgView.ZIndex = 0;
                 z++;
                 absLay.SetLayoutFlags(imgView, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
-                absLay.SetLayoutBounds(imgView, new Rect(0 / 2, 0 / 2, 1500, 1500));
+                absLay.SetLayoutBounds(imgView, new Rect(0, 0, 800, 800));
 
                 foreach (clsKaisou wKaisou in lstKaisou._Datas)
                 {
@@ -1194,6 +1285,12 @@ public partial class Page5 : ContentPage
                     {
                         Text = wKaisou._kaisouName,
                         FontSize = baseFontsize,
+                        //FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //WidthRequest = 50,
                         ZIndex = ++z,
                         WidthRequest = baseFontsize * 1.7 * wKaisou._kaisouName.Length,
@@ -1228,9 +1325,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -1241,7 +1341,7 @@ public partial class Page5 : ContentPage
                 Content = new StackLayout
                 {
                     Padding = new Thickness(10, 10, 10, 10),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     Children = {
                             ContentMenu,
                             label1,
@@ -1259,7 +1359,7 @@ public partial class Page5 : ContentPage
                 labelDummy = new Label
                 {
                     Text = "　　",
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -1272,9 +1372,9 @@ public partial class Page5 : ContentPage
                     //Text = "次へ",
                     ImageSource = "next.png",
                     FontSize = 20,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
-                    BackgroundColor = Colors.White,
+                    //Margin = new Thickness(0, 5, 0, 5),
+                    Margin = new Thickness(0, 40, 0, 20),
+                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     //HorizontalOptions = LayoutOptions.CenterAndExpand,
                     HorizontalOptions = LayoutOptions.End,
                     //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
@@ -1289,8 +1389,8 @@ public partial class Page5 : ContentPage
                     ImageSource = "prev.png",
                     FontSize = 20,
                     Margin = new Thickness(0, 15, 0, 15),
-                    Padding = new Thickness(10, 10, 10, 10),
-                    BackgroundColor = Colors.White,
+                    Padding = new Thickness(5, 10, 10, 15),
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     HorizontalOptions = LayoutOptions.StartAndExpand,
                     //HorizontalOptions = LayoutOptions.Center//,//中央に配置する（横方向）
                     //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
@@ -1302,7 +1402,7 @@ public partial class Page5 : ContentPage
                 {
                     Orientation = StackOrientation.Horizontal,
                     HorizontalOptions = LayoutOptions.CenterAndExpand,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     Children = {
                         buttonprev,
                         labelDummy,
@@ -1315,7 +1415,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -1325,7 +1425,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1337,7 +1437,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1346,7 +1446,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1356,12 +1456,13 @@ public partial class Page5 : ContentPage
                 txtVal1 = new Entry
                 {
                     Keyboard = Keyboard.Text,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 26,
                     //HorizontalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Center,
                     HorizontalTextAlignment = TextAlignment.End,
+                    MinimumWidthRequest = 200,
                     Placeholder = GetKetaStr(lstKaisou._Header._KetaSei, lstKaisou._Header._KetaShou),
                     Text = GetFormatedStrByKeta(lstKaisou._Header._KetaSei, lstKaisou._Header._KetaShou, lstKaisou._Header._dVal),
                 };
@@ -1369,7 +1470,7 @@ public partial class Page5 : ContentPage
                 {
                     dropdown1 = new Picker
                     {
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         TextColor = Colors.Black,
                         FontSize = 26,
                         //Title = AppResources.IDM039,
@@ -1389,7 +1490,7 @@ public partial class Page5 : ContentPage
                 label6 = new Label
                 {
                     Text = lstKaisou._Header._InputUnit,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 26,
                     VerticalOptions = LayoutOptions.Center,
@@ -1401,6 +1502,7 @@ public partial class Page5 : ContentPage
                     Content2 = new StackLayout()
                     {
                         Orientation = StackOrientation.Horizontal,
+                        HorizontalOptions = LayoutOptions.Center,
                         Children = {
                         txtVal1,
                         dropdown1,
@@ -1413,6 +1515,7 @@ public partial class Page5 : ContentPage
                     Content2 = new StackLayout()
                     {
                         Orientation = StackOrientation.Horizontal,
+                        HorizontalOptions = LayoutOptions.Center,
                         Children = {
                         txtVal1,
                         //dropdown1,
@@ -1426,9 +1529,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -1440,9 +1546,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -1455,7 +1564,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -1476,7 +1585,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -1499,7 +1608,7 @@ public partial class Page5 : ContentPage
                 label1 = new Label
                 {
                     Text = "　" + lstKaisou._Header._Title,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 22,
                     VerticalOptions = LayoutOptions.Center,
@@ -1509,7 +1618,7 @@ public partial class Page5 : ContentPage
                 {
                     //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
                     Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1521,7 +1630,7 @@ public partial class Page5 : ContentPage
                     Text = "　　" + "指図番号" + "：" + wwsashizuNo,
                     Margin = new Thickness(0, 5, 0, 5),
                     Padding = new Thickness(0, 0, 0, 0),
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1530,7 +1639,7 @@ public partial class Page5 : ContentPage
                 label5 = new Label
                 {
                     Text = lstKaisou._Header._InputSetsumei,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 16,
                     VerticalOptions = LayoutOptions.Center,
@@ -1540,14 +1649,15 @@ public partial class Page5 : ContentPage
                 txtVal1 = new Entry
                 {
                     Keyboard = Keyboard.Text,
-                    BackgroundColor = Colors.White,
+                                    BackgroundColor = Colors.Transparent,          // ← 透過に変更
                     TextColor = Colors.Black,
                     FontSize = 26,
-                                HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Center,
                     VerticalOptions = LayoutOptions.Center,
-                    Margin = new Thickness(20, 0, 20, 0),
+                    Margin = new Thickness(30, 0, 20, 0),
                     //Placeholder = GetKetaStr(lstKaisou._Header._KetaSei, lstKaisou._Header._KetaShou),
                     //Placeholder = AppResources.IDM071,
+                    MinimumWidthRequest = 300,
                     Placeholder = "文字列入力",
                     Text = ConvStr2Disp(lstKaisou._Header._strVal),
                 };
@@ -1557,6 +1667,7 @@ public partial class Page5 : ContentPage
                     layout1 = new StackLayout()
                     {
                         Orientation = StackOrientation.Horizontal,
+                        HorizontalOptions = LayoutOptions.Center,
                         Children = {
                                 txtVal1,
                                 //buttonOCR,
@@ -1566,9 +1677,12 @@ public partial class Page5 : ContentPage
                     {
                         //Text = AppResources.IDM038,
                         Text = "更新",
-                        FontSize = 22,
-                        Margin = new Thickness(0, 5, 0, 5),
-                        Padding = new Thickness(10, 10, 10, 10),
+                        FontSize = 14,
+                        BorderColor = Colors.LightGray,
+                        BorderWidth = 1.5,
+                        HeightRequest = 48,
+                        CornerRadius = 12,
+                        Margin = new Thickness(20, 0, 20, 12),
                         //VerticalOptions = LayoutOptions.Center,
                         //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,
@@ -1586,9 +1700,12 @@ public partial class Page5 : ContentPage
                 {
                     //Text = AppResources.IDM032,
                     Text = "戻る",
-                    FontSize = 22,
-                    Margin = new Thickness(0, 5, 0, 5),
-                    Padding = new Thickness(10, 10, 10, 10),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     //VerticalOptions = LayoutOptions.Center,
                     //            HorizontalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
@@ -1601,7 +1718,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -1622,7 +1739,7 @@ public partial class Page5 : ContentPage
                     Content = new StackLayout
                     {
                         Padding = new Thickness(10, 10, 10, 10),
-                        BackgroundColor = Colors.White,
+                                        BackgroundColor = Colors.Transparent,          // ← 透過に変更
                         Children = {
                                 ContentMenu,
                                 label1,
@@ -1645,7 +1762,7 @@ public partial class Page5 : ContentPage
             {
                 //Text = "　" + AppResources.IDM027,
                 Text = "　" + "データエラー（又は通信エラー）",
-                BackgroundColor = Colors.White,
+                                BackgroundColor = Colors.Transparent,          // ← 透過に変更
                 TextColor = Colors.Black,
                 FontSize = 22,
                 VerticalOptions = LayoutOptions.Center,
@@ -1654,7 +1771,7 @@ public partial class Page5 : ContentPage
             Content = new StackLayout
             {
                 Padding = new Thickness(10, 10, 10, 10),
-                BackgroundColor = Colors.White,
+                                BackgroundColor = Colors.Transparent,          // ← 透過に変更
                 Children = {
                     label1,
                     }
@@ -2548,6 +2665,36 @@ public partial class Page5 : ContentPage
             wCol = Colors.LightGray;
         }
 
+        return wCol;
+    }
+    private Color GetBorderColor(clsKaisou wKaisou)
+    {
+        Color wCol = Colors.LightGray;
+        if (wKaisou._during == 0)
+        {
+            //進行中
+            wCol = Colors.LightGray;
+        }
+        else if (wKaisou._during == 1)
+        {
+            wCol = Colors.LightGreen;
+        }
+        else if (wKaisou._during == 2)
+        {
+            wCol = Colors.Gray;
+        }
+        else if (wKaisou._during == 3)
+        {
+            wCol = Colors.DarkGreen;
+        }
+        else if (wKaisou._during == 4)
+        {
+            wCol = Colors.Red;
+        }
+        else if (wKaisou._during == 5)
+        {
+            wCol = GetBackColorParts();
+        }
         return wCol;
     }
     private Color GetBackColor(clsKaisou wKaisou)

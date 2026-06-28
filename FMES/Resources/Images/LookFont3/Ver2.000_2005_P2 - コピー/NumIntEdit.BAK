@@ -1,0 +1,243 @@
+// NumIntEdit.cpp : インプリメンテーション ファイル
+//
+
+#include "stdafx.h"
+#include "ShipMoniter.h"
+//#include "RLFCalcOrdinary.h"
+//#include "NumIntEdit.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CIntEdit
+
+CIntEdit::CIntEdit()
+{
+	Style		= "";
+	OrgTitle	= "整数値";
+	Title		= OrgTitle + "入力エラー";
+	ErrMess		= "範囲指定が設定されていません．";
+	MinusEnabled	= FALSE;
+	KeepVal			= -1;
+
+	ReverseFlag	= FALSE;
+	MinMode		= -1;
+	MinVal		= -1;
+	MaxMode		= -1;
+	MaxVal		= -1;
+
+	SameFlag	= FALSE;
+	SameValue	= -1;
+}
+
+CIntEdit::~CIntEdit()
+{
+}
+
+BEGIN_MESSAGE_MAP(CIntEdit, CEdit)
+	//{{AFX_MSG_MAP(CIntEdit)
+	ON_WM_CHAR()
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CIntEdit メッセージ ハンドラ
+
+void CIntEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) 
+{
+// 数値以外のキーが押されたら警告音を鳴らす
+	if ( (nChar >= '0' && nChar <= '9')
+	||   (MinusEnabled && nChar == '-')
+	||    nChar == VK_BACK )
+		CEdit::OnChar(nChar, nRepCnt, nFlags);
+	else
+		MessageBeep( MB_ICONASTERISK );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CIntEdit 環境設定　ファンクション
+
+void CIntEdit::SetCondition(BOOL Enable, int Keta, const char*Form) 
+{
+// マイナス'-'の許可
+	MinusEnabled	= Enable;
+// 桁数の設定
+	SetLimitText( Keta );
+// 数値のみ
+//	DWORD	wDW;	
+//	int		wl;
+//	wDW = GetStyle ();
+//	wDW |= ES_NUMBER;
+//	wl = SetWindowLong( m_hWnd, GWL_STYLE, wDW );
+// 表示書式の設定
+	Style = Form;
+}
+
+BOOL CIntEdit::SetFullCondition(const char*Ttl, BOOL MinusEnable, int Keta, const char*Form, BOOL MinOpt, int MinValue, BOOL MaxOpt, int MaxValue, BOOL RFlag, int CountryCode )
+{
+	CString	wStr;
+	CString	wStrNum;
+
+// 指定値スルーは禁止
+	SameFlag	= FALSE;
+
+// 入力項目名
+	OrgTitle		= Ttl;
+// マイナス'-'の許可
+	MinusEnabled	= MinusEnable;
+// 桁数の設定
+	SetLimitText( Keta );
+// 表示書式の設定
+	Style = Form;
+
+// エラー時に入力値を戻す
+	ReverseFlag	= RFlag;
+	
+	if ( MinOpt )	MinMode	= 1;
+	else			MinMode	= 0;
+	MinVal		= MinValue;
+	if ( MaxOpt )	MaxMode	= 1;
+	else			MaxMode	= 0;
+	MaxVal		= MaxValue;
+
+	if ( MinVal > MaxVal )	return	FALSE;
+
+// 許容範囲の表示
+	wStrNum.Format( Style, MinVal );
+	wStr  = wStrNum;
+	if ( MinMode == 1 )	wStr += "≦";
+	else				wStr += "＜";
+	switch ( CountryCode )	{
+	case	1:
+	// English
+		break;
+	case	2:
+	// Chinese
+		break;
+	case	3:
+	// Korea
+		break;
+	default:
+	// Japanese
+		wStr += "入力値";
+		break;
+	}
+	if ( MaxMode == 1 )	wStr += "≦";
+	else				wStr += "＜";
+	wStrNum.Format( Style, MaxVal );
+	wStr  += wStrNum;
+	wStr  += "］";
+
+// エラーメッセージの設定
+	switch ( CountryCode )	{
+	case	1:
+	// English
+		break;
+	case	2:
+	// Chinese
+		break;
+	case	3:
+	// Korea
+		break;
+	default:
+	// Japanese
+		Title	= OrgTitle + " 入力エラー";
+		ErrMess	= OrgTitle + "の入力に問題があります．" + wStr;
+		break;
+	}
+
+	return	TRUE;
+}
+
+void CIntEdit::AddSameCheck( int CheckVal )
+{
+	SameFlag	= TRUE;
+	SameValue	= CheckVal;
+}
+
+void CIntEdit::SetValue(int Val)
+{
+	CString	wStr;
+	KeepVal	= Val;
+	wStr.Format( Style, Val );
+	SetWindowText( wStr );
+}
+
+int	CIntEdit::GetValue()
+{
+	CString	wStr;
+	GetWindowText( wStr );
+	return	atoi( wStr );
+}
+
+void CIntEdit::ResetValue()
+{
+	SetValue( KeepVal );
+}
+
+BOOL CIntEdit::CheckValue()
+{
+	BOOL	MinFlag	= FALSE;
+	BOOL	MaxFlag	= FALSE;
+	int		wi		= GetValue();
+
+// 指定値はスルー
+	if ( SameFlag )
+	{
+		if ( wi == SameValue )	{
+			MinFlag	= TRUE;
+			MaxFlag	= TRUE;
+			goto	RESULT_CHECK;
+		}
+	}
+
+// 下限判定
+	switch( MinMode )	{
+	case	0:
+	// > :OK
+		if ( wi > MinVal )		MinFlag = TRUE;
+		break;
+	case	1:
+	// >=:OK
+		if ( wi >= MinVal )		MinFlag = TRUE;
+		break;
+	default:
+	// 設定なし
+		break;
+	}
+
+// 上限判定
+	switch( MaxMode )	{
+	case	0:
+	// < :OK
+		if ( wi < MaxVal )		MaxFlag = TRUE;
+		break;
+	case	1:
+	// <=:OK
+		if ( wi <= MaxVal )		MaxFlag = TRUE;
+		break;
+	default:
+	// 設定なし
+		break;
+	}
+
+RESULT_CHECK:
+// 判定
+	if ( MinFlag && MaxFlag )
+	{
+		SetValue( wi );
+		return	TRUE;
+	}
+
+// エラー表示 
+	MSGBOX( (const LPSTR)((const char*)ErrMess), MB_OK | MB_ICONSTOP , (const LPSTR)((const char*)Title) );
+
+// エラー時に入力値を戻す
+	if ( ReverseFlag )		ResetValue();
+
+	return	FALSE;
+}

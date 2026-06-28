@@ -1,0 +1,333 @@
+// MainFrm.cpp : CMainFrame クラスの動作の定義を行います。
+//
+
+#include "stdafx.h"
+#include "LookFont.h"
+
+#include "MainFrm.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame
+
+IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
+
+BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
+	//{{AFX_MSG_MAP(CMainFrame)
+	ON_WM_CREATE()
+	ON_WM_CLOSE()
+    ON_UPDATE_COMMAND_UI(ID_VIEW_FONTSELECTBAR, OnUpdateControlBarMenu)
+    ON_UPDATE_COMMAND_UI(ID_VIEW_TEXTCTRLBAR, OnUpdateControlBarMenu)
+    ON_COMMAND_EX(ID_VIEW_FONTSELECTBAR, OnBarCheck)
+    ON_COMMAND_EX(ID_VIEW_TEXTCTRLBAR, OnBarCheck)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame クラスの構築/消滅
+
+CMainFrame::CMainFrame()
+{
+	// TODO: この位置にメンバの初期化処理コードを追加してください。
+	
+}
+
+CMainFrame::~CMainFrame()
+{
+}
+
+int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	CLookFontApp* pApp = (CLookFontApp*)AfxGetApp();
+
+	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
+		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
+	{
+		TRACE0("Failed to create toolbar\n");
+		return -1;      // 作成に失敗
+	}
+
+	// TODO: ツール バーをドッキング可能にしない場合は以下の３行を削除
+	//       してください。
+	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	EnableDocking(CBRS_ALIGN_ANY);
+	DockControlBar(&m_wndToolBar);
+	m_wndToolBar.SetWindowText(_T("ツールバー"));
+
+	if (!m_wndFontSelectBar.CreateEx(this, 0, WS_CHILD | WS_VISIBLE | CBRS_TOP
+		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
+		CRect(0, 0, 0, 0),
+		ID_VIEW_FONTSELECTBAR) ||
+		!m_wndFontSelectBar.LoadToolBar(IDR_TOOLBAR_FONTSELECT))
+	{
+		TRACE0("Failed to create toolbar2\n");
+		return -1;      // 作成に失敗
+	}
+	m_wndFontSelectBar.EnableDocking(CBRS_ALIGN_ANY);
+	DockControlBarLeftOf(&m_wndFontSelectBar, &m_wndToolBar);
+	m_wndFontSelectBar.SetWindowText(_T("フォント選択バー"));
+
+	if (!m_wndFontTabBar.CreateEx(this, 0, WS_CHILD | WS_VISIBLE | CBRS_TOP
+		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
+		CRect(0, 0, 0, 0),
+		ID_VIEW_TABSELECTBAR) ||
+		!m_wndFontTabBar.LoadToolBar(IDR_TOOLBAR_TAB))
+	{
+		TRACE0("Failed to create toolbar3\n");
+		return -1;      // 作成に失敗
+	}
+	m_wndFontTabBar.EnableDocking(CBRS_ALIGN_ANY);
+//	DockControlBarLeftOf(&m_wndFontTabBar, &m_wndTextCtrlBar);
+	DockControlBar(&m_wndFontTabBar);
+	m_wndFontTabBar.SetWindowText(_T("リスト選択バー"));
+
+	m_wndTextCtrlBar.Create(this, IDD_DIALOG_TEXTCTRL,
+		WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY,
+		ID_VIEW_TEXTCTRLBAR);
+	m_wndTextCtrlBar.EnableDocking(CBRS_ALIGN_TOP | CBRS_ALIGN_BOTTOM);
+	DockControlBar(&m_wndTextCtrlBar, CBRS_ALIGN_TOP);
+	m_wndTextCtrlBar.SetWindowText(_T("テキスト入力バー"));
+
+	// コントロールバー・バージョンが同じなら位置復元
+	if(pApp->GetProfileString(LF_REG_WINDOW_SEC, LF_REG_WINDOW_KEY_VER, _T("")) == LF_REG_WINDOW_VER)
+		LoadBarState(LF_REG_WINDOW_KEY_CONTROLBAR);
+
+	pApp->m_pWndTextCtrlBar = &m_wndTextCtrlBar;
+
+	return 0;
+}
+
+BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
+{
+	CWinApp *pApp = AfxGetApp();
+
+	int ScreenWidth  = GetSystemMetrics(SM_CXSCREEN);
+	int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	cs.style &= ~(WS_MAXIMIZEBOX | FWS_ADDTOTITLE);
+	cs.x  = pApp->GetProfileInt(LF_REG_WINDOW_SEC, _T("x"),  cs.x);
+	cs.y  = pApp->GetProfileInt(LF_REG_WINDOW_SEC, _T("y"),  cs.y);
+	cs.cx = pApp->GetProfileInt(LF_REG_WINDOW_SEC, _T("cx"), 600);
+	cs.cy = pApp->GetProfileInt(LF_REG_WINDOW_SEC, _T("cy"), 768);
+
+	if(cs.x >= ScreenWidth - 32) {
+		cs.x = ScreenWidth - cs.cx;
+		if(cs.x < 0)
+			cs.x = 0;
+	}
+	if(cs.y >= ScreenHeight - 32) {
+		cs.y = ScreenHeight - cs.cy;
+		if(cs.y < 0)
+			cs.y = 0;
+	}
+
+	if( !CFrameWnd::PreCreateWindow(cs) )
+		return FALSE;
+	// TODO: この位置で CREATESTRUCT cs を修正して、Window クラスやスタイルを
+	//       修正してください。
+
+	return TRUE;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame クラスの診断
+
+#ifdef _DEBUG
+void CMainFrame::AssertValid() const
+{
+	CFrameWnd::AssertValid();
+}
+
+void CMainFrame::Dump(CDumpContext& dc) const
+{
+	CFrameWnd::Dump(dc);
+}
+
+#endif //_DEBUG
+
+/////////////////////////////////////////////////////////////////////////////
+// CMainFrame メッセージ ハンドラ
+
+BOOL CMainFrame::DestroyWindow() 
+{
+	CWinApp *pApp = AfxGetApp();
+	WINDOWPLACEMENT	wndpl;
+
+	pApp->WriteProfileString(LF_REG_WINDOW_SEC, LF_REG_WINDOW_KEY_VER, LF_REG_WINDOW_VER);
+
+	if(GetWindowPlacement(&wndpl)) {
+		CRect rect = wndpl.rcNormalPosition;
+		pApp->WriteProfileInt(LF_REG_WINDOW_SEC, _T("showCmd"), wndpl.showCmd);
+		pApp->WriteProfileInt(LF_REG_WINDOW_SEC, _T("x"),       rect.left);
+		pApp->WriteProfileInt(LF_REG_WINDOW_SEC, _T("y"),       rect.top);
+		pApp->WriteProfileInt(LF_REG_WINDOW_SEC, _T("cx"),      rect.Width());
+		pApp->WriteProfileInt(LF_REG_WINDOW_SEC, _T("cy"),      rect.Height());
+	}
+
+	SaveBarState(LF_REG_WINDOW_KEY_CONTROLBAR);
+
+	return CFrameWnd::DestroyWindow();
+}
+
+void CMainFrame::OnClose() 
+{
+	if(GetActiveView())
+		GetActiveView()->SendMessage(LF_WM_FRAME_CLOSE);
+
+	CFrameWnd::OnClose();
+}
+
+// pBar を pLeftOf の右に配置する
+// code from http://www.codeproject.com/docking/toolbar_docking.asp
+void CMainFrame::DockControlBarLeftOf(CControlBar* pBar, CControlBar* pLeftOf)
+{
+	CRect rect;
+	DWORD dw;
+	UINT n;
+	
+	// get MFC to adjust the dimensions of all docked ToolBars
+	// so that GetWindowRect will be accurate
+	RecalcLayout(TRUE);
+	
+	pLeftOf->GetWindowRect(&rect);
+	rect.OffsetRect(1,0);
+	dw=pLeftOf->GetBarStyle();
+	n = 0;
+	n = (dw&CBRS_ALIGN_TOP) ? AFX_IDW_DOCKBAR_TOP : n;
+	n = (dw&CBRS_ALIGN_BOTTOM && n==0) ? AFX_IDW_DOCKBAR_BOTTOM : n;
+	n = (dw&CBRS_ALIGN_LEFT && n==0) ? AFX_IDW_DOCKBAR_LEFT : n;
+	n = (dw&CBRS_ALIGN_RIGHT && n==0) ? AFX_IDW_DOCKBAR_RIGHT : n;
+	
+	// When we take the default parameters on rect, DockControlBar will dock
+	// each Toolbar on a seperate line. By calculating a rectangle, we
+	// are simulating a Toolbar being dragged to that location and docked.
+	DockControlBar(pBar, n, &rect);
+}
+
+void CMainFrame::WinHelp(DWORD dwData, UINT nCmd) 
+{
+	CWinApp* pApp = AfxGetApp();
+	ASSERT_VALID(pApp);
+	ASSERT(pApp->m_pszHelpFilePath != NULL);
+
+	CWaitCursor wait;
+	if (IsFrameWnd())
+	{
+		// CFrameWnd windows should be allowed to exit help mode first
+		CFrameWnd* pFrameWnd = (CFrameWnd*)this;
+		pFrameWnd->ExitHelpMode();
+	}
+
+	// cancel any tracking modes
+	SendMessage(WM_CANCELMODE);
+	SendMessageToDescendants(WM_CANCELMODE, 0, 0, TRUE, TRUE);
+
+	// need to use top level parent (for the case where m_hWnd is in DLL)
+	CWnd* pWnd = GetTopLevelParent();
+	pWnd->SendMessage(WM_CANCELMODE);
+	pWnd->SendMessageToDescendants(WM_CANCELMODE, 0, 0, TRUE, TRUE);
+
+	// attempt to cancel capture
+	HWND hWndCapture = ::GetCapture();
+	if (hWndCapture != NULL)
+		::SendMessage(hWndCapture, WM_CANCELMODE, 0, 0);
+
+
+	// ここから HTML ヘルプ用に書き足したものです。
+
+	// HTML Help ファイルの存在をチェック
+	CString hp = pApp->m_pszHelpFilePath;
+	CFileStatus st;
+	if ( !CFile::GetStatus(hp,st) )
+	{
+		CString str;
+		str.Format( "Not Exist Html Help File\n\n   File Path [ %s ]", hp );
+		AfxMessageBox(str);
+		return;
+	}
+
+	// ヘルプを表示
+	switch( nCmd )
+	{
+	case HELP_INDEX:// ヘルプの目次
+		::HtmlHelp(m_hWnd, hp, HH_DISPLAY_TOC, NULL);
+		break;
+	case HELP_HELPONHELP:// ヘルプの検索
+		{
+			HH_FTS_QUERY q ;
+			q.cbStruct = sizeof (HH_FTS_QUERY);
+			q.fUniCodeStrings = FALSE;
+			q.pszSearchQuery = "";
+			q.iProximity = 0;
+			q.fStemmedSearch = FALSE;
+			q.fTitleOnly = FALSE; 
+			q.fExecute = FALSE;
+			q.pszWindow = "";   
+			::HtmlHelp(m_hWnd, hp, HH_DISPLAY_SEARCH, (DWORD)&q);
+		}
+		break;
+	case HELP_FINDER:// キーワードで検索
+		::HtmlHelp(m_hWnd, hp, HH_DISPLAY_INDEX , NULL);
+		break;
+	case HELP_CONTEXT:// コンテキストヘルプ (F1/Shift+F1/HelpButton/?Button)
+		{
+			// すぐにカーソル位置のウィンドウを取得しないとカーソルが動いちゃう。
+			POINT   point;
+			GetCursorPos(&point);
+			CWnd*pCallWnd = WindowFromPoint( point );
+
+			// ヘルプコンテキストID dwData を別の ID に変更したい場合などは
+			// ここに式を書きます。dwData は既に加算された値なので注意。
+		
+			// 例 ID_EDIT_REDO の場合 ID_EDIT_UNDO にする（つまり同じページ表示)
+			// if ( dwData == ID_EDIT_REDO | 0x10000 ) dwData = ID_EDIT_UNDO | 0x10000;
+			
+			// 状況依存型のヘルプだと、ヘルプ作成時にVCのリソースに対応した
+			// 各HTMLファイルを関連付けてある必要があります。しかし、ツール
+			// バーのボタン１つ１つに１ページの html ファイルを関連付けるの
+			// ではなく、１つのツールバーで１ページ分を関連付けたい時などが
+			// あります。ダイアログバーなどでも、コントロールやボタンのの１
+			// つ１つに １ページを割り当てるのではなく、ダイアログバー自体で
+			// １つのページを表示させたい場合などがあります。
+
+			// そこで、ここでは、まず最初に dwDataのコンテキストIDのページが
+			// あれば表示し、無ければ、親ウィンドウのIDから作成したコンテキス
+			// トID なければさらに親ウィンドウのID・・・。とトライしてみて、
+			// 結局何も無い場合は、エラーメッセージを表示するような、仕様で
+			// 書いてみました。各自好みに合わせて書き換えて使用してください。
+
+			// HTML Help を表示
+			HWND hWnd = NULL;
+			DWORD dwID = dwData;
+			while( dwID>0 && (hWnd=::HtmlHelp(m_hWnd,hp,HH_HELP_CONTEXT,dwID))==NULL && pCallWnd )
+			{
+				pCallWnd = pCallWnd->GetParent();
+				dwID = (pCallWnd)? (pCallWnd->GetDlgCtrlID()|0x50000):0;
+			}
+			
+			// この方法だと、メニュー項目のコンテキストIDのヘルプが無い場合に
+			// その下のウィンドウのコンテキストがあるとそれを表示してしまうと
+			// いう難点がある。しかし、メニュー項目のコンテキストIDのヘルプを
+			// ちゃんと用意しておけば問題も起きない。
+
+			// エラーチェック
+			if ( hWnd == NULL )
+			{
+				CString str;
+				DWORD dwIdOrg = 0x0000ffff & dwData, dwIdAdd = 0xffff0000 & dwData;
+				str.Format( "Error Context ID\n\n   File Path [ %s ]\n  ContextID [0x%x + 0x%04x(%d)]", hp , dwIdAdd, dwIdOrg, dwIdOrg );
+				AfxMessageBox(str);
+			}
+		}
+		break;
+	}
+}

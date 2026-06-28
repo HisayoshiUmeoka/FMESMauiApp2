@@ -1,0 +1,18 @@
+LookFont
+ロゴ＆デザイン支援フォントツール　ルックフォント
+
+LKFT
+
+D:\LookFont\LookFont.lf
+pluss21
+
+398		58371
+125		195
+PLUS S ライセンス認証
+
+10
+
+http://www.pluss-inc.com/
+www.ss.pluss-inc.com/shopping/
+www.ss.pluss-inc.com/unlock/getcode.asp
+www.ss.pluss-inc.com/registsofts/userregist.asp

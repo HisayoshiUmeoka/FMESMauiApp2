@@ -1,583 +1,644 @@
-using System.Globalization;
-using ZXing.Net.Maui;
+using System;
+using System.Collections.Generic;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
-namespace FMES;
-
-public partial class SashizuAdd : ContentPage
+namespace FMES
 {
-    private clsKaisouList lstKaisou;
+    public partial class SashizuAdd : ContentPage
+    {
+        private clsKaisouList lstKaisou;
 
-    // ↓added for popupmeneu
-    private Label labelUser;
-    private Button buttonMenu;
-    private HorizontalStackLayout ContentMenu;
-    // ↑added for popupmeneu
+        private Label labelUser;
+        private Button buttonMenu;
+        private HorizontalStackLayout ContentMenu;
 
-    private Label label1;
-    private Label label2;
-    private Label label3;
-    private List<Label> LstlabSashizu = new List<Label>();
-    private List<Button> LstbuttonDel = new List<Button>();
-    private List<StackLayout> LstLayout = new List<StackLayout>();
-    private Picker dropdown1;
-    private Button buttonQR;
-    private Button buttonSashizuGr;
-    //private Button buttonUpd2;
-    private Button buttonEnd;
-    private StackLayout layout1;
-    private ScrollView sv;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private List<Label> LstlabSashizu = new List<Label>();
+        private List<Button> LstbuttonDel = new List<Button>();
+        private List<StackLayout> LstLayout = new List<StackLayout>();
+        private Picker dropdown1;
+        private Button buttonQR;
+        private Button buttonSashizuGr;
+        private Button buttonEnd;
+        private StackLayout layout1;
+        private ScrollView sv;
 
-    private bool doingNow = false;
+        private bool doingNow = false;
 
-    public int _TotalTime { get; set; } = 0;
-    public int _StartStop { get; set; } = 0;
-    public bool _TimerStoped { get; set; } = false;
+        public int _TotalTime { get; set; } = 0;
+        public int _StartStop { get; set; } = 0;
+        public bool _TimerStoped { get; set; } = false;
 
-
-
-    public SashizuAdd()
-	{
-		InitializeComponent();
-        Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
-
-        Color defBKCol = Colors.White;
-        //        AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
-        clsGlobalVar.g_NowForm = 9;
-        string wwsashizuNo = clsGlobalVar.g_SasizuNo;
-        if (clsGlobalVar.g_SasizuNo == "-2")
+        public SashizuAdd()
         {
-            wwsashizuNo = "指図番号無し作業";
-        }
-        else if (clsGlobalVar.g_SasizuNo == "-1")
-        {
-            wwsashizuNo = "その他";
-        }
+            InitializeComponent();
+            Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, false);
 
-        // ↓added for popupmeneu
+            this.Padding = new Thickness(0);
+            clsGlobalVar.g_NowForm = 9;
+            
+            string wwsashizuNo = clsGlobalVar.g_SasizuNo;
+            if (clsGlobalVar.g_SasizuNo == "-2")
+            {
+                wwsashizuNo = "指図番号なし作業";
+            }
+            else if (clsGlobalVar.g_SasizuNo == "-1")
+            {
+                wwsashizuNo = "その他";
+            }
 
-        labelUser = new Label
-        {
-            Text = clsGlobalVar.g_Operator,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            FontSize = 22,
-            VerticalOptions = LayoutOptions.Center,
-            //            HorizontalOptions = LayoutOptions.Fill,
-            HorizontalOptions = LayoutOptions.End,
-        };
+            // 背景を白色に変更
+            this.BackgroundColor = Color.FromArgb("#D1D5DB");
 
-        buttonMenu = new Button
-        {
-            //Text = "メニュー",
-            ImageSource = "icon80x80.png",
-            FontSize = 20,
-            BackgroundColor = Colors.White,
-            HorizontalOptions = LayoutOptions.End,
-            //VerticalOptions = LayoutOptions.center // 中央に配置する（縦方向）
-            VerticalOptions = LayoutOptions.Center // 中央に配置する（縦方向）
-        };
-        buttonMenu.Clicked += MenuButtonClicked;
-        ContentMenu = new HorizontalStackLayout()
-        {
-            HorizontalOptions = LayoutOptions.End,
-            BackgroundColor = Colors.White,
-            Children = {
-                        labelUser,
-                        buttonMenu,
+            // ヘッダー - ユーザー名とメニューボタン
+            labelUser = new Label
+            {
+                Text = clsGlobalVar.g_Operator,
+                TextColor = Color.FromArgb("#1E293B"),
+                FontSize = 16,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.EndAndExpand
+            };
+
+            buttonMenu = new Button
+            {
+                ImageSource = "icon80x80.png",
+                WidthRequest = 40,
+                HeightRequest = 40,
+                CornerRadius = 20,
+                BackgroundColor = Colors.White,
+                BorderColor = Color.FromArgb("#CBD5E1"),
+                BorderWidth = 1,
+                Padding = 4,
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center
+            };
+            buttonMenu.Clicked += MenuButtonClicked;
+
+            ContentMenu = new HorizontalStackLayout
+            {
+                Spacing = 12,
+                Padding = new Thickness(20, 16, 20, 16),
+                BackgroundColor = Colors.White,
+                Children = { labelUser, buttonMenu }
+            };
+
+            string srtErrMsg = string.Empty;
+            lstKaisou = new clsKaisouList();
+            if (lstKaisou.GetList(clsGlobalVar.g_UserID, clsGlobalVar.g_SasizuNo, 2, clsGlobalVar.g_KouteiID, 0, 0, 0, clsGlobalVar.g_lastSashizuKind, clsGlobalVar.g_KouteiVer, ref srtErrMsg) == true)
+            {
+                _TotalTime = lstKaisou._Header._TotalSec;
+                _StartStop = lstKaisou._Header._StopWatch;
+                _TimerStoped = (_StartStop == 1) ? false : true;
+                clsGlobalVar.g_KouteiKekkaID = lstKaisou._Header._KouteiKekkaID;
+
+                layout1 = new StackLayout
+                {
+                    Spacing = 0,
+                    BackgroundColor = Colors.White,
+                    Children = { ContentMenu }
+                };
+
+                // ヘッダー情報カード
+                label1 = new Label
+                {
+                    Text = lstKaisou._Header._Title,
+                    TextColor = Color.FromArgb("#1E293B"),
+                    FontSize = 20,
+                    FontAttributes = FontAttributes.Bold,
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+
+                label2 = new Label
+                {
+                    Text = "品名: " + lstKaisou._Header._ProductName,
+                    TextColor = Color.FromArgb("#475569"),
+                    FontSize = 14,
+                    Margin = new Thickness(0, 0, 0, 4)
+                };
+
+                label3 = new Label
+                {
+                    Text = "指図番号: " + wwsashizuNo,
+                    TextColor = Color.FromArgb("#475569"),
+                    FontSize = 14,
+                    Margin = new Thickness(0, 0, 0, 0)
+                };
+
+                var headerCard = new Frame
+                {
+                    CornerRadius = 14,
+                    HasShadow = true,
+                    BackgroundColor = Colors.White,
+                    Padding = new Thickness(20, 16),
+                    Margin = new Thickness(20, 16, 20, 16),
+                    Content = new VerticalStackLayout
+                    {
+                        Spacing = 4,
+                        Children = { label1, label2, label3 }
                     }
-        };
-        // ↑added for popupmeneu
-        string srtErrMsg = string.Empty;
-        lstKaisou = new clsKaisouList();
-        if (lstKaisou.GetList(clsGlobalVar.g_UserID, clsGlobalVar.g_SasizuNo, 2, clsGlobalVar.g_KouteiID, 0, 0, 0, clsGlobalVar.g_lastSashizuKind, clsGlobalVar.g_KouteiVer, ref srtErrMsg) == true)
+                };
+
+                layout1.Children.Add(headerCard);
+
+                // 選択済み指図番号リスト
+                var selectedListLayout = new VerticalStackLayout
+                {
+                    Spacing = 8
+                };
+
+                var selectedLabel = new Label
+                {
+                    Text = "選択済み指図番号",
+                    FontSize = 16,
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Color.FromArgb("#334155"),
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+                selectedListLayout.Children.Add(selectedLabel);
+
+                foreach (clsLine wLine in lstKaisou._Header._SelLists)
+                {
+                    if (wLine._index == 1)
+                    {
+                        Label labelW = new Label
+                        {
+                            Text = wLine._LineName,
+                            FontSize = 15,
+                            TextColor = Color.FromArgb("#1E293B"),
+                            VerticalOptions = LayoutOptions.Center,
+                            HorizontalOptions = LayoutOptions.StartAndExpand
+                        };
+                        LstlabSashizu.Add(labelW);
+
+                        Button butn = new Button
+                        {
+                            ImageSource = "batsu.png",
+                            WidthRequest = 32,
+                            HeightRequest = 32,
+                            CornerRadius = 16,
+                            BackgroundColor = Color.FromArgb("#FEE2E2"),
+                            BorderColor = Color.FromArgb("#DC2626"),
+                            BorderWidth = 1,
+                            Padding = 4,
+                            HorizontalOptions = LayoutOptions.End
+                        };
+                        butn.Clicked += ItemButtonDelClicked;
+                        LstbuttonDel.Add(butn);
+
+                        StackLayout Content2 = new StackLayout
+                        {
+                            Orientation = StackOrientation.Horizontal,
+                            Spacing = 12,
+                            Padding = new Thickness(12, 8),
+                            BackgroundColor = Color.FromArgb("#F8FAFC"),
+                            Children = { labelW, butn }
+                        };
+
+                        var itemFrame = new Frame
+                        {
+                            CornerRadius = 8,
+                            HasShadow = false,
+                            BackgroundColor = Color.FromArgb("#F8FAFC"),
+                            Padding = 0,
+                            Margin = new Thickness(0, 0, 0, 8),
+                            Content = Content2
+                        };
+
+                        LstLayout.Add(Content2);
+                        selectedListLayout.Children.Add(itemFrame);
+                    }
+                }
+
+                if (LstlabSashizu.Count > 0)
+                {
+                    var selectedCard = new Frame
+                    {
+                        CornerRadius = 14,
+                        HasShadow = true,
+                        BackgroundColor = Colors.White,
+                        Padding = new Thickness(20, 16),
+                        Margin = new Thickness(20, 0, 20, 16),
+                        Content = selectedListLayout
+                    };
+                    layout1.Children.Add(selectedCard);
+                }
+
+                // 追加セクション
+                var addLabel = new Label
+                {
+                    Text = "指図番号を追加",
+                    FontSize = 16,
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Color.FromArgb("#334155"),
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+
+                dropdown1 = new Picker
+                {
+                    BackgroundColor = Color.FromArgb("#F8FAFC"),
+                    TextColor = Color.FromArgb("#1E293B"),
+                    FontSize = 15,
+                    Title = "指図番号選択",
+                    HeightRequest = 48,
+                    HorizontalOptions = LayoutOptions.FillAndExpand
+                };
+
+                foreach (clsLine wLine in lstKaisou._Header._SelLists)
+                {
+                    if (wLine._index == 0)
+                    {
+                        dropdown1.Items.Add(wLine._LineName);
+                    }
+                }
+
+                // QR戻り値の復元（既存ロジック維持）
+                if (clsGlobalVar.g_BackPage == "SashizuAdd" && clsGlobalVar.g_QRRET != null)
+                {
+                    int iMax = dropdown1.Items.Count;
+                    for (int i = 0; i < iMax; i++)
+                    {
+                        if (dropdown1.Items[i].ToString() == clsGlobalVar.g_QRRET)
+                        {
+                            dropdown1.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                    clsGlobalVar.g_BackPage = string.Empty;
+                    clsGlobalVar.g_QRRET = string.Empty;
+                }
+
+                buttonQR = new Button
+                {
+                    ImageSource = "qr100x100.png",
+                    WidthRequest = 48,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    BackgroundColor = Colors.White,
+                    BorderColor = Color.FromArgb("#CBD5E1"),
+                    BorderWidth = 1,
+                    Padding = 8
+                };
+                buttonQR.Clicked += ScanButtonClicked;
+
+                var pickerRow = new HorizontalStackLayout
+                {
+                    Spacing = 10,
+                    Margin = new Thickness(0, 0, 0, 12),
+                    Children = { dropdown1, buttonQR }
+                };
+
+                buttonSashizuGr = new Button
+                {
+                    Text = "追加",
+                    FontSize = 15,
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Colors.White,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    HorizontalOptions = LayoutOptions.Fill
+                };
+                buttonSashizuGr.Background = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0),
+                    GradientStops = new GradientStopCollection
+                    {
+                        new GradientStop { Color = Color.FromArgb("#10B981"), Offset = 0.0f },
+                        new GradientStop { Color = Color.FromArgb("#059669"), Offset = 1.0f }
+                    }
+                };
+                buttonSashizuGr.Clicked += AddButtonClicked;
+
+                var addCard = new Frame
+                {
+                    CornerRadius = 14,
+                    HasShadow = true,
+                    BackgroundColor = Colors.White,
+                    Padding = new Thickness(20, 16),
+                    Margin = new Thickness(20, 0, 20, 16),
+                    Content = new VerticalStackLayout
+                    {
+                        Spacing = 8,
+                        Children = { addLabel, pickerRow, buttonSashizuGr }
+                    }
+                };
+
+                layout1.Children.Add(addCard);
+
+                // 戻るボタン
+                buttonEnd = new Button
+                {
+                    Text = "戻る",
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
+                    VerticalOptions = LayoutOptions.StartAndExpand,
+                    //            HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    TextColor = Colors.Black,
+                    BackgroundColor = Colors.LightGreen,
+                };
+                buttonEnd.Clicked += EndButtonClicked;
+                layout1.Children.Add(buttonEnd);
+
+                sv = new ScrollView 
+                { 
+                    Content = layout1,
+                    Padding = new Thickness(0),
+                    BackgroundColor = Colors.White
+                };
+                Content = sv;
+            }
+        }
+
+        private Color GetBackColor(int index)
         {
-
-            _TotalTime = lstKaisou._Header._TotalSec;
-            _StartStop = lstKaisou._Header._StopWatch;
-            _TimerStoped = (_StartStop == 1) ? false : true;
-            clsGlobalVar.g_KouteiKekkaID = lstKaisou._Header._KouteiKekkaID;
-            layout1 = new StackLayout
+            Color wCol = Colors.White;
+            if (lstKaisou._Datas[index]._during == 0)
             {
-                Padding = new Thickness(10, 10, 10, 10),
-                BackgroundColor = Colors.White,
-                Orientation = StackOrientation.Vertical,
-            };
-            label1 = new Label
+                wCol = Colors.White;
+            }
+            else if (lstKaisou._Datas[index]._during == 1)
             {
-                Text = "　" + lstKaisou._Header._Title,
-                BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                FontSize = 22,
-                VerticalOptions = LayoutOptions.Center,
-                            HorizontalOptions = LayoutOptions.Fill,
-            };
-            label2 = new Label
+                wCol = Colors.LightGreen;
+            }
+            else if (lstKaisou._Datas[index]._during == 2)
             {
-                //Text = "　　" + AppResources.IDM029 + "：" + lstKaisou._Header._ProductName,
-                Text = "　　" + "機種" + "：" + lstKaisou._Header._ProductName,
-                BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                FontSize = 16,
-                VerticalOptions = LayoutOptions.Center,
-                            HorizontalOptions = LayoutOptions.Fill,
-            };
-
-            label3 = new Label
+                wCol = Colors.Gray;
+            }
+            else if (lstKaisou._Datas[index]._during == 3)
             {
-                //Text = "　　" + AppResources.IDM030 + "：" + wwsashizuNo,
-                Text = "　　" + "指図番号" + "：" + wwsashizuNo,
-                Margin = new Thickness(0, 5, 0, 5),
-                Padding = new Thickness(0, 0, 0, 0),
-                BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                FontSize = 16,
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Fill,
-            };
-            layout1.Children.Add(ContentMenu);
-            layout1.Children.Add(label1);
-            layout1.Children.Add(label2);
-            layout1.Children.Add(label3);
-
-            foreach (clsLine wLine in lstKaisou._Header._SelLists)
+                wCol = Colors.DarkGreen;
+            }
+            else if (lstKaisou._Datas[index]._during == 4)
             {
-                if (wLine._index == 1)
-                {
-                    Label labelW = new Label
-                    {
-                        Text = "　" + wLine._LineName,
-                        FontSize = 22,
-                        VerticalOptions = LayoutOptions.CenterAndExpand,
-                        HorizontalOptions = LayoutOptions.StartAndExpand,
-                    };
-                    LstlabSashizu.Add(labelW);
-                    Button butn = new Button
-                    {
-                        ImageSource = "batsu.png",
-                        FontSize = 20,
-                        HorizontalOptions = LayoutOptions.EndAndExpand//,//中央に配置する（横方向）
-                    };
-                    butn.Clicked += ItemButtonDelClicked;
-                    LstbuttonDel.Add(butn);
-                    StackLayout Content2 = new StackLayout()
-                    {
-                        Orientation = StackOrientation.Horizontal,
-                        Padding = new Thickness(10, 10, 10, 10),
-                        Children = {
-                                butn,
-                                labelW,
-                            }
-                    };
-                    LstLayout.Add(Content2);
-                    layout1.Children.Add(Content2);
-                }
+                wCol = Colors.Red;
+            }
+            else if (lstKaisou._Datas[index]._during == 5)
+            {
+                wCol = GetBackColorParts();
             }
 
-            dropdown1 = new Picker
+            return wCol;
+        }
+
+        private Color GetTextColor(int index)
+        {
+            Color wCol;
+            if (lstKaisou._Datas[index]._parmit == 1)
             {
-                BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                FontSize = 20,
-                //Title = AppResources.IDM086,
-                Title = "指図番号選択",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
-            };
-            //var ar = Enumerable.Range(0, 100).Select(n => string.Format("item-{0}", n)).ToList();
-            foreach (clsLine wLine in lstKaisou._Header._SelLists)
-            {
-                if (wLine._index == 0)
-                {
-                    dropdown1.Items.Add(wLine._LineName);
-                }
+                wCol = Colors.Black;
             }
-            // ↓added for QRScan
-            if (clsGlobalVar.g_BackPage == "SashizuAdd" && clsGlobalVar.g_QRRET != null)
+            else
             {
-                int iMax = dropdown1.Items.Count;
-                int iSelectedIndex = -1;
-                for (int i = 0; i < iMax; i++)
+                wCol = Colors.LightGray;
+            }
+
+            return wCol;
+        }
+
+        private Color GetBackColor(clsKaisou wKaisou)
+        {
+            Color wCol = Colors.White;
+            if (wKaisou._during == 0)
+            {
+                wCol = Colors.White;
+            }
+            else if (wKaisou._during == 1)
+            {
+                wCol = Colors.LightGreen;
+            }
+            else if (wKaisou._during == 2)
+            {
+                wCol = Colors.Gray;
+            }
+            else if (wKaisou._during == 3)
+            {
+                wCol = Colors.DarkGreen;
+            }
+            else if (wKaisou._during == 4)
+            {
+                wCol = Colors.Red;
+            }
+            else if (wKaisou._during == 5)
+            {
+                wCol = GetBackColorParts();
+            }
+            return wCol;
+        }
+
+        private Color GetBackColorParts()
+        {
+            Color wCol = Colors.White;
+#if IOS
+            wCol = Colors.Blue;
+#else
+            wCol = Colors.DodgerBlue;
+#endif
+            return wCol;
+        }
+
+        private Color GetTextColorParts()
+        {
+            Color wCol = Colors.White;
+#if IOS
+            wCol = Colors.White;
+#else
+            wCol = Colors.Black;
+#endif
+            return wCol;
+        }
+
+        private Color GetTextColor(clsKaisou wKaisou)
+        {
+            Color wCol;
+            if (wKaisou._parmit == 1)
+            {
+                wCol = Colors.Black;
+            }
+            else
+            {
+                wCol = Colors.Gray;
+            }
+
+            return wCol;
+        }
+
+        async void MenuButtonClicked(object sender, EventArgs s)
+        {
+            clsGlobalVar.g_BackPage = "SashizuAdd";
+            freeThis();
+            Application.Current.MainPage = new Pagepopupmenu();
+        }
+
+        async void ScanButtonClicked(object sender, EventArgs s)
+        {
+            clsGlobalVar.g_BackPage = "SashizuAdd";
+            clsGlobalVar.g_QRRET = string.Empty;
+            Application.Current.MainPage = new QRPage();
+        }
+
+        async void ItemButtonDelClicked(object sender, EventArgs s)
+        {
+            Button wBtn2 = (Button)sender;
+            wBtn2.IsEnabled = false;
+            if (doingNow == false)
+            {
+                doingNow = true;
+                int i = 0;
+                foreach (Button wBtn in LstbuttonDel)
                 {
-                    if (dropdown1.Items[i].ToString() == clsGlobalVar.g_QRRET)
+                    if (wBtn.GetHashCode() == sender.GetHashCode())
                     {
-                        iSelectedIndex = i;
-                        dropdown1.SelectedIndex = i;
+                        string wSashizuNo = clsGlobalVar.g_SasizuNo;
+                        string wSelectedSasizuNo = LstlabSashizu[i].Text.Trim();
+                        string strErrMsg = "";
+                        bool bRet = clsWebUpdate.SendAddDelSashizu(wSashizuNo, wSelectedSasizuNo, ref strErrMsg);
+                        if (bRet == false)
+                        {
+                            await DisplayAlert("指図番号追加・削除エラー", strErrMsg, "OK");
+                        }
+                        else
+                        {
+                            ReInit();
+                        }
                         break;
                     }
+                    i++;
                 }
-                clsGlobalVar.g_BackPage = string.Empty;
-                clsGlobalVar.g_QRRET = string.Empty;
-
+                doingNow = false;
             }
-            // ↑added for QRScan
+            wBtn2.IsEnabled = true;
+        }
 
-            buttonQR = new Button
+        private void freeThis()
+        {
+            Console.WriteLine("SashizuAddPage free before GC.GetTotalMemory:" + GC.GetTotalMemory(true).ToString());
+            if (buttonMenu != null)
             {
-                //Text = "ＱＲスキャン",
-                ImageSource = "qr100x100.png",
-                FontSize = 20,
-                BackgroundColor = Colors.White,
-                HorizontalOptions = LayoutOptions.Center//,//中央に配置する（横方向）
-                                                        //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
-            };
-            buttonQR.Clicked += ScanButtonClicked;
+                buttonMenu.Clicked -= MenuButtonClicked;
+                buttonMenu.ImageSource = null;
+                buttonMenu = null;
+            }
+            if (labelUser != null) labelUser = null;
+            if (ContentMenu != null) ContentMenu = null;
 
-            buttonSashizuGr = new Button
+            if (LstlabSashizu != null)
             {
-                //Text = AppResources.IDM087,
-                Text = "追加",
-                FontSize = 22,
-                //VerticalOptions = LayoutOptions.Center,
-                //            HorizontalOptions = LayoutOptions.Fill,
-                HorizontalOptions = LayoutOptions.Center,
-                TextColor = Colors.Black,
-                BackgroundColor = Colors.LightGreen,
-            };
-            buttonSashizuGr.Clicked += AddButtonClicked;
-            //layout1.Children.Add(buttonSashizuGr);
-            StackLayout Content3 = new StackLayout()
-            {
-                Orientation = StackOrientation.Horizontal,
-                Padding = new Thickness(10, 5, 5, 5),
-                BackgroundColor = Colors.White,
-                Children = {
-                                dropdown1,
-                                buttonQR,
-                                buttonSashizuGr,
-                            }
-            };
-            layout1.Children.Add(Content3);
-
-            //layout1.Children.Add(dropdown1);
-
-
-            buttonEnd = new Button
-            {
-                //Text = AppResources.IDM032,
-                Text = "戻る",
-                FontSize = 22,
-                //VerticalOptions = LayoutOptions.Center,
-                //            HorizontalOptions = LayoutOptions.Fill,
-                            HorizontalOptions = LayoutOptions.Fill,
-                TextColor = Colors.Black,
-                BackgroundColor = Colors.LightGreen,
-            };
-            layout1.Children.Add(buttonEnd);
-
-            sv = new ScrollView { Content = layout1 };
-            Content = sv;
-            buttonEnd.Clicked += EndButtonClicked;
-
-        }
-
-    }
-
-    private Color GetBackColor(int index)
-    {
-        Color wCol = Colors.White;
-        if (lstKaisou._Datas[index]._during == 0)
-        {
-            //進行中
-            wCol = Colors.White;
-        }
-        else if (lstKaisou._Datas[index]._during == 1)
-        {
-            wCol = Colors.LightGreen;
-        }
-        else if (lstKaisou._Datas[index]._during == 2)
-        {
-            wCol = Colors.Gray;
-        }
-        else if (lstKaisou._Datas[index]._during == 3)
-        {
-            wCol = Colors.DarkGreen;
-        }
-        else if (lstKaisou._Datas[index]._during == 4)
-        {
-            wCol = Colors.Red;
-        }
-        else if (lstKaisou._Datas[index]._during == 5)
-        {
-            wCol = GetBackColorParts();
-        }
-
-        return wCol;
-    }
-    private Color GetTextColor(int index)
-    {
-        Color wCol;
-        if (lstKaisou._Datas[index]._parmit == 1)
-        {
-            //権限あり
-            wCol = Colors.Black;
-        }
-        else
-        {
-            wCol = Colors.LightGray;
-        }
-
-        return wCol;
-    }
-    private Color GetBackColor(clsKaisou wKaisou)
-    {
-        Color wCol = Colors.White;
-        if (wKaisou._during == 0)
-        {
-            //進行中
-            wCol = Colors.White;
-        }
-        else if (wKaisou._during == 1)
-        {
-            wCol = Colors.LightGreen;
-        }
-        else if (wKaisou._during == 2)
-        {
-            wCol = Colors.Gray;
-        }
-        else if (wKaisou._during == 3)
-        {
-            wCol = Colors.DarkGreen;
-        }
-        else if (wKaisou._during == 4)
-        {
-            wCol = Colors.Red;
-        }
-        else if (wKaisou._during == 5)
-        {
-            wCol = GetBackColorParts();
-        }
-        return wCol;
-    }
-    private Color GetBackColorParts()
-    {
-        Color wCol = Colors.White;
-        if (Device.RuntimePlatform == Device.iOS)
-        {
-            //wCol = Colors.DodgerBlue;
-            wCol = Colors.Blue;
-        }
-        else
-        {
-            wCol = Colors.DodgerBlue;
-            //wCol = Colors.Blue;
-
-        }
-        return wCol;
-    }
-
-    private Color GetTextColorParts()
-    {
-        Color wCol = Colors.White;
-        if (Device.RuntimePlatform == Device.iOS)
-        {
-            //wCol = Colors.Black;
-            wCol = Colors.White;
-        }
-        else
-        {
-            //wCol = Colors.White;
-            wCol = Colors.Black;
-
-
-        }
-        return wCol;
-    }
-
-    private Color GetTextColor(clsKaisou wKaisou)
-    {
-        Color wCol;
-        if (wKaisou._parmit == 1)
-        {
-            //権限あり
-            wCol = Colors.Black;
-        }
-        else
-        {
-            wCol = Colors.Gray;
-        }
-
-        return wCol;
-    }
-    // ↓added for popupmeneu
-    async void MenuButtonClicked(object sender, EventArgs s)
-    {
-        clsGlobalVar.g_BackPage = "SashizuAdd";
-        freeThis();
-
-        Application.Current.MainPage = new Pagepopupmenu();
-    }
-    // ↑added for popupmeneu
-
-    async void ScanButtonClicked(object sender, EventArgs s)
-    {
-        //TAKO ここにQRスキャン実処理を入れる。
-        // ↓added for QRScan
-        clsGlobalVar.g_BackPage = "SashizuAdd";
-        clsGlobalVar.g_QRRET = string.Empty;
-        Application.Current.MainPage = new QRPage();
-        // ↑added for QRScan
-
-    }
-    async void ItemButtonDelClicked(object sender, EventArgs s)
-    {
-        Button wBtn2 = (Button)sender;
-        wBtn2.IsEnabled = false;
-        if (doingNow == false)
-        {
-            doingNow = true;
-            int i = 0;
-            foreach (Button wBtn in LstbuttonDel)
-            {
-                if (wBtn.GetHashCode() == sender.GetHashCode())
+                int imax = LstlabSashizu.Count;
+                for (int i = 0; i < imax; i++)
                 {
+                    LstlabSashizu[i] = null;
+                }
+                LstlabSashizu.Clear();
+                LstlabSashizu = null;
+            }
+            if (LstbuttonDel != null)
+            {
+                int imax = LstbuttonDel.Count;
+                for (int i = 0; i < imax; i++)
+                {
+                    LstbuttonDel[i].ImageSource = null;
+                    LstbuttonDel[i].Clicked -= ItemButtonDelClicked;
+                    LstbuttonDel[i] = null;
+                }
+                LstbuttonDel.Clear();
+                LstbuttonDel = null;
+            }
+            if (LstLayout != null)
+            {
+                int imax = LstLayout.Count;
+                for (int i = 0; i < imax; i++)
+                {
+                    LstLayout[i] = null;
+                }
+                LstLayout.Clear();
+                LstLayout = null;
+            }
+            label1 = null;
+            label2 = null;
+            label3 = null;
+            if (dropdown1 != null)
+            {
+                dropdown1.Items.Clear();
+                dropdown1 = null;
+            }
+            if (buttonEnd != null)
+            {
+                buttonEnd.Clicked -= EndButtonClicked;
+                buttonEnd = null;
+            }
+            layout1 = null;
+            sv = null;
+            Content = null;
+            if (lstKaisou != null)
+            {
+                lstKaisou.freeThis();
+                lstKaisou = null;
+            }
+            GC.Collect();
+            Console.WriteLine("SashizuAddPage free after GC.GetTotalMemory:" + GC.GetTotalMemory(true).ToString());
+        }
+
+        async void EndButtonClicked(object sender, EventArgs s)
+        {
+            Button wBtn = (Button)sender;
+            wBtn.IsEnabled = false;
+            if (doingNow == false)
+            {
+                doingNow = true;
+                clsGlobalVar.g_KaisouNo = 2;
+                freeThis();
+                Application.Current.MainPage = new Page2();
+                doingNow = false;
+            }
+            wBtn.IsEnabled = true;
+        }
+
+        private void ReInit()
+        {
+            clsGlobalVar.g_KaisouNo = 2;
+            freeThis();
+            Application.Current.MainPage = new SashizuAdd();
+        }
+
+        async void AddButtonClicked(object sender, EventArgs s)
+        {
+            Button wBtn = (Button)sender;
+            wBtn.IsEnabled = false;
+            if (doingNow == false)
+            {
+                if (dropdown1.SelectedIndex > -1)
+                {
+                    doingNow = true;
                     string wSashizuNo = clsGlobalVar.g_SasizuNo;
-                    string wSelectedSasizuNo = LstlabSashizu[i].Text.Trim();
+                    string wSelectedSasizuNo = dropdown1.SelectedItem.ToString();
                     string strErrMsg = "";
                     bool bRet = clsWebUpdate.SendAddDelSashizu(wSashizuNo, wSelectedSasizuNo, ref strErrMsg);
                     if (bRet == false)
                     {
-                        //await Navigation.PopAsync();
-                        //await DisplayAlert(AppResources.IDM094, strErrMsg, "OK");
                         await DisplayAlert("指図番号追加・削除エラー", strErrMsg, "OK");
                     }
                     else
                     {
                         ReInit();
                     }
-                    break;
-                }
-                i++;
-            }
-            doingNow = false;
-        }
-        wBtn2.IsEnabled = true;
-    }
-    private void freeThis()
-    {
-        Console.WriteLine("SashizuAddPage free before GC.GetTotalMemory:" + GC.GetTotalMemory(true).ToString());
-        // added for popupmeneu
-        if (buttonMenu != null)
-        {
-            buttonMenu.Clicked -= MenuButtonClicked;
-            buttonMenu.ImageSource = null;
-            buttonMenu = null;
-        }
-        if (labelUser != null) labelUser = null;
-        if (ContentMenu != null) ContentMenu = null;
-        // ↑added for popupmeneu
-
-        if (LstlabSashizu != null)
-        {
-            int imax = LstlabSashizu.Count;
-            for (int i = 0; i < imax; i++)
-            {
-                LstlabSashizu[i] = null;
-            }
-            LstlabSashizu.Clear();
-            LstlabSashizu = null;
-        }
-        if (LstbuttonDel != null)
-        {
-            int imax = LstbuttonDel.Count;
-            for (int i = 0; i < imax; i++)
-            {
-                LstbuttonDel[i].ImageSource = null;
-                LstbuttonDel[i].Clicked -= ItemButtonDelClicked;
-                LstbuttonDel[i] = null;
-            }
-            LstbuttonDel.Clear();
-            LstbuttonDel = null;
-        }
-        if (LstLayout != null)
-        {
-            int imax = LstLayout.Count;
-            for (int i = 0; i < imax; i++)
-            {
-                LstLayout[i] = null;
-            }
-            LstLayout.Clear();
-            LstLayout = null;
-        }
-        label1 = null;
-        label2 = null;
-        label3 = null;
-        if (dropdown1 != null)
-        {
-            dropdown1.Items.Clear();
-            dropdown1 = null;
-        }
-        if (buttonEnd != null)
-        {
-            buttonEnd.Clicked -= EndButtonClicked;
-            buttonEnd = null;
-        }
-        layout1 = null;
-        sv = null;
-        Content = null;
-        if (lstKaisou != null)
-        {
-            lstKaisou.freeThis();
-            lstKaisou = null;
-        }
-        GC.Collect();
-        Console.WriteLine("SashizuAddPage free after GC.GetTotalMemory:" + GC.GetTotalMemory(true).ToString());
-    }
-    async void EndButtonClicked(object sender, EventArgs s)
-    {
-        Button wBtn = (Button)sender;
-        wBtn.IsEnabled = false;
-        if (doingNow == false)
-        {
-            doingNow = true;
-            clsGlobalVar.g_KaisouNo = 2;
-            //string[] yourData = { _UserID.ToString(), _SasizuNo, _SasizuID.ToString(), _KaisouNo.ToString(), _KouteiID.ToString(), "0", "0", clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString(), "0", _LineIndex.ToString() };
-            freeThis();
-            //await Navigation.PushAsync(new Page2(yourData));
-            Application.Current.MainPage = new Page2();
-            doingNow = false;
-        }
-        wBtn.IsEnabled = true;
-    }
-    private void ReInit()
-    {
-        clsGlobalVar.g_KaisouNo = 2;
-        //string[] yourData = { _UserID.ToString(), _SasizuNo, _SasizuID.ToString(), _KaisouNo.ToString(), _KouteiID.ToString(), "0", "0", clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString(), "0", _LineIndex.ToString() };
-        freeThis();
-        //await Navigation.PushAsync(new Page2(yourData));
-        Application.Current.MainPage = new SashizuAdd();
-    }
-    async void AddButtonClicked(object sender, EventArgs s)
-    {
-        Button wBtn = (Button)sender;
-        wBtn.IsEnabled = false;
-        if (doingNow == false)
-        {
-            if (dropdown1.SelectedIndex > -1)
-            {
-                doingNow = true;
-                string wSashizuNo = clsGlobalVar.g_SasizuNo;
-                string wSelectedSasizuNo = dropdown1.SelectedItem.ToString();
-                string strErrMsg = "";
-                bool bRet = clsWebUpdate.SendAddDelSashizu(wSashizuNo, wSelectedSasizuNo, ref strErrMsg);
-                if (bRet == false)
-                {
-                    //await Navigation.PopAsync();
-                    //await DisplayAlert(AppResources.IDM094, strErrMsg, "OK");
-                    await DisplayAlert("指図番号追加・削除エラー", strErrMsg, "OK");
+                    doingNow = false;
                 }
                 else
                 {
-                    ReInit();
+                    await DisplayAlert("指図番号追加・削除エラー", "追加する指図番号を選択してください。", "OK");
                 }
-                doingNow = false;
             }
-            else
-            {
-                //await DisplayAlert(AppResources.IDM094, AppResources.IDM096, "OK");
-                await DisplayAlert("指図番号追加・削除エラー", "追加する指図番号を選択してください。", "OK");
-            }
+            wBtn.IsEnabled = true;
         }
-        wBtn.IsEnabled = true;
     }
-
 }

@@ -89,7 +89,12 @@ public partial class Pageweboption : ContentPage
         {
             //Text = AppResources.IDM032,
             Text = "–ß‚é",
-            FontSize = 22,
+            FontSize = 14,
+            BorderColor = Colors.LightGray,
+            BorderWidth = 1.5,
+            HeightRequest = 48,
+            CornerRadius = 12,
+            Margin = new Thickness(20, 0, 20, 12),
             VerticalOptions = LayoutOptions.StartAndExpand,
             //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,

@@ -1,0 +1,305 @@
+// LicBack.cpp : アプリケーション用クラスの定義を行います。
+//
+
+#include "stdafx.h"
+#include "LicBack.h"
+#include "LicBackDlg.h"
+#include <direct.h>
+#include <keylib.h>
+#include <Skca.h>
+#include "SerialKey.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CLicBackApp
+
+BEGIN_MESSAGE_MAP(CLicBackApp, CWinApp)
+	//{{AFX_MSG_MAP(CLicBackApp)
+		// メモ - ClassWizard はこの位置にマッピング用のマクロを追加または削除します。
+		//        この位置に生成されるコードを編集しないでください。
+	//}}AFX_MSG
+	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CLicBackApp クラスの構築
+
+CLicBackApp::CLicBackApp()
+{
+	// TODO: この位置に構築用のコードを追加してください。
+	// ここに InitInstance 中の重要な初期化処理をすべて記述してください。
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// 唯一の CLicBackApp オブジェクト
+
+CLicBackApp theApp;
+
+/////////////////////////////////////////////////////////////////////////////
+// CLicBackApp クラスの初期化
+
+BOOL CLicBackApp::InitInstance()
+{
+//	if (!AfxSocketInit())
+//	{
+//		AfxMessageBox(IDP_SOCKETS_INIT_FAILED);
+//		return FALSE;
+//	}
+
+	AfxEnableControlContainer();
+
+	// 標準的な初期化処理
+	// もしこれらの機能を使用せず、実行ファイルのサイズを小さくしたけ
+	//  れば以下の特定の初期化ルーチンの中から不必要なものを削除して
+	//  ください。
+
+#ifdef _AFXDLL
+	Enable3dControls();			// 共有 DLL 内で MFC を使う場合はここをコールしてください。
+#else
+	Enable3dControlsStatic();	// MFC と静的にリンクする場合はここをコールしてください。
+#endif
+
+	CString	csWrokPath (m_pszHelpFilePath) ;
+	int	iFund = csWrokPath.ReverseFind ('\\') ;
+	m_appPath = csWrokPath.Left (iFund) ;
+//	m_appPath.Format("%s", _getcwd(buffer, _MAX_PATH));
+	m_appPath.MakeUpper();
+	m_appBoot = m_appPath ;
+	m_appPath += CString("\\LookFont.lf");
+//MessageBox (NULL, m_appPath, "debug_lf", MB_OK) ;
+//	m_compno = pp_compno(COMPNO_WINPRODID | COMPNO_HDSERIAL, "", "C");
+//MessageBox (NULL, "debug001", "debug", MB_OK) ;
+	CheckProKey() ;
+	if (m_ActivatOK == 0) {
+//MessageBox (NULL, "debug002-err", "debug", MB_OK) ;
+		UpdateProKey () ;
+//MessageBox (NULL, "debug003-err", "debug", MB_OK) ;
+		MessageBox (NULL, "ライセンスの削除が完了しました。\n手動によるアンインストール認証は必要ありません。", "アンインストール認証", MB_OK) ;
+		return FALSE;
+	}
+//MessageBox (NULL, "debug003", "debug", MB_OK) ;
+//	StatusChanged () ;
+
+
+	CLicBackDlg dlg;
+	m_pMainWnd = &dlg;
+	if (m_ActivatOK == 1) {
+//MessageBox (NULL, "debug004", "debug", MB_OK) ;
+		int nResponse = dlg.DoModal();
+		if (nResponse == IDOK)
+		{
+//MessageBox (NULL, "debug005-OK", "debug", MB_OK) ;
+			UpdateProKey () ;
+		}
+		else if (nResponse == IDCANCEL)
+		{
+//MessageBox (NULL, "debug005-CAN", "debug", MB_OK) ;
+			UpdateProKey () ;
+		}
+	}
+//MessageBox (NULL, "debug006", "debug", MB_OK) ;
+
+	// ダイアログが閉じられてからアプリケーションのメッセージ ポンプを開始するよりは、
+	// アプリケーションを終了するために FALSE を返してください。
+	return FALSE;
+}
+
+BOOL CLicBackApp::CheckProKey()
+{	BOOL	b_ret = FALSE	,
+			b_open = FALSE	;
+	bool	b_dec			;
+	long	l_ret			;
+	char	buffer[128]		;
+	CString	cs_work			;
+	CSerialKey	proChk		;
+	
+//MessageBox (NULL, "debug002-001", "debug", MB_OK) ;
+	memset (m_LicenseID, 0, sizeof (char) * 16) ;
+	memset (m_LicensePW, 0, sizeof (char) * 16) ;
+	if (m_lfhandle == 0) {
+		b_open = TRUE ;
+		if ((l_ret = pp_lfopen((char *)((const char *)m_appPath), LF_CREATE_NORMAL, LF_FILE, "pluss21", &m_lfhandle)) != PP_SUCCESS) {
+			return (b_ret) ;
+		}
+	}
+	/* OPEN成功の場合	*/
+//MessageBox (NULL, "debug002-002", "debug", MB_OK) ;
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if ((l_ret = pp_getvarchar(m_lfhandle, VAR_AUTOCL_URL_UNLOCK, buffer)) == PP_SUCCESS) {
+		m_UrlUnlock = buffer ;
+	}
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if ((l_ret = pp_getvarchar(m_lfhandle, VAR_UDEF_CHAR_1, buffer)) == PP_SUCCESS) {
+		cs_work = buffer ;
+		if (cs_work.GetLength () == 25) {
+			if ((b_dec = proChk.Decode (cs_work, m_LicenseID, m_LicensePW)) == true) {
+//MessageBox (NULL, "debug002-003", "debug", MB_OK) ;
+				m_ProKey1 = cs_work.Left (5) ;
+				m_ProKey2 = cs_work.Mid (5, 5) ;
+				m_ProKey3 = cs_work.Mid (10, 5) ;
+				m_ProKey4 = cs_work.Mid (15, 5) ;
+				m_ProKey5 = cs_work.Mid (20, 5) ;
+				m_ProKeyOK = TRUE ;
+//				m_showMain = true ;
+				b_ret = TRUE ;
+			}
+		}
+	}
+
+	pp_getvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_2, (LPLONG)&m_compno) ;
+	if (m_compno == 0) {
+//MessageBox (NULL, "debug002-004", "debug", MB_OK) ;
+		m_compno = pp_compno(COMPNO_WINPRODID | COMPNO_HDSERIAL, "", "C");
+	}
+
+	pp_getvarnum(m_lfhandle, VAR_UDEF_NUM_1, (LPLONG)&m_ActivatOK) ;
+//	if (m_ActivatOK) {
+//		memset (buffer, 0, sizeof (char) * 128) ;
+//		if (pp_getvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, buffer) == PP_SUCCESS) {
+//			if (buffer[0] == 'N') {
+//			}
+//		}
+//MessageBox (NULL, "debug002-005", "debug", MB_OK) ;
+//MessageBox (NULL, buffer, "debug002-005", MB_OK) ;
+
+//	}
+	if (b_open == TRUE) {
+		pp_lfclose(m_lfhandle) ;
+		m_lfhandle = 0 ;
+	}
+//MessageBox (NULL, "debug002-006", "debug", MB_OK) ;
+	return (b_ret) ;
+}
+
+BOOL CLicBackApp::UpdateProKey()
+{	BOOL	b_ret = FALSE	,
+			b_open = FALSE	;
+	long	l_ret			;
+	char	buffer[128]		;
+	CString	cs_work			;
+	CSerialKey	proChk		;
+	int	lm_dy,lm_dm,lm_dd	;
+	CString	reg1Al = ""		,
+			reg2Al = ""		,
+			com1Al = ""		,
+			wAlias			;
+//	LONG	handleW			;
+//	LONG	type			;
+
+	// PCタイム取得
+	CTime ctPNow = CTime::GetCurrentTime();
+	
+	memset (m_LicenseID, 0, sizeof (char) * 16) ;
+	memset (m_LicensePW, 0, sizeof (char) * 16) ;
+	if (m_lfhandle == 0) {
+		b_open = TRUE ;
+		if ((l_ret = pp_lfopen((char *)((const char *)m_appPath), LF_CREATE_NORMAL, LF_FILE, "pluss21", &m_lfhandle)) != PP_SUCCESS) {
+			return (b_ret) ;
+		}
+	}
+//	for (i = 0 ; i < 3 ; i++) {
+//		switch (i) {
+//		case 0 :
+//			type = VAR_EZTRIAL_REG_ALIAS1 ;
+//		case 1 :
+//			type = VAR_EZTRIAL_REG_ALIAS1 ;
+//		case 2 :
+//		}
+//		if (pp_getvarchar(theApp.m_lfhandle, VAR_EZTRIAL_REG_ALIAS1, buffer) == PP_SUCCESS) {
+//			reg1Al = buffer ;
+//		}
+//		memset (buffer, 0, sizeof (char) * 128) ;
+//		if (pp_getvarchar(theApp.m_lfhandle, VAR_EZTRIAL_REG_ALIAS2, buffer) == PP_SUCCESS) {
+//			reg2Al = buffer ;
+//		}
+//		memset (buffer, 0, sizeof (char) * 128) ;
+//		if (pp_getvarchar(theApp.m_lfhandle, VAR_EZTRIAL_SYSDIR_FILENAME, buffer) == PP_SUCCESS) {
+//			com1Al = buffer ;
+//		}
+//	}
+
+
+	/* OPEN成功の場合	*/
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if ((l_ret = pp_getvarchar(m_lfhandle, VAR_AUTOCL_URL_UNLOCK, buffer)) == PP_SUCCESS) {
+		m_UrlUnlock = buffer ;
+	}
+	// プロダクトキー　クリア
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if ((l_ret = pp_setvarchar(m_lfhandle, VAR_UDEF_CHAR_1, buffer)) == PP_SUCCESS) {
+		cs_work = buffer ;
+	}
+
+	// 認証済みフラグ　クリア
+//	m_ActivatOK = 0 ;
+	pp_setvarnum(m_lfhandle, VAR_UDEF_NUM_1, 0) ;
+
+	// 製品モード　デモに戻す
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if (pp_getvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, buffer) == PP_SUCCESS) {
+		if (buffer[0] == 'N') {
+			pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "D") ;
+
+			// デモ期限を本日にする
+			lm_dm = ctPNow.GetMonth () ;
+			lm_dd = ctPNow.GetDay () ;
+			lm_dy = ctPNow.GetYear () ;
+			pp_setvardate(theApp.m_lfhandle, VAR_EXP_DATE_SOFT, lm_dm, lm_dd, lm_dy) ;
+			pp_setvardate(theApp.m_lfhandle, VAR_EXP_DATE_HARD, lm_dm, lm_dd, lm_dy) ;
+		}
+	}
+
+	// セッションコード　クリア
+	pp_setvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_5, 0);
+
+	// コンピュータＩＤ　クリア
+	if (m_ActivatOK == 1) {
+		pp_copydelete(theApp.m_lfhandle, theApp.m_compno) ;
+	}
+	theApp.m_compno = 0 ;
+	pp_setvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_2, (LONG)theApp.m_compno) ;
+
+	pp_upddate(m_lfhandle, UPDDATE_FORCE);
+
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if (pp_getvarchar(theApp.m_lfhandle, VAR_EZTRIAL_REG_ALIAS1, buffer) == PP_SUCCESS) {
+//		reg1Al = buffer ;
+		reg1Al.Format (":LM:Software\\Classes\\CLSID\\%s\\Programmable:Version", buffer) ;
+	}
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if (pp_getvarchar(theApp.m_lfhandle, VAR_EZTRIAL_REG_ALIAS2, buffer) == PP_SUCCESS) {
+//		reg2Al = buffer ;
+		reg2Al.Format (":LM:Software\\Classes\\CLSID\%s\\Programmable:Version", buffer) ;
+	}
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if (pp_getvarchar(theApp.m_lfhandle, VAR_EZTRIAL_SYSDIR_FILENAME, buffer) == PP_SUCCESS) {
+		com1Al = buffer ;
+	}
+
+	if (m_ActivatOK) {
+		if (reg1Al != "") {
+			l_ret = pp_lfcopy(m_lfhandle, (char *)((const char *)reg1Al), LF_REGISTRY) ;
+		}
+		if (reg2Al != "") {
+			l_ret = pp_lfcopy(m_lfhandle, (char *)((const char *)reg2Al), LF_REGISTRY) ;
+		}
+		if (com1Al != "") {
+			l_ret = pp_lfcopy(m_lfhandle, (char *)((const char *)com1Al), LF_FILE) ;
+		}
+	}
+	
+	if (b_open == TRUE) {
+		pp_lfclose(m_lfhandle) ;
+		m_lfhandle = 0 ;
+	}
+	b_ret = TRUE ;
+//MessageBox (NULL, "debug008--END", "debug", MB_OK) ;
+
+	return (b_ret) ;
+}
+

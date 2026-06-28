@@ -29,49 +29,49 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android35.0|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
     <AndroidUseAapt2>True</AndroidUseAapt2>
     <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android35.0|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
-    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidUseAapt2>True</AndroidUseAapt2>
     <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
-    <ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
-    <ApplicationVersion>46</ApplicationVersion>
+    <ApplicationDisplayVersion>51.0</ApplicationDisplayVersion>
+    <ApplicationVersion>51</ApplicationVersion>
   </PropertyGroup>
 
   <ItemGroup>

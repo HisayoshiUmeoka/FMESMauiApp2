@@ -1,0 +1,32 @@
+	// Init our pt struct in case escape not supported
+	pt.x = 0; pt.y = 0;
+
+	// Locate the upper left corner of the printable area
+	pt.x = GetDeviceCaps(hPrnDC, PHYSICALOFFSETX);
+	pt.y = GetDeviceCaps(hPrnDC, PHYSICALOFFSETY);
+
+	// Figure out how much you need to offset output to produce the left 
+	// and top margins for the output in the printer. Note the
+	// use of the "max" macro. It is possible that you are asking for
+	// margins that are not possible on this printer. For example, the HP
+	// LaserJet has a 0.25" unprintable area so we cannot get margins of
+	// 0.1".
+
+	xOffset = max (0, GetDeviceCaps (hPrnDC, LOGPIXELSX) * nInchesWeWant - pt.x);
+
+	yOffset = max (0, GetDeviceCaps (hPrnDC, LOGPIXELSY) * nInchesWeWant - pt.y);
+
+	// When doing all the output, you can either offset it by the above
+	// values or call SetViewportOrg() to set the point (0,0) at
+	// the margin offset you calculated.
+
+	SetViewportOrg (hPrnDC, xOffset, yOffset);
+	all other output here
+
+
+	// Get the size of the printable area
+	pt.x = GetDeviceCaps(hPrnDC, PHYSICALWIDTH);
+	pt.y = GetDeviceCaps(hPrnDC, PHYSICALHEIGHT);
+
+	xOffsetOfRightMargin = xOffset + GetDeviceCaps (hPrnDC, HORZRES) - pt.x - GetDeviceCaps (hPrnDC, LOGPIXELSX) * wInchesWeWant;
+	yOffsetOfBottomMargin = yOffset + GetDeviceCaps (hPrnDC, VERTRES) - pt.y - GetDeviceCaps (hPrnDC, LOGPIXELSY) * wInchesWeWant;

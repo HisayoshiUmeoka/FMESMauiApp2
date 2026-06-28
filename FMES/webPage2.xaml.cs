@@ -20,6 +20,7 @@ public partial class webPage2 : ContentPage
 	{
 		InitializeComponent();
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
+        this.BackgroundColor = Color.FromArgb("#D1D5DB");
 
         //AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 11;
@@ -28,7 +29,9 @@ public partial class webPage2 : ContentPage
         labelUser = new Label
         {
             Text = clsGlobalVar.g_Operator,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
+
             TextColor = Colors.Black,
             FontSize = 22,
             VerticalOptions = LayoutOptions.Center,
@@ -41,7 +44,8 @@ public partial class webPage2 : ContentPage
             //Text = "メニュー",
             ImageSource = "icon80x80.png",
             FontSize = 20,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             HorizontalOptions = LayoutOptions.End,
             //VerticalOptions = LayoutOptions.center // 中央に配置する（縦方向）
             VerticalOptions = LayoutOptions.Center // 中央に配置する（縦方向）
@@ -50,7 +54,8 @@ public partial class webPage2 : ContentPage
         ContentMenu = new HorizontalStackLayout()
         {
             HorizontalOptions = LayoutOptions.End,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             Children = {
                         labelUser,
                         buttonMenu,
@@ -62,7 +67,12 @@ public partial class webPage2 : ContentPage
         {
             //Text = AppResources.IDM032,
             Text = "戻る",
-            FontSize = 22,
+            FontSize = 14,
+            BorderColor = Colors.LightGray,
+            BorderWidth = 1.5,
+            HeightRequest = 48,
+            CornerRadius = 12,
+            Margin = new Thickness(20, 0, 20, 12),
             VerticalOptions = LayoutOptions.StartAndExpand,
             //            HorizontalOptions = LayoutOptions.Fill,
                         HorizontalOptions = LayoutOptions.Fill,

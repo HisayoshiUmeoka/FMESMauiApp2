@@ -35,7 +35,22 @@ public partial class PageParts2 : ContentPage
 		InitializeComponent();
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-        this.BackgroundColor = Colors.White;
+        //this.BackgroundColor = Color.FromArgb("#D1D5DB");
+        App.Current.UserAppTheme = AppTheme.Light;
+        Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+        // モダンなグラデーション背景
+        this.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+        };
+
 
         //AppResources.Culture = new System.Globalization.CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 5;

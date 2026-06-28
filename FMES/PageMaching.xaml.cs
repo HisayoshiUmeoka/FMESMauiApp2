@@ -1,15 +1,15 @@
-using System.Globalization;
+ï»¿using System.Globalization;
 using ZXing.Net.Maui;
 
 namespace FMES;
 
 public partial class PageMaching : ContentPage
 {
-    // «added for popupmeneu
+    // â†“added for popupmeneu
     private Label labelUser;
     private Button buttonMenu;
     private HorizontalStackLayout ContentMenu;
-    // ªadded for popupmeneu
+    // â†‘added for popupmeneu
 
     private Label label1;
     private Entry user1;
@@ -27,21 +27,38 @@ public partial class PageMaching : ContentPage
     private bool doingNow = false;
 
     public PageMaching()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-        this.BackgroundColor = Colors.White;
+        // ãƒšãƒ¼ã‚¸èƒŒæ™¯ã¯å¤‰æ›´ã—ãªã„ï¼ˆæŒ‡å®šã®æ¿ƒã„ãƒ©ã‚¤ãƒˆã‚°ãƒ¬ãƒ¼ï¼‰
+        //        this.BackgroundColor = Color.FromArgb("#D1D5DB");
+        App.Current.UserAppTheme = AppTheme.Light;
+        Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+        // ãƒ¢ãƒ€ãƒ³ãªã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³èƒŒæ™¯
+        this.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+        };
+
 
         //AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 2;
 
-        // «added for popupmeneu
-
+        // â†“added for popupmeneu (å°ã•ãªãƒ¦ãƒ¼ã‚¶ãƒ¼è¡¨ç¤º + ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒœã‚¿ãƒ³)
         labelUser = new Label
         {
             Text = clsGlobalVar.g_Operator,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // â† é€éã«å¤‰æ›´
+
             TextColor = Colors.Black,
             FontSize = 22,
             VerticalOptions = LayoutOptions.Center,
@@ -51,48 +68,43 @@ public partial class PageMaching : ContentPage
 
         buttonMenu = new Button
         {
-            //Text = "ƒƒjƒ…[",
+            //Text = "ãƒ¡ãƒ‹ãƒ¥ãƒ¼",
             ImageSource = "icon80x80.png",
             FontSize = 20,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // â† é€éã«å¤‰æ›´
             HorizontalOptions = LayoutOptions.End,
-            //VerticalOptions = LayoutOptions.center // ’†‰›‚É”z’u‚·‚éic•ûŒüj
-            VerticalOptions = LayoutOptions.Center // ’†‰›‚É”z’u‚·‚éic•ûŒüj
+            //VerticalOptions = LayoutOptions.center // ä¸­å¤®ã«é…ç½®ã™ã‚‹ï¼ˆç¸¦æ–¹å‘ï¼‰
+            VerticalOptions = LayoutOptions.Center // ä¸­å¤®ã«é…ç½®ã™ã‚‹ï¼ˆç¸¦æ–¹å‘ï¼‰
         };
         buttonMenu.Clicked += MenuButtonClicked;
         ContentMenu = new HorizontalStackLayout()
         {
             HorizontalOptions = LayoutOptions.End,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // â† é€éã«å¤‰æ›´
             Children = {
                         labelUser,
                         buttonMenu,
                     }
         };
-        // ªadded for popupmeneu
+        // â†‘added for popupmeneu
 
-        // StackLayout‚Å2‚Â‚Ì EntryƒRƒ“ƒgƒ[ƒ‹‚ğ•À‚×‚é
-        //dropdown1 = new Picker
-        //{
-        //    FontSize = 16,
-        //    Title = AppResources.IDM103,
-        //    VerticalOptions = LayoutOptions.Start
-        //};
-        //dropdown1.Items.Add(AppResources.IDM104);
-        //dropdown1.Items.Add(AppResources.IDM105);
-        //dropdown1.SelectedIndex = clsGlobalVar.g_lastSashizuKind - 1;
+        // Entry - ãƒ“ãƒ¼ã‚³ãƒ³å
         user1 = new Entry
         {
             Keyboard = Keyboard.Text,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            FontSize = 20,
-            //Placeholder = AppResources.IDM126,
-            Placeholder = "ƒr[ƒRƒ“–¼Ì",
-                        HorizontalOptions = LayoutOptions.Fill,
-            VerticalOptions = LayoutOptions.Center,
+            BackgroundColor = Color.FromArgb("#F8FAFC"), // subtle input bg
+            TextColor = Color.FromArgb("#0F172A"),
+            FontSize = 16,
+            Placeholder = "ãƒ“ãƒ¼ã‚³ãƒ³åç§°",
+            PlaceholderColor = Color.FromArgb("#94A3B8"),
+            HeightRequest = 48,
+            HorizontalOptions = LayoutOptions.FillAndExpand,
+            //CornerRadius = 10,
+            Margin = new Thickness(0)
         };
-        // «added for QRScan
+        // â†“added for QRScan
         if (clsGlobalVar.g_BackPage == "PageMaching" && clsGlobalVar.g_QRRET != null)
         {
             user1.Text = clsGlobalVar.g_QRRET;
@@ -100,85 +112,157 @@ public partial class PageMaching : ContentPage
             clsGlobalVar.g_QRRET = string.Empty;
 
         }
-        // ªadded for QRScan
+        // â†‘added for QRScan
 
+        // QRãƒœã‚¿ãƒ³ï¼ˆå°å‹ï¼‰
         button1 = new Button
         {
-            //Text = "‚p‚qƒXƒLƒƒƒ“",
             ImageSource = "qr100x100.png",
-            FontSize = 20,
+            WidthRequest = 48,
+            HeightRequest = 48,
+            CornerRadius = 12,
             BackgroundColor = Colors.White,
-            HorizontalOptions = LayoutOptions.Center//,//’†‰›‚É”z’u‚·‚éi‰¡•ûŒüj
-                                                    //VerticalOptions = LayoutOptions.CenterAndExpand // ’†‰›‚É”z’u‚·‚éic•ûŒüj
+            BorderColor = Color.FromArgb("#E6EEF8"),
+            BorderWidth = 1,
+            Padding = 8,
+            HorizontalOptions = LayoutOptions.End
         };
-        Content2 = new StackLayout()
+        // Content2 ã¯å…¥åŠ›è¡Œï¼ˆEntry + QRï¼‰
+        Content2 = new StackLayout
         {
             Orientation = StackOrientation.Horizontal,
-            BackgroundColor = Colors.White,
-            Children = {
-                        user1,
-                        button1,
-                    }
+            Spacing = 10,
+            HorizontalOptions = LayoutOptions.Fill,
+            Children = { user1, button1 }
         };
+
+        // ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒœã‚¿ãƒ³ï¼ˆä¸»æ“ä½œï¼‰
         button2 = new Button
         {
-            //Text = AppResources.IDM119,//"@Œˆ’è@",
-            Text = "ƒr[ƒRƒ“ƒ}ƒbƒ`“o˜^",//"ƒr[ƒRƒ“ƒ}ƒbƒ`“o˜^",
-            FontSize = 20,
-            Margin = new Thickness(0, 5, 0, 5),
-            Padding = new Thickness(10, 10, 10, 10),
-            //BackgroundColor = Colors.DodgerBlue,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
-                        HorizontalOptions = LayoutOptions.Fill,
-            //VerticalOptions = LayoutOptions.CenterAndExpand // ’†‰›‚É”z’u‚·‚éic•ûŒüj
+            Text = "ãƒ“ãƒ¼ã‚³ãƒ³ãƒãƒƒãƒç™»éŒ²",
+            FontSize = 14,
+            BorderColor = Colors.LightGray,
+            BorderWidth = 1.5,
+            HeightRequest = 48,
+            CornerRadius = 12,
+            Margin = new Thickness(20, 0, 20, 12),
+            HorizontalOptions = LayoutOptions.Fill
+        };
+        // ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã«å¿œã˜ãŸã‚¢ã‚¯ã‚»ãƒ³ãƒˆã‚«ãƒ©ãƒ¼ã‚’åˆ©ç”¨ã—ã¦ã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³é¢¨ã«
+        button2.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 0),
+            GradientStops = new GradientStopCollection
+            {
+                new GradientStop { Color = Color.FromArgb("#3B82F6"), Offset = 0.0f },
+                new GradientStop { Color = Color.FromArgb("#2563EB"), Offset = 1.0f }
+            }
         };
 
-        //string wEnd = AppResources.IDM032;
-        string wEnd = "–ß‚é";
-
+        // æˆ»ã‚‹ãƒœã‚¿ãƒ³ï¼ˆã‚»ã‚«ãƒ³ãƒ€ãƒªï¼‰
         buttonEnd = new Button
         {
-            Text = wEnd,
-            FontSize = 22,
-            Margin = new Thickness(0, 5, 0, 5),
-            Padding = new Thickness(10, 10, 10, 10),
-            //VerticalOptions = LayoutOptions.Center,
+            Text = "æˆ»ã‚‹",
+            FontSize = 14,
+            BorderColor = Colors.LightGray,
+            BorderWidth = 1.5,
+            HeightRequest = 48,
+            CornerRadius = 12,
+            Margin = new Thickness(20, 0, 20, 12),
+            VerticalOptions = LayoutOptions.StartAndExpand,
+            //            HorizontalOptions = LayoutOptions.Fill,
             HorizontalOptions = LayoutOptions.Fill,
-            //HorizontalOptions = LayoutOptions.Center,
             TextColor = Colors.Black,
             BackgroundColor = Colors.LightGreen,
         };
         buttonEnd.Clicked += EndButtonClicked;
 
-
-        Content = new StackLayout
+        // å…¨ä½“ã‚«ãƒ¼ãƒ‰ â€” ä¸­å¤®ã®ç™½ã„ã‚«ãƒ¼ãƒ‰ã«ã¾ã¨ã‚ã¦æ´—ç·´ã•ã‚ŒãŸè¦‹ãŸç›®ã«
+        var mainCard = new Frame
         {
-            Padding = new Thickness(10, 10, 10, 10),
+            CornerRadius = 14,
+            HasShadow = true,
+            Padding = new Thickness(16),
+            Margin = new Thickness(20, 12, 20, 20),
             BackgroundColor = Colors.White,
-            Children = {
-                    ContentMenu,
-                    //dropdown1,
+            BorderColor = Color.FromArgb("#E6EEF8"),
+            Content = new VerticalStackLayout
+            {
+                Spacing = 12,
+                Children =
+                {
+                    // ãƒ˜ãƒƒãƒ€ãƒ¼è¡Œï¼ˆã‚¿ã‚¤ãƒˆãƒ« + ãƒ¡ãƒ‹ãƒ¥ãƒ¼ï¼‰
+                    new HorizontalStackLayout
+                    {
+                        HorizontalOptions = LayoutOptions.Fill,
+                        Children =
+                        {
+                            new Label
+                            {
+                                Text = "ãƒ“ãƒ¼ã‚³ãƒ³ãƒãƒƒãƒ",
+                                FontSize = 20,
+                                FontAttributes = FontAttributes.Bold,
+                                TextColor = Color.FromArgb("#0F172A"),
+                                VerticalOptions = LayoutOptions.Center,
+                                HorizontalOptions = LayoutOptions.StartAndExpand
+                            },
+                            ContentMenu
+                        }
+                    },
+
+                    // èª¬æ˜ï¼ˆå°ã•ã‚ãƒ†ã‚­ã‚¹ãƒˆï¼‰
+                    new Label
+                    {
+                        Text = "ãƒ“ãƒ¼ã‚³ãƒ³åã‚’å…¥åŠ›ã—ã¦ç™»éŒ²ã—ã¾ã™ã€‚QRã§ç°¡å˜ã«å…¥åŠ›ã§ãã¾ã™ã€‚",
+                        FontSize = 13,
+                        TextColor = Color.FromArgb("#64748B"),
+                        HorizontalOptions = LayoutOptions.Fill,
+                        LineBreakMode = LineBreakMode.WordWrap
+                    },
+
+                    // å…¥åŠ›è¡Œ
                     Content2,
-                    //user1,
-                    //button1,
-                    button2,
-                    //button5,
-                    //button3,
-                    buttonEnd,
-                    //button4,
+
+                    // ä¸»ãƒœã‚¿ãƒ³ãƒ»æˆ»ã‚‹ãƒœã‚¿ãƒ³
+                    new VerticalStackLayout
+                    {
+                        Spacing = 10,
+                        Children =
+                        {
+                            button2,
+                            buttonEnd
+                        }
+                    }
                 }
+            }
         };
+
+        // ãƒšãƒ¼ã‚¸å…¨ä½“ã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆï¼ˆèƒŒæ™¯è‰²ã¯ä¿æŒï¼‰
+        this.Content = new ScrollView
+        {
+            Padding = new Thickness(0),
+            BackgroundColor = Color.FromArgb("#D1D5DB"), // ãƒšãƒ¼ã‚¸èƒŒæ™¯ã¯å¤‰ãˆãªã„
+            Content = new VerticalStackLayout
+            {
+                Spacing = 0,
+                Padding = new Thickness(0, 12),
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                BackgroundColor = Colors.Transparent,
+                Children =
+                {
+                    // ä¸Šéƒ¨ã«å°ã•ãªä½™ç™½ã‚’ä½œã‚Šã€ã‚«ãƒ¼ãƒ‰ã‚’ä¸­å¿ƒã«è¡¨ç¤º
+                    mainCard
+                }
+            }
+        };
+
+        // ã‚¤ãƒ™ãƒ³ãƒˆã¯æ—¢å­˜ãƒãƒ³ãƒ‰ãƒ©ã¸ï¼ˆå…ƒã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’ç¶­æŒï¼‰
         button1.Clicked += ScanButtonClicked;
         button2.Clicked += GoButtonClicked;
-        //button3.Clicked += GoButtonClicked2;
-        //button4.Clicked += GoWebClicked;
-        //button5.Clicked += GoButtonClicked3;
-
-
-
     }
-    // «added for popupmeneu
+
+    // â†“added for popupmeneu
     async void MenuButtonClicked(object sender, EventArgs s)
     {
         clsGlobalVar.g_BackPage = "PageMaching";
@@ -186,7 +270,7 @@ public partial class PageMaching : ContentPage
 
         Application.Current.MainPage = new Pagepopupmenu();
     }
-    // ªadded for popupmeneu
+    // â†‘added for popupmeneu
 
     async void EndButtonClicked(object sender, EventArgs s)
     {
@@ -236,164 +320,39 @@ public partial class PageMaching : ContentPage
     }
     async void ScanButtonClicked(object sender, EventArgs s)
     {
-        //tako ‚±‚±‚ÅQRƒXƒLƒƒƒ“Àˆ—‚ğ“ü‚ê‚é
-        //‚±‚±‚ÉQRSCANÀˆ—‚ğ“ü‚ê‚éB
-        // «added for QRScan
+        //tako ã“ã“ã§QRã‚¹ã‚­ãƒ£ãƒ³å®Ÿå‡¦ç†ã‚’å…¥ã‚Œã‚‹
+        //ã“ã“ã«QRSCANå®Ÿå‡¦ç†ã‚’å…¥ã‚Œã‚‹ã€‚
+        // â†“added for QRScan
         clsGlobalVar.g_BackPage = "PageMaching";
         clsGlobalVar.g_QRRET = string.Empty;
         Application.Current.MainPage = new QRPage();
-        // ªadded for QRScan
-
-        //var scanPage = new ZXing.Net.Maui.Views.CameraBarcodeReaderView();
-        //var result = await scanPage.ScanAsync();
-
-        //if (result != null)
-        //{
-        //    await DisplayAlert("ƒXƒLƒƒƒ“Š®—¹", result.Text, "OK");
-        //    user1.Text = result.Text;
-        //}            //user1.Text = result.Text;
-        //});
-
-        //scanedData.Add(result.Text);
-        //};
+        // â†‘added for QRScan
     }
 
     async void GoButtonClicked(object sender, EventArgs s)
     {
-        //bool bChange = (clsGlobalVar.g_lastSashizuKind == dropdown1.SelectedIndex + 1)? false : true;
-        //clsGlobalVar.g_SasizuNo = user1.Text;
-
-        //clsGlobalVar.g_lastSashizuKind = dropdown1.SelectedIndex + 1;
-        //            clsGlobalVar.g_lastSashizuKind = 0 + 1;
-
-
-        //await clsGlobalVar.SaveTextAsync();
-
         if (string.IsNullOrEmpty(user1.Text) == false)
         {
-            //await DisplayAlert(AppResources.IDM091, "0", "OK");
             string srtErrMsg = string.Empty;
             clsKaisouList lstKaisou = new clsKaisouList();
             if (clsWebUpdate.SendAddBeacon(clsGlobalVar.g_SasizuNo, user1.Text, ref srtErrMsg) == false)
             {
-                //await Navigation.PopAsync();
-                //await DisplayAlert(AppResources.IDM091, srtErrMsg, "OK");
-                await DisplayAlert("w}”Ô†ƒGƒ‰[", srtErrMsg, "OK");
+                await DisplayAlert("æŒ‡å›³ç•ªå·ã‚¨ãƒ©ãƒ¼", srtErrMsg, "OK");
             }
             else
             {
-                //await DisplayAlert(AppResources.IDM125, "³íI—¹", "OK");
-                await DisplayAlert("ƒr[ƒRƒ“ƒ}ƒbƒ`“o˜^Š®—¹", "³íI—¹", "OK");
-
-                //string[] yourData = { _UserID.ToString(), _SasizuNo, _SasizuID.ToString(), _KaisouNo.ToString(), _KouteiID.ToString(), _KouteiShousaiID.ToString(), _KensaBashoID.ToString(), clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString() };
-                //if (bChange)
-                //{
-                //    await clsGlobalVar.SaveTextAsync();
-                //    //System.Threading.Thread.Sleep(1000);
-                //    await DisplayAlert(AppResources.IDM110, AppResources.IDM111, "OK");
-                //}
-                //await DisplayAlert(AppResources.IDM091, "2", "OK");
+                await DisplayAlert("ãƒ“ãƒ¼ã‚³ãƒ³ãƒãƒƒãƒç™»éŒ²å®Œäº†", "æ­£å¸¸çµ‚äº†", "OK");
                 freeThis();
-                //await Navigation.PushAsync(new Page1(yourData));
                 clsGlobalVar.g_ActMode = 0;
                 Application.Current.MainPage = new Page1();
             }
         }
         else
         {
-            //await Navigation.PopAsync();
-            //await DisplayAlert(AppResources.IDM091, AppResources.IDM102, "OK");
+            // ç©ºç™½å…¥åŠ›æ™‚ã®æŒ™å‹•ã¯æ—¢å­˜ã®ã¾ã¾
         }
     }
-    async void GoButtonClicked2(object sender, EventArgs s)
-    {
-        clsGlobalVar.g_SasizuNo = "-1";
-        clsGlobalVar.g_ActMode = -1;
 
-        //            clsGlobalVar.g_lastSashizuKind = 0 + 1;
-
-        //await clsGlobalVar.SaveTextAsync();
-
-        if (string.IsNullOrEmpty(clsGlobalVar.g_SasizuNo) == false)
-        {
-            //await DisplayAlert(AppResources.IDM091, "0", "OK");
-            string srtErrMsg = string.Empty;
-            clsKaisouList lstKaisou = new clsKaisouList();
-            if (clsWebUpdate.SendCheckSashizu(clsGlobalVar.g_UserID, clsGlobalVar.g_SasizuNo, 1, clsGlobalVar.g_KouteiID, 0, 0, 0, clsGlobalVar.g_lastSashizuKind, clsGlobalVar.g_KouteiVer, ref srtErrMsg) == false)
-            {
-                //await Navigation.PopAsync();
-                //await DisplayAlert(AppResources.IDM091, srtErrMsg, "OK");
-                await DisplayAlert("w}”Ô†ƒGƒ‰[", srtErrMsg, "OK");
-            }
-            else
-            {
-                //string[] yourData = { _UserID.ToString(), _SasizuNo, _SasizuID.ToString(), _KaisouNo.ToString(), _KouteiID.ToString(), _KouteiShousaiID.ToString(), _KensaBashoID.ToString(), clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString() };
-                //await DisplayAlert(AppResources.IDM091, "2", "OK");
-                freeThis();
-                //await Navigation.PushAsync(new Page1(yourData));
-                Application.Current.MainPage = new Page1();
-            }
-        }
-        else
-        {
-            //await Navigation.PopAsync();
-            //await DisplayAlert(AppResources.IDM091, AppResources.IDM102, "OK");
-            await DisplayAlert("w}”Ô†ƒGƒ‰[", "w}”Ô†‚ğƒXƒLƒƒƒ“‚µ‚Ä‚­‚¾‚³‚¢B", "OK");
-        }
-    }
-    async void GoButtonClicked3(object sender, EventArgs s)
-    {
-        clsGlobalVar.g_SasizuNo = "-2";
-        clsGlobalVar.g_ActMode = -2;
-
-        //            clsGlobalVar.g_lastSashizuKind = 0 + 1;
-
-        //await clsGlobalVar.SaveTextAsync();
-
-        if (string.IsNullOrEmpty(clsGlobalVar.g_SasizuNo) == false)
-        {
-            //await DisplayAlert(AppResources.IDM091, "0", "OK");
-            string srtErrMsg = string.Empty;
-            clsKaisouList lstKaisou = new clsKaisouList();
-            if (clsWebUpdate.SendCheckSashizu(clsGlobalVar.g_UserID, clsGlobalVar.g_SasizuNo, 1, clsGlobalVar.g_KouteiID, 0, 0, 0, clsGlobalVar.g_lastSashizuKind, clsGlobalVar.g_KouteiVer, ref srtErrMsg) == false)
-            {
-                //await Navigation.PopAsync();
-                //await DisplayAlert(AppResources.IDM091, srtErrMsg, "OK");
-                await DisplayAlert("w}”Ô†ƒGƒ‰[", srtErrMsg, "OK");
-            }
-            else
-            {
-                //string[] yourData = { _UserID.ToString(), _SasizuNo, _SasizuID.ToString(), _KaisouNo.ToString(), _KouteiID.ToString(), _KouteiShousaiID.ToString(), _KensaBashoID.ToString(), clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString() };
-                //await DisplayAlert(AppResources.IDM091, "2", "OK");
-                freeThis();
-                //await Navigation.PushAsync(new Page1(yourData));
-                Application.Current.MainPage = new Page1();
-            }
-        }
-        else
-        {
-            //await Navigation.PopAsync();
-            //await DisplayAlert(AppResources.IDM091, AppResources.IDM102, "OK");
-            await DisplayAlert("w}”Ô†ƒGƒ‰[", "w}”Ô†‚ğƒXƒLƒƒƒ“‚µ‚Ä‚­‚¾‚³‚¢B", "OK");
-        }
-    }
-    async void GoWebClicked(object sender, EventArgs s)
-    {
-        clsGlobalVar.g_SasizuNo = "-1";
-
-        //await clsGlobalVar.SaveTextAsync();
-
-        //await DisplayAlert(AppResources.IDM091, "0", "OK");
-        freeThis();
-        //await Navigation.PushAsync(new Page1(yourData));
-
-        //neko
-        //Application.Current.MainPage = new PageWeb();
-        clsGlobalVar.g_optionurl = clsGlobalVar.GetCurURL() + "users/dailyreports/" + clsGlobalVar.GetLanguageStr() + "/" + clsGlobalVar.g_UserID + "/" + DateTime.Now.ToString("yyyy-MM-dd");
-        clsGlobalVar.g_JumpPage = "SashizuPage";
-        Application.Current.MainPage = new webPage2();
-
-    }
     private void freeThis()
     {
         label1 = null;
@@ -407,19 +366,10 @@ public partial class PageMaching : ContentPage
         }
         if (labelUser != null) labelUser = null;
         if (ContentMenu != null) ContentMenu = null;
-        // ªadded for popupmeneu
+        // â†‘added for popupmeneu
 
-
-        //if (dropdown1 != null)
-        //{
-        //    dropdown1.Items.Clear();
-        //    dropdown1 = null;
-        //}
         button1.Clicked -= ScanButtonClicked;
         button2.Clicked -= GoButtonClicked;
-        //button3.Clicked -= GoButtonClicked2;
-        //button4.Clicked -= GoWebClicked;
-        //button5.Clicked -= GoButtonClicked3;
         button1.ImageSource = null;
         button1 = null;
         button2 = null;
@@ -430,9 +380,5 @@ public partial class PageMaching : ContentPage
         Content = null;
         GC.Collect();
     }
-
-
-
-
 
 }

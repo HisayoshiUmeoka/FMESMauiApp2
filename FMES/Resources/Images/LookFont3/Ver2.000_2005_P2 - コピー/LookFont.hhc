@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="Window Styles" value="0x800227">
+	<param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="はじめに">
+		<param name="Local" value="htm Ver1.020\index.htm">
+		<param name="ImageNumber" value="12">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="製品の特徴とメリット">
+		<param name="Local" value="htm Ver1.020\feature.htm">
+		<param name="ImageNumber" value="17">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="使用許諾及び著作権について">
+		<param name="Local" value="htm Ver1.020\copyright.htm">
+		<param name="ImageNumber" value="18">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="インストール・ガイド">
+		<param name="ImageNumber" value="2">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="動作環境スペック">
+			<param name="Local" value="htm Ver1.020\setup\speck.htm">
+			<param name="ImageNumber" value="17">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="インストールについて">
+			<param name="Local" value="htm Ver1.020\setup\install.htm">
+			<param name="ImageNumber" value="31">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="アンインストールについて">
+			<param name="Local" value="htm Ver1.020\setup\uninstall.htm">
+			<param name="ImageNumber" value="31">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ライセンス認証">
+			<param name="Local" value="htm Ver1.020\setup\license.htm">
+			<param name="ImageNumber" value="15">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ユーザー登録について">
+			<param name="Local" value="htm Ver1.020\setup\userreg.htm">
+			<param name="ImageNumber" value="15">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="クイックスタート">
+		<param name="ImageNumber" value="2">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="クイックスタート">
+			<param name="Local" value="htm Ver1.020\quickstart\quickstart.htm">
+			<param name="ImageNumber" value="17">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="リファレンスガイド">
+		<param name="ImageNumber" value="2">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="メイン画面　各部名称">
+			<param name="Local" value="htm Ver1.020\reference\detail.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="印刷">
+			<param name="Local" value="htm Ver1.020\reference\print.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="印刷プレビュー">
+			<param name="Local" value="htm Ver1.020\reference\preview.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="プリンタの設定">
+			<param name="Local" value="htm Ver1.020\reference\printerset.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="設定">
+			<param name="Local" value="htm Ver1.020\reference\setup.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="アップデートチェック">
+			<param name="Local" value="htm Ver1.020\reference\upd_check.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="アプリケーションの終了">
+			<param name="Local" value="htm Ver1.020\reference\exit.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ツールバー">
+			<param name="Local" value="htm Ver1.020\reference\toolbar.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="コピー">
+			<param name="Local" value="htm Ver1.020\reference\copy.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="フォント名をコピー">
+			<param name="Local" value="htm Ver1.020\reference\fcopy.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="貼り付け">
+			<param name="Local" value="htm Ver1.020\reference\paste.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="プロパティ">
+			<param name="Local" value="htm Ver1.020\reference\propaty.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="フォントの一時インストール／フォント登録">
+			<param name="Local" value="htm Ver1.020\reference\fontinstall.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ＣＤ／フォルダ検索 一時インストール">
+			<param name="Local" value="htm Ver1.020\reference\finfinstall.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="一時フォントのアンインストール／フォント解除">
+			<param name="Local" value="htm Ver1.020\reference\fontuninstall.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="フォント選択バー">
+			<param name="Local" value="htm Ver1.020\reference\filter.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="テキスト入力バー">
+			<param name="Local" value="htm Ver1.020\reference\textinput.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="表示メニュー">
+			<param name="Local" value="htm Ver1.020\reference\disp.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="オンラインヘルプ">
+			<param name="Local" value="htm Ver1.020\reference\help_help.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="バージョン情報">
+			<param name="Local" value="htm Ver1.020\reference\help_ver.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="プラス・エス サイト">
+			<param name="Local" value="htm Ver1.020\reference\pluss_site.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="サポート サイト">
+			<param name="Local" value="htm Ver1.020\reference\support_site.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="フォントファイル拡張子について">
+			<param name="Local" value="htm Ver1.020\reference\fontext.htm">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="トラブルシューティング">
+		<param name="Local" value="htm Ver1.020\trouble.htm">
+		<param name="ImageNumber" value="17">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="サポートについて">
+		<param name="Local" value="htm Ver1.020\support.htm">
+		<param name="ImageNumber" value="17">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="プライバシーポリシー">
+		<param name="Local" value="htm Ver1.020\privacy.htm">
+		<param name="ImageNumber" value="37">
+		</OBJECT>
+</UL>
+</BODY></HTML>

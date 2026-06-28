@@ -35,7 +35,7 @@ public partial class PageParts : ContentPage
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
         //        InitializeComponent();
-        this.BackgroundColor = Colors.White;
+        this.BackgroundColor = Color.FromArgb("#D1D5DB");
 
         //AppResources.Culture = new System.Globalization.CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 5;
@@ -78,9 +78,12 @@ public partial class PageParts : ContentPage
                 Button butn = new Button
                 {
                     Text = whinnmokuData._hinnmokuName,
-                    FontSize = 22,
-                    Margin = new Thickness(15, 15, 15, 15),
-                    Padding = new Thickness(0, 0, 0, 0),
+                    FontSize = 14,
+                    BorderColor = Colors.LightGray,
+                    BorderWidth = 1.5,
+                    HeightRequest = 48,
+                    CornerRadius = 12,
+                    Margin = new Thickness(20, 0, 20, 12),
                     VerticalOptions = LayoutOptions.Center,
                                 HorizontalOptions = LayoutOptions.Fill,
                     TextColor = GetTextColorParts(),
@@ -111,9 +114,12 @@ public partial class PageParts : ContentPage
             {
                 //Text = AppResources.IDM032,
                 Text = "–ß‚é",
-                FontSize = 22,
-                Margin = new Thickness(15, 15, 15, 15),
-                Padding = new Thickness(0, 0, 0, 0),
+                FontSize = 14,
+                BorderColor = Colors.LightGray,
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 12),
                 //VerticalOptions = LayoutOptions.Center,
                 //            HorizontalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill,

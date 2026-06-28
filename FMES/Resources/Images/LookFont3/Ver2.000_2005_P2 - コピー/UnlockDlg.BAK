@@ -1,0 +1,335 @@
+// UnlockDlg.cpp : インプリメンテーション ファイル
+//
+
+#include "stdafx.h"
+#include "lookfont.h"
+#include "UnlockDlg.h"
+#include <keylib.h>
+#include <Skca.h>
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CUnlockDlg ダイアログ
+
+
+CUnlockDlg::CUnlockDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CUnlockDlg::IDD, pParent)
+{
+	//{{AFX_DATA_INIT(CUnlockDlg)
+	m_userCode1String = _T("");
+	m_userCode2String = _T("");
+	//}}AFX_DATA_INIT
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_ICON_LICENCE);
+}
+
+
+void CUnlockDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CUnlockDlg)
+	DDX_Control(pDX, IDC_EDIT_USER_CODE_1, m_userCode1);
+	DDX_Control(pDX, IDC_EDIT_USER_CODE_2, m_userCode2);
+	DDX_Control(pDX, IDC_EDIT_REG_KEY_1, m_regKey1);
+	DDX_Control(pDX, IDC_EDIT_REG_KEY_2, m_regKey2);
+	DDX_Text(pDX, IDC_EDIT_USER_CODE_1, m_userCode1String);
+	DDX_Text(pDX, IDC_EDIT_USER_CODE_2, m_userCode2String);
+	//}}AFX_DATA_MAP
+}
+
+
+BEGIN_MESSAGE_MAP(CUnlockDlg, CDialog)
+	//{{AFX_MSG_MAP(CUnlockDlg)
+	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_BUTTON_GETWEB, OnButtonGetweb)
+	ON_BN_CLICKED(IDC_BUTTON_FAX, OnButtonFax)
+	ON_BN_CLICKED(IDC_BUTTON_EMAIL, OnButtonEmail)
+	ON_EN_CHANGE(IDC_EDIT_REG_KEY_1, OnChangeEditRegKey1)
+	ON_WM_HELPINFO()
+	ON_EN_CHANGE(IDC_EDIT_REG_KEY_2, OnChangeEditRegKey2)
+	ON_WM_SYSCOMMAND()
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CUnlockDlg メッセージ ハンドラ
+
+BOOL CUnlockDlg::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+	SetIcon(m_hIcon, TRUE);			// 大きいアイコンの設定
+	SetIcon(m_hIcon, FALSE);		// 小さいアイコンの設定
+	
+	long StoredCode;
+
+	theApp.CheckError(pp_getvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_5, &StoredCode));
+
+	if (StoredCode != 0)
+	{
+		m_sessionCode = StoredCode;
+	}
+	else
+	{
+		m_sessionCode = pp_cenum();
+	}
+
+	// Set the text on the dialog box
+	m_userCode1String.Format("%ld", m_sessionCode);
+	m_userCode2String.Format("%ld", theApp.m_compno);
+
+	m_userCode1.SetWindowText(m_userCode1String);
+	m_userCode2.SetWindowText(m_userCode2String);
+	return TRUE;  // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります
+	              // 例外: OCX プロパティ ページの戻り値は FALSE となります
+}
+
+void CUnlockDlg::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & 0xFFF0) == SC_CLOSE)
+	{
+		OnCancel () ;
+	}
+	else
+	{
+		CDialog::OnSysCommand(nID, lParam);
+	}
+}
+
+void CUnlockDlg::OnPaint() 
+{
+	CPaintDC dc(this); // 描画用のデバイス コンテキスト
+	if (IsIconic())
+	{
+		CPaintDC dc(this); // 描画のデバイス コンテキスト
+
+		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+
+		// クライアントの四角形領域内の中央
+		int cxIcon = GetSystemMetrics(SM_CXICON);
+		int cyIcon = GetSystemMetrics(SM_CYICON);
+		CRect rect;
+		GetClientRect(&rect);
+		int x = (rect.Width() - cxIcon + 1) / 2;
+		int y = (rect.Height() - cyIcon + 1) / 2;
+
+		// アイコンの描画
+		dc.DrawIcon(x, y, m_hIcon);
+	}
+}
+
+void CUnlockDlg::OnOK() 
+{
+	long	TcValue	;	// trigger code value
+	long	TcData	;	// trigger code data
+	long	RegKey1	,
+			RegKey2	,
+			result	;
+	// Unconditionally clear out our stored session code
+	// to prevent hacking on the stored session code
+	// (refer to Delayed Trigger Codes in the index for information)
+	pp_setvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_5, 0);
+
+	// See if a valid code was entered
+	// Also decode the Trigger Code additional number, if applicable
+	CString tempStr;
+	m_regKey1.GetWindowText(tempStr);
+	RegKey1 = atol((char *)(const char *)tempStr);
+//	TcValue = pp_tcode(atoi((char *)(const char*)tempStr), m_sessionCode, theApp.m_compno, 398);
+	m_regKey2.GetWindowText(tempStr);
+	RegKey2 = atol((char *)(const char *)tempStr);
+
+//	TcData = pp_ndecrypt(atoi((char *)(const char *)tempStr), 125);
+
+	if ((result = pp_eztrig1ex(theApp.m_lfhandle, RegKey1, RegKey2, 0, m_sessionCode, theApp.m_compno, 398, 125, &TcValue, &TcData)) != PP_SUCCESS) {
+		CString	cs_err	;
+		cs_err.Format ("ライセンス認証解除コード取得エラー発生！\nエラーコード:%d\nライセンス認証時の解除コード取得に失敗しました。\n弊社サポートまでご連絡下さい。", result) ;
+		MessageBox(cs_err, "ライセンス認証解除エラー", MB_OK | MB_ICONERROR);
+		theApp.m_showMain = false ;
+		theApp.m_ActivatOK = FALSE ;
+		return ;
+	}
+
+	switch(TcValue)
+	{
+		case 1:
+		{
+			// This code should authorize this computer and turn on payments
+			theApp.CheckError(pp_copyadd(theApp.m_lfhandle, COPYADD_ERASEALL, theApp.m_compno));
+
+			// Extend Payment Expiration for the next quarter - on the 15th of the month
+			ExtendPayment();
+			break;
+		}
+		case 2:
+		{
+			// This code should authorize this computer and turn off payments
+			theApp.CheckError(pp_copyadd(theApp.m_lfhandle, COPYADD_ERASEALL, theApp.m_compno));
+
+			// Release from Payment Expiration
+			TurnOffPayments();
+			break;
+		}
+		case 3:
+		{
+			// This code should de-authorize this computer
+			if (theApp.CheckError(pp_copydelete(theApp.m_lfhandle, theApp.m_compno)) == PP_SUCCESS)
+			{
+				MessageBox("Application de-activation complete", "Success!", MB_OK);
+			}
+			break;
+		}
+		case 4:
+		{
+			// Set Demo Expiration to 30 days from today
+//			theApp.ConvertToDemo(30);
+			break;
+		}
+		case 5:
+		{
+			// Extend Payment Expiration for the next quarter - on the 15th of the month
+			ExtendPayment();
+			break;
+		}
+		case 6:
+		{
+			// Release from Payment Expiration
+			TurnOffPayments();
+			break;
+		}
+		case 7:
+		case 31:
+		{
+			// If the user turned the date forward by mistake, ran your program and
+			// then set the clock back to the correct time, they will not be allowed
+			// in becuase pp_valdate() will fail. THey will call you and you will give
+			// them code 6 to force the last used date/time fields to be set to the
+			// current (and correct) date and time.
+			theApp.CheckError(pp_upddate(theApp.m_lfhandle, UPDDATE_FORCE));
+			theApp.CheckError(pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "N"));
+			pp_setvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_2, (LONG)theApp.m_compno) ;
+			MessageBox("ライセンス認証が完了しました。\nサポートにはユーザー登録が必要です。\nユーザー登録ページ https://www.ss.pluss-inc.com/regist/index.html にて\nユーザー登録して頂く事をお勧め致します。", "インフォメーション", MB_OK | MB_ICONINFORMATION);
+			theApp.m_showMain = true ;
+			theApp.m_ActivatOK = TRUE ;
+			break;
+		}
+		case 8:
+		{
+			// Set Demo Expireation to X days from today, where X is the
+			// Trigger Code Additional Number (regkey2)
+//			theApp.ConvertToDemo(TcData);
+			break;
+		}
+		case 49:
+		{
+			// These codes could be used for something else
+			break;
+		}
+		default:
+		{
+			// Invalid code was entered.
+			MessageBox("不正なコードが入力されました！", "エラーメッセージ", MB_OK | MB_ICONERROR);
+		}
+	}
+
+
+	CDialog::OnOK();
+//	theApp.StatusChanged();
+}
+
+void CUnlockDlg::OnCancel() 
+{
+	theApp.CheckError(pp_setvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_5, m_sessionCode));
+	CDialog::OnCancel();
+}
+
+VOID CUnlockDlg::ExtendPayment()
+{
+	long month, day, year, dow;
+
+	// Extend Payment Expiration for the next quarter - on the 15th of the month
+	pp_getdate(&month, &day, &year, &dow);
+	pp_adddays(&month, &day, &year, 60);
+	pp_npdate(&month, &day, &year, 15);
+
+	// store the date and expiration type
+	theApp.CheckError(pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "P"));
+	if (theApp.CheckError(pp_setvardate(theApp.m_lfhandle, VAR_EXP_DATE_HARD, month, day, year)) == PP_SUCCESS)
+	{
+		MessageBox("Activation Complete!", "Success!", MB_OK);
+	}
+
+	// It is a good idea to update the last used date/time fields
+	pp_upddate(theApp.m_lfhandle, 0);
+
+}
+
+void CUnlockDlg::TurnOffPayments()
+{
+	// Release from Payment Expiration
+	if (theApp.CheckError(pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "N")) == PP_SUCCESS)
+	{
+		MessageBox("認証成功！\n正規ライセンスの取得に成功しました。", "インフォメーション", MB_OK | MB_ICONINFORMATION);
+	}
+
+	// It is a good idea to update the last used date/time fields
+
+	pp_upddate(theApp.m_lfhandle, 0);
+}
+
+
+void CUnlockDlg::OnButtonGetweb() 
+{
+	CString	cs_web = "https://www.ss.pluss-inc.com/unlock/prokeyunlock.asp" ;
+	ShellExecute (NULL, "open", cs_web, NULL, NULL, SW_SHOWNORMAL) ;
+}
+
+void CUnlockDlg::OnButtonFax() 
+{
+	CString	cs_web	;
+	cs_web = theApp.m_appBoot + "\\Ｆａｘライセンス認証コード取得依頼.pdf" ;
+	ShellExecute (NULL, "open", cs_web, NULL, NULL, SW_SHOWNORMAL) ;
+}
+
+void CUnlockDlg::OnButtonEmail() 
+{
+	CString	cs_web = "mailto:support@pluss-inc.com?subject=ライセンス認証コード取得依頼［ＬｏｏｋＦｏｎｔ］&body=お名前（全角）：%0D%0Aプロダクトキー（大文字半角英数字）：     -     -     -     -     %0D%0Aユーザーコード１（大文字半角英数字）：%0D%0Aユーザーコード２（大文字半角英数字）：%0D%0AＥｍａｉｌ（半角英数字）：" ;
+	ShellExecute (NULL, "open", cs_web, NULL, NULL, SW_SHOWNORMAL) ;
+}
+
+void CUnlockDlg::OnChangeEditRegKey1() 
+{
+	CString cs_Reg1	;
+	CString cs_Reg2	;
+	GetDlgItemText (IDC_EDIT_REG_KEY_1, cs_Reg1) ;
+	GetDlgItemText (IDC_EDIT_REG_KEY_2, cs_Reg2) ;
+	cs_Reg1.TrimLeft () ;
+	cs_Reg1.TrimRight () ;
+	cs_Reg2.TrimLeft () ;
+	cs_Reg2.TrimRight () ;
+	if (cs_Reg1.GetLength () > 0) {
+		if (cs_Reg2.GetLength () > 0) {
+			GetDlgItem (IDOK)->EnableWindow (TRUE) ;
+		}
+	}
+}
+
+void CUnlockDlg::OnChangeEditRegKey2() 
+{
+	CString cs_Reg1	;
+	CString cs_Reg2	;
+	GetDlgItemText (IDC_EDIT_REG_KEY_1, cs_Reg1) ;
+	GetDlgItemText (IDC_EDIT_REG_KEY_2, cs_Reg2) ;
+	cs_Reg1.TrimLeft () ;
+	cs_Reg1.TrimRight () ;
+	cs_Reg2.TrimLeft () ;
+	cs_Reg2.TrimRight () ;
+	if (cs_Reg1.GetLength () > 0) {
+		if (cs_Reg2.GetLength () > 0) {
+			GetDlgItem (IDOK)->EnableWindow (TRUE) ;
+		}
+	}
+}

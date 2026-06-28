@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-
+﻿using Microsoft.Maui.Storage;
+using System;
 
 namespace FMES
 {
@@ -20,7 +16,8 @@ namespace FMES
         static string _trmname = string.Empty;
         static string _auth = string.Empty;
         static int _language = 0;
-        static int _logWrite = 1;
+        //static int _logWrite = 1;
+        static int _logWrite = 1;//ログ送信する
         static int _urlMsg = 0;
         static string _optionurl = string.Empty;
         static int _lastSashizuKind = 1;
@@ -42,6 +39,9 @@ namespace FMES
         static int _KensaBashoShousaiID = 0;
         static int _hinnmokuID = 0;
 
+        // ログイン情報用フィールド追加
+        static string _loginID = string.Empty;
+        static string _loginName = string.Empty;
 
         static int _LineIndex = -1;
         static int _KouteiVer = 0;
@@ -99,6 +99,20 @@ namespace FMES
 
         static int _SashizuMode = 1;    //1:QRコードモード 2:セレクトモード
         static string _Operator = string.Empty; //オペレター名
+
+        // ログイン情報用プロパティ追加
+        public static string g_loginID
+        {
+            get { return _loginID; }
+            set { _loginID = value; }
+        }
+
+        public static string g_loginName
+        {
+            get { return _loginName; }
+            set { _loginName = value; }
+        }
+
         public static int g_SashizuMode
         {
             get { return _SashizuMode; }
@@ -346,7 +360,7 @@ namespace FMES
         {
             return _CompanyURL;
         }
-            public static string GetCurURL_keep2()
+        public static string GetCurURL_keep2()
         {
             string strRet = "http://192.168.120.94/";
             if (g_svUrl == 1)
@@ -486,28 +500,20 @@ namespace FMES
         public static bool LoadConfig()
         {
             bool bRet = true;
-            //_language = Application.Current.Properties["_language"] as int;
             try
             {
-                
-                    _language = (int)Preferences.Default.Get("_language",0);
-
-                   _logWrite = (int)Preferences.Default.Get("_logWrite",1);
-
-                   _urlMsg = (int)Preferences.Default.Get("_urlMsg",1);
-
-                   _svUrl = (int)Preferences.Default.Get("_svUrl",0);
-
-                   _lastSashizuKind = (int)Preferences.Default.Get("_lastSashizuKind",0);
-
-                   _CnfVer = (int)Preferences.Default.Get("_CnfVer",0);
-
-                   _CnfExist = 1;
-                    _CnfRed = 1;
-                    _CompanyID = (string)Preferences.Default.Get("_CompanyID", "");
-                    _CompanyPW = (string)Preferences.Default.Get("_CompanyPW", "");
-                    _ComRegisterd = (int)Preferences.Default.Get("_ComRegisterd", 1);
-                    _CompanyURL = (string)Preferences.Default.Get("_CompanyURL", "");
+                _language = (int)Preferences.Default.Get("_language", 0);
+                _logWrite = (int)Preferences.Default.Get("_logWrite", 1);
+                _urlMsg = (int)Preferences.Default.Get("_urlMsg", 1);
+                _svUrl = (int)Preferences.Default.Get("_svUrl", 0);
+                _lastSashizuKind = (int)Preferences.Default.Get("_lastSashizuKind", 0);
+                _CnfVer = (int)Preferences.Default.Get("_CnfVer", 0);
+                _CnfExist = 1;
+                _CnfRed = 1;
+                _CompanyID = (string)Preferences.Default.Get("_CompanyID", "");
+                _CompanyPW = (string)Preferences.Default.Get("_CompanyPW", "");
+                _ComRegisterd = (int)Preferences.Default.Get("_ComRegisterd", 1);
+                _CompanyURL = (string)Preferences.Default.Get("_CompanyURL", "");
 
                 //↓認証用
                 _trmcode = (string)Preferences.Default.Get("_trmcode", "");
@@ -515,10 +521,14 @@ namespace FMES
                 _auth = (string)Preferences.Default.Get("_auth", "");
                 //↑認証用
 
+                // ログイン情報の読み込み追加
+                _loginID = (string)Preferences.Default.Get("_loginID", "");
+                _loginName = (string)Preferences.Default.Get("_loginName", "");
+
                 _svUrlTop = _CompanyURL;
-                    _CnfExist = 1;
-                    _CnfRed = 1;
-                    SaveConfig();
+                _CnfExist = 1;
+                _CnfRed = 1;
+                SaveConfig();
             }
             catch (Exception)
             {
@@ -526,14 +536,13 @@ namespace FMES
                 _CnfExist = 1;
                 _CnfRed = 1;
                 bRet = true;
-                //throw;
             }
             return bRet;
         }
+
         public static bool SaveConfig()
         {
             bool bRet = true;
-            //ClsGlobalVar.G_language = Application.Current.Properties["language"] as int;
             Preferences.Default.Set("_language", _language);
             Preferences.Default.Set("_logWrite", _logWrite);
             Preferences.Default.Set("_urlMsg", _urlMsg);
@@ -550,8 +559,11 @@ namespace FMES
             Preferences.Default.Set("_auth", _auth);
             //↑認証用
 
+            // ログイン情報の保存追加
+            Preferences.Default.Set("_loginID", _loginID);
+            Preferences.Default.Set("_loginName", _loginName);
+
             return bRet;
         }
-
     }
 }

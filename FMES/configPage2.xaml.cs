@@ -1,466 +1,309 @@
-using System.Runtime.Intrinsics.X86;
+using System;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
-namespace FMES;
-
-public partial class configPage2 : ContentPage
+namespace FMES
 {
-    private Label label1;
-    private Label label2;
-    private Label label3;
-    private Label label4;
-    private Label label5;
-    private Label label6;
-    private Label label7;
-    private Entry txturl;
-    //↓認証用
-    private Entry txtrmname;
-    private Entry txtauth;
-    //↑認証用
-    private HorizontalStackLayout Content2;
-    private HorizontalStackLayout Content4;
-    private HorizontalStackLayout Content5;
-    private VerticalStackLayout Content3;
-    private Picker dropdown1;
-    private Picker dropdown3;
-    private Button Scanbutton;
-    private Button buttonclear;
-    private Button buttonUpd;
-    private Button buttonEnd;
+    public partial class configPage2 : ContentPage
+    {
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label6;
+        private Label label7;
+        private Entry txturl;
+        private Entry txtrmname;
+        private Entry txtauth;
+        private HorizontalStackLayout Content2;
+        private HorizontalStackLayout Content4;
+        private HorizontalStackLayout Content5;
+        private VerticalStackLayout Content3;
+        private Picker dropdown1;
+        private Picker dropdown3;
+        private Button Scanbutton;
+        private Button buttonclear;
+        private Button buttonUpd;
+        private Button buttonEnd;
 
-    public configPage2()
-	{
-		InitializeComponent();
-        Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
+        public configPage2()
+        {
+            InitializeComponent();
+            Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, false);
 
-        this.BackgroundColor = Colors.White;
+            this.Padding = new Thickness(0);
+            clsGlobalVar.g_NowForm = 1;
 
-        //this.Title = "環境設定";
-        //AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
-        clsGlobalVar.g_NowForm = 1;
+            // 背景を白色に変更
+            //            this.BackgroundColor = Color.FromArgb("#D1D5DB");
+            App.Current.UserAppTheme = AppTheme.Light;
+            Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
 
-        Color defBKCol = Colors.White;
-        string wstr = DateTime.Now.ToString("yyyyMMddHHmmss");
-        this.BackgroundColor = defBKCol;
-        label1 = new Label
-        {
-            //                //Text = AppResources.IDM003,
-            Text = "言語",
-            FontSize = 22,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-        dropdown1 = new Picker
-        {
-            FontSize = 16,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            //Title = AppResources.IDM004,
-            Title = "未選択",
-            VerticalOptions = LayoutOptions.Start
-        };
-        //var ar = Enumerable.Range(0, 100).Select(n => string.Format("item-{0}", n)).ToList();
-        dropdown1.Items.Add("Japanese");
-        dropdown1.Items.Add("English");
-        dropdown1.Items.Add("Chinese");
-        dropdown1.Items.Add("Korean");
-        dropdown1.SelectedIndex = clsGlobalVar.g_language;
-        label4 = new Label
-        {
-
-
-            //                //Text = AppResources.IDM003,
-            Text = "URL",
-            FontSize = 22,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-        txtrmname = new Entry
-        {
-            Keyboard = Keyboard.Text,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            Text = "",
-            FontSize = 22,
-            Placeholder = "NAME",
-            MaximumWidthRequest = 200,
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.End,
-        };
-        txtauth = new Entry
-        {
-            Keyboard = Keyboard.Text,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            Text = "",
-            FontSize = 22,
-            Placeholder = "AUTH",
-            MaximumWidthRequest = 200,
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.End,
-        };
-
-        label5 = new Label
-        {
-            //                //Text = AppResources.IDM003,
-            MaximumWidthRequest = 100,
-            Text = "NAME:",
-            FontSize = 22,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            VerticalOptions = LayoutOptions.Start,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-        label6 = new Label
-        {
-            //                //Text = AppResources.IDM003,
-            MaximumWidthRequest = 100,
-            Text = "AUTH:",
-            FontSize = 22,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            VerticalOptions = LayoutOptions.Start,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-        label7 = new Label
-        {
-            //                //Text = AppResources.IDM003,
-            MaximumWidthRequest = 100,
-            Text = "URL",
-            FontSize = 22,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            VerticalOptions = LayoutOptions.Start,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-
-        txturl = new Entry
-        {
-            Keyboard = Keyboard.Text,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            Text = clsGlobalVar.g_CompanyURL,
-            FontSize = 22,
-            Placeholder = "URL",
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.Fill,
-        };
-        // ↓added for QRScan
-        if (clsGlobalVar.g_BackPage == "configPage" && clsGlobalVar.g_QRRET != null)
-        {
-            txturl.Text = clsGlobalVar.g_QRRET;
-            clsGlobalVar.g_BackPage = string.Empty;
-            clsGlobalVar.g_QRRET = string.Empty;
-        }
-        else
-        {
-            if (clsGlobalVar.g_CompanyURL == null)
+            // モダンなグラデーション背景
+            this.Background = new LinearGradientBrush
             {
-                txturl.Text = "https://";
-            }
-        }
-        // ↑added for QRScan
-
-        Scanbutton = new Button
-        {
-            //Text = "ＱＲスキャン",
-            ImageSource = "qr100x100.png",
-            FontSize = 20,
-            //BackgroundColor = Colors.White,
-            BackgroundColor = defBKCol,
-            HorizontalOptions = LayoutOptions.End, //,//中央に配置する（横方向）
-                                                   //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
-        };
-        Content2 = new HorizontalStackLayout()
-        {
-            Spacing = 25,
-            Padding = new Thickness(30, 0),
-
-            //BackgroundColor = Colors.White,
-            BackgroundColor = defBKCol,
-            Children = {
-                    label5,
-                        //user5,
-                        //Scanbutton,
-                        txtrmname,
-                        //txturl,
-                    }
-        };
-        Content4 = new HorizontalStackLayout()
-        {
-            Spacing = 25,
-            Padding = new Thickness(30, 0),
-
-            //BackgroundColor = Colors.White,
-            BackgroundColor = defBKCol,
-            Children = {
-                    label6,
-                        //user1,
-                        //Scanbutton,
-                        txtauth,
-                        //txturl,
-                    }
-        };
-        Content5 = new HorizontalStackLayout()
-        {
-            Spacing = 25,
-            Padding = new Thickness(30, 0),
-
-            //BackgroundColor = Colors.White,
-            BackgroundColor = defBKCol,
-            Children = {
-                    label7,
-                        //user1,
-                        //Scanbutton,
-                        //txtauth,
-                        txturl,
-                    }
-        };
-        Scanbutton.Clicked += ScanButtonClicked;
-
-        label3 = new Label
-        {
-            //Text = AppResources.IDM005,
-            Text = "ログ",
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            FontSize = 22,
-            VerticalOptions = LayoutOptions.Fill,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-        dropdown3 = new Picker
-        {
-            FontSize = 16,
-            BackgroundColor = Colors.White,
-            TextColor = Colors.Black,
-            //Title = AppResources.IDM004,
-            Title = "未選択",
-            VerticalOptions = LayoutOptions.Start
-        };
-        //dropdown3.Items.Add(AppResources.IDM006);
-        //dropdown3.Items.Add(AppResources.IDM007);
-        dropdown3.Items.Add("ログ送信無し");
-        dropdown3.Items.Add("ログ送信有り");
-        dropdown3.SelectedIndex = clsGlobalVar.g_logWrite;
-        buttonclear = new Button
-        {
-            //Text = AppResources.IDM008,
-            Text = "認証初期化",
-            FontSize = 22,
-            //VerticalOptions = LayoutOptions.Center,
-            //            HorizontalOptions = LayoutOptions.Fill,
-            HorizontalOptions = LayoutOptions.Fill,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
-        };
-
-        buttonUpd = new Button
-        {
-            //Text = AppResources.IDM008,
-            Text = "ＯＫ",
-            FontSize = 22,
-            //VerticalOptions = LayoutOptions.Center,
-            //            HorizontalOptions = LayoutOptions.Fill,
-            HorizontalOptions = LayoutOptions.Fill,
-            TextColor = GetTextColorParts(),
-            BackgroundColor = GetBackColorParts(),
-        };
-        buttonEnd = new Button
-        {
-            //Text = AppResources.IDM009,
-            Text = "キャンセル",
-            FontSize = 22,
-            //VerticalOptions = LayoutOptions.Center,
-            //            HorizontalOptions = LayoutOptions.Fill,
-            HorizontalOptions = LayoutOptions.Fill,
-            TextColor = Colors.Black,
-            BackgroundColor = Colors.LightGray,
-        };
-        buttonclear.Clicked += clearButtonClicked;
-        buttonUpd.Clicked += UpdButtonClicked;
-        buttonEnd.Clicked += EndButtonClicked;
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+            };
 
 
-
-
-
-        this.Content = new ScrollView
-        {
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.Center,
-
-            Content = new VerticalStackLayout
+            // ヘッダー
+            var headerLabel = new Label
             {
-                //縦方向
-                Spacing = 25,
-                Padding = new Thickness(30, 0),
-                VerticalOptions = LayoutOptions.Center,
+                Text = "Settings",
+                FontSize = 26,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#1E293B"),
+                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0, 20, 0, 12)
+            };
+
+            var subHeaderLabel = new Label
+            {
+                Text = "初回利用時に認証情報を登録してください",
+                FontSize = 14,
+                TextColor = Color.FromArgb("#64748B"),
+                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0, 0, 0, 24)
+            };
+
+            // NAME入力セクション
+            label5 = new Label
+            {
+                Text = "NAME",
+                FontSize = 16,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#334155"),
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+
+            txtrmname = new Entry
+            {
+                Keyboard = Keyboard.Text,
+                BackgroundColor = Color.FromArgb("#F8FAFC"),
+                TextColor = Color.FromArgb("#1E293B"),
+                Text = "",
+                FontSize = 15,
+                Placeholder = "Please enter a device name.",//端末名を入力してください
+                PlaceholderColor = Color.FromArgb("#94A3B8"),
+                HeightRequest = 48,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+
+            var nameCard = new Frame
+            {
+                CornerRadius = 14,
+                HasShadow = true,
                 BackgroundColor = Colors.White,
-                Children = {
-                        //label1,
-                        //dropdown1,
-                        //label2,
-                        
-                        
-                        Content2,
-                        Content4,
-                        //Scanbutton,
-                        //Content5,
-                        //txturl,
-                        //label4,
-                        //label3,
-                        //dropdown3,
-                        //buttonclear,
+                Padding = new Thickness(20, 16),
+                Margin = new Thickness(20, 0, 20, 16),
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 8,
+                    Children = { label5, txtrmname }
+                }
+            };
+
+            // AUTH入力セクション
+            label6 = new Label
+            {
+                Text = "AUTH",
+                FontSize = 16,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#334155"),
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+
+            txtauth = new Entry
+            {
+                Keyboard = Keyboard.Text,
+                BackgroundColor = Color.FromArgb("#F8FAFC"),
+                TextColor = Color.FromArgb("#1E293B"),
+                Text = "",
+                FontSize = 15,
+                Placeholder = "Please enter a 5-character authentication code.",//認証コードを入力してください（5文字以上）
+                PlaceholderColor = Color.FromArgb("#94A3B8"),
+                HeightRequest = 48,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+
+            var authCard = new Frame
+            {
+                CornerRadius = 14,
+                HasShadow = true,
+                BackgroundColor = Colors.White,
+                Padding = new Thickness(20, 16),
+                Margin = new Thickness(20, 0, 20, 16),
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 8,
+                    Children = { label6, txtauth }
+                }
+            };
+
+            // 注意書き
+            var noticeLabel = new Label
+            {
+                Text = "※ 認証情報はサーバーに送信され、端末登録に使用されます",
+                FontSize = 12,
+                TextColor = Color.FromArgb("#64748B"),
+                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(20, 0, 20, 20)
+            };
+
+            // 登録ボタン（プライマリーグラデーション）
+            buttonUpd = new Button
+            {
+                Text = "登録",
+                FontSize = 16,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.White,
+                HeightRequest = 52,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 8, 20, 12)
+            };
+            buttonUpd.Background = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 0),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#3B82F6"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#2563EB"), Offset = 1.0f }
+                }
+            };
+            buttonUpd.Clicked += UpdButtonClicked;
+
+            // キャンセルボタン（セカンダリー）
+            buttonEnd = new Button
+            {
+                Text = "戻る",
+                FontSize = 14,
+                TextColor = Color.FromArgb("#64748B"),
+                BackgroundColor = Color.FromArgb("#F1F5F9"),
+                HeightRequest = 48,
+                CornerRadius = 12,
+                Margin = new Thickness(20, 0, 20, 20)
+            };
+            buttonEnd.Clicked += EndButtonClicked;
+
+            // 非表示フィールド（既存コードとの互換性維持）
+            label1 = new Label { IsVisible = false };
+            label2 = new Label { IsVisible = false };
+            label3 = new Label { IsVisible = false };
+            label4 = new Label { IsVisible = false };
+            label7 = new Label { IsVisible = false };
+            txturl = new Entry { IsVisible = false };
+            dropdown1 = new Picker { IsVisible = false };
+            dropdown3 = new Picker { IsVisible = false };
+            Scanbutton = new Button { IsVisible = false };
+            buttonclear = new Button { IsVisible = false };
+            Content2 = new HorizontalStackLayout { IsVisible = false };
+            Content4 = new HorizontalStackLayout { IsVisible = false };
+            Content5 = new HorizontalStackLayout { IsVisible = false };
+
+            // メインレイアウト
+            this.Content = new ScrollView
+            {
+                Padding = new Thickness(0),
+                BackgroundColor = Colors.White,
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 0,
+                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    BackgroundColor = Colors.White,
+                    Children =
+                    {
+                        headerLabel,
+                        //subHeaderLabel,
+                        nameCard,
+                        authCard,
+                        noticeLabel,
                         buttonUpd,
-                        buttonEnd,
+                        buttonEnd
                     }
+                }
+            };
+        }
 
-
+        private string Gettrmcode()
+        {
+            string str_base = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string str_ret = str_base.Substring(0, 10);
+            try
+            {
+                str_ret = ComputeSHA256(str_base).Substring(0, 10);
             }
-        };
-    }
-    private string Gettrmcode()
-    {
-        string str_base= DateTime.Now.ToString("yyyyMMddHHmmss");
-        string str_ret = str_base.Substring(0, 10);
-        //DateTime.Now.Month;
-        try
-        {
-            str_ret = ComputeSHA256(str_base).Substring(0, 10);
+            catch (Exception)
+            {
+                str_ret = str_base.Substring(0, 10);
+            }
 
-        }
-        catch (Exception)
-        {
-            str_ret = str_base.Substring(0, 10);
-
-            //throw;
+            return str_ret;
         }
 
-        return str_ret;
-    }
-    static string ComputeSHA256(string input)
-    {
-        using (SHA256 sha256 = SHA256.Create())
+        static string ComputeSHA256(string input)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(input);
-            byte[] hashBytes = sha256.ComputeHash(bytes);
-            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = sha256.ComputeHash(bytes);
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
         }
-    }
 
-    private Color GetBackColorParts()
-    {
-        Color wCol = Colors.White;
+        private Color GetBackColorParts()
+        {
+            Color wCol = Colors.White;
 #if IOS
-                //wCol = Colors.DodgerBlue;
-                wCol = Colors.Blue;
+            wCol = Colors.Blue;
 #else
-        wCol = Colors.DodgerBlue;
-        //wCol = Colors.Blue;
+            wCol = Colors.DodgerBlue;
 #endif
+            return wCol;
+        }
 
-        return wCol;
-    }
-
-    private Color GetTextColorParts()
-    {
-        Color wCol = Colors.White;
-#if IOS
-                //wCol = Colors.Black;
-                wCol = Colors.White;
-#else
-        //wCol = Colors.White;
-        wCol = Colors.Black;
-
-#endif
-
-        return wCol;
-    }
-    async void ScanButtonClicked(object sender, EventArgs s)
-    {
-        //tako
-        //QRSCAN実処理をここで行う
-
-
-        //debugdummy
-        //txturl.Text = "https://fmes.5ms.cloud/";
-
-        // ↓added for QRScan
-        clsGlobalVar.g_BackPage = "configPage";
-        clsGlobalVar.g_QRRET = string.Empty;
-        Application.Current.MainPage = new QRPage();
-        // ↑added for QRScan
-
-
-        //DefaultOverlayTopText = AppResources.IDM015,
-        //DefaultOverlayBottomText = "ＱＲコードを読み取ります",
-
-        // スキャナページを表示
-
-        // PopAsyncで元のページに戻り、結果をダイアログで表示
+        private Color GetTextColorParts()
         {
-            //tako
-            //ここにQRSCAN実処理を入れる。
-            //var scanPage = new ZXing.Net.Maui.Views.CameraBarcodeReaderView();
-            //var result = await scanPage.ScanAsync();
+            Color wCol = Colors.White;
+#if IOS
+            wCol = Colors.White;
+#else
+            wCol = Colors.Black;
+#endif
+            return wCol;
+        }
 
-            //if (result != null)
-            //{
-            //    await DisplayAlert("スキャン完了", result.Text, "OK");
-            //    txturl.Text = result.Text;
-            //}
-
-            //Application.Current.MainPage = this;
-            //await DisplayAlert("スキャン完了", result.Text, "OK");
-
-            //label4.Text = result.Text;
-
-            //SCAN結果をtxturl.Textに代入する
-            //txturl.Text = result.Text;
-
-            //user1.Text = result.Text;
-            //user2.Text = "";
+        async void ScanButtonClicked(object sender, EventArgs s)
+        {
+            clsGlobalVar.g_BackPage = "configPage";
+            clsGlobalVar.g_QRRET = string.Empty;
+            Application.Current.MainPage = new QRPage();
 
             clsGlobalVar.g_svUrlTop = txturl.Text;
             clsGlobalVar.g_CompanyURL = txturl.Text;
-
-
-            //scanedData.Add(result.Text);
-        }
-        ;
-    }
-
-    async void clearButtonClicked(object sender, EventArgs s)
-    {
-        //認証初期化
-
-        string trmcode = "";
-
-        if (clsGlobalVar.g_language != dropdown1.SelectedIndex)
-        {
         }
 
-
-
-        //↓認証用
+        async void clearButtonClicked(object sender, EventArgs s)
         {
-            //URL登録済みの場合
+            string trmcode = "";
+
             if (string.IsNullOrEmpty(clsGlobalVar.g_trmcode))
             {
-                //未認証の場合
-                //trmcodeを取得する
                 trmcode = Gettrmcode();
                 if (string.IsNullOrEmpty(txtauth.Text) || txtauth.Text.Length < 5)
                 {
-                    //認証条件未達の場合
                     await DisplayAlert("環境設定エラー", "正しいAUTHを入力してください", "OK");
                     return;
-
                 }
                 else
                 {
@@ -471,12 +314,8 @@ public partial class configPage2 : ContentPage
                     }
                     else
                     {
-                        //送信条件を満たした場合
-
-                        //認証コマンドを送信する
                         string strErrMsg = "";
                         bool ret = clsWebUpdate.SendTrmData(txtauth.Text, trmcode, txtrmname.Text, ref strErrMsg);
-                        //bool ret = clsWebUpdate.SendTrmData(txtrmname.Text, trmcode, txtauth.Text, ref strErrMsg);
                         if (ret == false)
                         {
                             await DisplayAlert("環境設定エラー", strErrMsg, "OK");
@@ -484,59 +323,30 @@ public partial class configPage2 : ContentPage
                         }
                         else
                         {
-                            await DisplayAlert("環境設定完了", "認証正常完了", "OK");
+                            await DisplayAlert("環境設定完了", "認証設定完了", "OK");
                         }
-
                     }
                 }
-
             }
-        }
-        //↑認証用
 
-
-
-        //clsGlobalVar.g_auth = txtauth.Text;
-        //clsGlobalVar.g_trmcode = trmcode;
-        clsGlobalVar.g_trmname = txtrmname.Text;
-
-        clsGlobalVar.g_trmname = txtrmname.Text;
-        clsGlobalVar.g_auth = txtauth.Text;
-        clsGlobalVar.g_trmcode = trmcode;
-        //環境設定保存
-        clsGlobalVar.SaveConfig();
-        string[] yourData = { clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString(), clsGlobalVar.g_lastSashizuKind.ToString() };
-        //freeThis();
-        //await Navigation.PushAsync(new MainPage(yourData));
-        //Application.Current.MainPage = new MainPage(yourData);
-        Application.Current.MainPage = new MainPage();
-    }
-
-
-    async void UpdButtonClicked(object sender, EventArgs s)
-    {
-        string trmcode = "";
-
-        if (clsGlobalVar.g_language != dropdown1.SelectedIndex)
-        {
+            clsGlobalVar.g_trmname = txtrmname.Text;
+            clsGlobalVar.g_auth = txtauth.Text;
+            clsGlobalVar.g_trmcode = trmcode;
+            clsGlobalVar.SaveConfig();
+            Application.Current.MainPage = new MainPage();
         }
 
-
-
-        //↓認証用
+        async void UpdButtonClicked(object sender, EventArgs s)
         {
-            //URL登録済みの場合
+            string trmcode = "";
+
             if (string.IsNullOrEmpty(clsGlobalVar.g_trmcode))
             {
-                //未認証の場合
-                //trmcodeを取得する
                 trmcode = Gettrmcode();
                 if (string.IsNullOrEmpty(txtauth.Text) || txtauth.Text.Length < 5)
                 {
-                    //認証条件未達の場合
-                    await DisplayAlert("環境設定エラー", "正しいAUTHを入力してください", "OK");
+                    await DisplayAlert("環境設定エラー", "正しいAUTHを入力してください（5文字以上）", "OK");
                     return;
-
                 }
                 else
                 {
@@ -547,12 +357,8 @@ public partial class configPage2 : ContentPage
                     }
                     else
                     {
-                        //送信条件を満たした場合
- 
-                        //認証コマンドを送信する
                         string strErrMsg = "";
                         bool ret = clsWebUpdate.SendTrmData(txtauth.Text, trmcode, txtrmname.Text, ref strErrMsg);
-                        //bool ret = clsWebUpdate.SendTrmData(txtrmname.Text, trmcode, txtauth.Text, ref strErrMsg);
                         if (ret == false)
                         {
                             await DisplayAlert("環境設定エラー", strErrMsg, "OK");
@@ -560,44 +366,22 @@ public partial class configPage2 : ContentPage
                         }
                         else
                         {
-                            await DisplayAlert("環境設定完了", "認証正常完了", "OK");
+                            await DisplayAlert("環境設定完了", "認証設定完了", "OK");
                         }
-
                     }
                 }
-
             }
+
+            clsGlobalVar.g_trmname = txtrmname.Text;
+            clsGlobalVar.g_auth = txtauth.Text;
+            clsGlobalVar.g_trmcode = trmcode;
+            clsGlobalVar.SaveConfig();
+            Application.Current.MainPage = new MainPage();
         }
-        //↑認証用
 
-
-
-        //clsGlobalVar.g_auth = txtauth.Text;
-        //clsGlobalVar.g_trmcode = trmcode;
-        clsGlobalVar.g_trmname = txtrmname.Text;
-
-        clsGlobalVar.g_trmname = txtrmname.Text;
-        clsGlobalVar.g_auth = txtauth.Text;
-        clsGlobalVar.g_trmcode = trmcode;
-        //環境設定保存
-        clsGlobalVar.SaveConfig();
-        string[] yourData = { clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString(), clsGlobalVar.g_lastSashizuKind.ToString() };
-        //freeThis();
-        //await Navigation.PushAsync(new MainPage(yourData));
-        //Application.Current.MainPage = new MainPage(yourData);
-        Application.Current.MainPage = new MainPage();
+        async void EndButtonClicked(object sender, EventArgs s)
+        {
+            Application.Current.MainPage = new configPage();
+        }
     }
-
-    async void EndButtonClicked(object sender, EventArgs s)
-    {
-        //await Navigation.PushAsync(new MainPage());
-        Application.Current.MainPage = new configPage();
-        //shelを利用する様に変更
-        //Shell.Current.FlyoutBehavior = FlyoutBehavior.Flyout;
-
-        //await Shell.Current.GoToAsync("//MainPage");
-        //Shell.FlyoutBehaviorProperty = FlyoutBehavior.Flyout;
-
-    }
-
 }

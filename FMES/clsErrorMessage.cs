@@ -11,7 +11,7 @@ namespace FMES
             string strRet = "想定外エラー発生";
             wErr = wErr.Replace("<!--ダミー-->", "");
             int iNo = wErr.IndexOf("#NG#");
-            if (iNo == 1)
+            if (iNo == 0)
             {
                 int iNo2 = wErr.IndexOf(":", iNo + 4);
                 string strNo = wErr.Substring(iNo2 + 1);
@@ -20,7 +20,7 @@ namespace FMES
             else
             {
                 iNo = wErr.IndexOf("NG");
-                if (iNo == 1)
+                if (iNo == 0)
                 {
                     int iNo2 = wErr.IndexOf(":", iNo + 2);
                     string strNo = wErr.Substring(iNo2 + 1);

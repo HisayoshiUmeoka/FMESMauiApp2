@@ -1,9 +1,8 @@
-﻿using System.Globalization;
-using System.Runtime.Intrinsics.X86;
+﻿using System;
+using System.Globalization;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using ZXing.Net.Maui;
-
-//using FMES.Resx;
-//using UKensa12cross.Resx;
 
 namespace FMES
 {
@@ -24,262 +23,281 @@ namespace FMES
         private HorizontalStackLayout Content4;
         private Button buttonOCR;
 
-
         public MainPage()
         {
             InitializeComponent();
+            
+            // セーフエリアを無効化
             Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
+            
+            // ContentPageのパディングを0に
+            this.Padding = new Thickness(0);
 
-            //this.Title = "LOGIN";
             App.Current.UserAppTheme = AppTheme.Light;
-            //App.Current.UserAppTheme = AppTheme.Light;
             Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
-            //App.Current.UserAppTheme = AppTheme.Dark;
 
-            this.BackgroundColor = Colors.White;
+            // 背景を白色に変更
+            //            //this.BackgroundColor = Color.FromArgb("#D1D5DB"); // やや濃いライトグレー
+            App.Current.UserAppTheme = AppTheme.Light;
+            Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+            // モダンなグラデーション背景
+            this.Background = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+            };
+
+            App.Current.UserAppTheme = AppTheme.Light;
+            Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+            // モダンなグラデーション背景
+            this.Background = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+            };
+
+
             clsGlobalVar.g_NowForm = 0;
-            // AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
 
-            //コントロール類の描画開始
-
+            // ロゴ画像
             imgLogo = new Image
             {
                 Source = ImageSource.FromFile("logo.png"),
-                BackgroundColor = Colors.White,
+                HeightRequest = 140,
+                Aspect = Aspect.AspectFit,
                 HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Colors.Transparent
             };
 
+            // ロゴフレーム（背景を白に）
+            var logoFrame = new Frame
+            {
+                CornerRadius = 0,
+                HasShadow = false,
+                Padding = new Thickness(20, 10, 20, 20),
+                Margin = new Thickness(0, 0, 0, 0),
+                BorderColor = Colors.Transparent,
+                //BackgroundColor = Color.FromArgb("#D1D5DB"),
+                BackgroundColor = Colors.Transparent,          // ← 透過に変更
+                Content = imgLogo
+            };
 
-            // StackLayoutで2つの Entryコントロールを並べる
-            this.BackgroundColor = Colors.White;
-
+            // Login ID Entry - モダンスタイル（少し長く）
             user1 = new Entry
             {
                 Keyboard = Keyboard.Text,
-                FontSize = 20,
+                FontSize = 16,
                 BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                WidthRequest= 170,
+                TextColor = Color.FromArgb("#1E293B"),
                 Placeholder = "Login ID",
-                Margin = new Thickness(0, 2, 0, 2),
-
-                HorizontalOptions = LayoutOptions.StartAndExpand,
-                VerticalOptions = LayoutOptions.Center,
+                PlaceholderColor = Color.FromArgb("#94A3B8"),
+                HeightRequest = 50,
+                MinimumWidthRequest = 200,
+                Margin = new Thickness(0, 0, 0, 0),
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Center
             };
-            // ↓added for QRScan
+
+            // QR戻り値の復元（既存ロジック維持）
             if (clsGlobalVar.g_BackPage == "MainPage")
             {
                 user1.Text = clsGlobalVar.g_QRRET;
             }
-            // ↑added for QRScan
 
+            // QRスキャンボタン - アイコンのみ、角丸
             button1 = new Button
             {
-                //Text = "ＱＲスキャン",
                 ImageSource = "qr100x100.png",
-                FontSize = 20,
-                //WidthRequest=80,
-                //HeightRequest=80,
+                WidthRequest = 50,
+                HeightRequest = 50,
+                CornerRadius = 12,
                 BackgroundColor = Colors.White,
+                BorderColor = Color.FromArgb("#CBD5E1"),
+                BorderWidth = 1,
                 HorizontalOptions = LayoutOptions.End,
                 VerticalOptions = LayoutOptions.Center,
+                Padding = 8
             };
             button1.Clicked += OnQRScanClicked;
 
+            // Login ID 行レイアウト
             Content3 = new HorizontalStackLayout
             {
-                Spacing = 25,
-                //                Padding = new Thickness(30, 0),
-                Margin = new Thickness(0, 2, 0, 2),
-                Padding = new Thickness(2, 2, 2, 2),
-                VerticalOptions = LayoutOptions.Start,
-
-                BackgroundColor = Colors.White,
-                Children = {
-                        user1,
-                        button1,
-                    }
+                Spacing = 8,
+                Margin = new Thickness(0, 0, 0, 12),
+                HorizontalOptions = LayoutOptions.Fill,
+                Children = { user1, button1 }
             };
+
+            // スペーサー（既存のlabel1を維持するが非表示）
             label1 = new Label
             {
-                //                //Text = AppResources.IDM003,
-                MaximumWidthRequest = 100,
-                Text = "　　",
-                FontSize = 22,
-                BackgroundColor = Colors.White,
-                TextColor = Colors.White,
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
+                Text = "",
+                IsVisible = false
             };
 
+            // Password Entry（Login IDと同じ幅に）
             user2 = new Entry
             {
                 Keyboard = Keyboard.Text,
-                FontSize = 20,
-                WidthRequest = 150,
-                //BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-
+                FontSize = 16,
+                BackgroundColor = Colors.White,
+                TextColor = Color.FromArgb("#1E293B"),
                 Placeholder = "Password",
-                Margin = new Thickness(0, 2, 0, 2),
-                HorizontalOptions = LayoutOptions.StartAndExpand,
-                IsPassword = true, // 入力された文字を隠す
+                PlaceholderColor = Color.FromArgb("#94A3B8"),
+                IsPassword = true,
+                HeightRequest = 50,
+                MinimumWidthRequest = 200,
+                Margin = new Thickness(0, 0, 0, 0),
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
+
             Content4 = new HorizontalStackLayout
             {
-                Spacing = 25,
-                //                Padding = new Thickness(30, 0),
-                Margin = new Thickness(0, 2, 0, 2),
-                Padding = new Thickness(2, 2, 2, 2),
-
-                VerticalOptions = LayoutOptions.Start,
-
-                BackgroundColor = Colors.White,
-                Children = {
-                        user2,
-                        label1,
-                    }
+                Spacing = 10,
+                Margin = new Thickness(0, 0, 0, 20),
+                HorizontalOptions = LayoutOptions.Fill,
+                Children = { user2, label1 }
             };
 
-
+            // Loginボタン - グラデーション背景
             button2 = new Button
             {
                 Text = "Login",
-                FontSize = 20,
-                //TextColor = Colors.Black,
-                //BackgroundColor = Colors.DodgerBlue,
-                //BackgroundColor = Colors.Blue,
-
-                TextColor = GetTextColorParts(),
-                BackgroundColor = GetBackColorParts(),
-
+                FontSize = 16,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.White,
+                HeightRequest = 52,
+                CornerRadius = 12,
                 HorizontalOptions = LayoutOptions.Fill,
-                //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
+                Margin = new Thickness(0, 0, 0, 12)
             };
-            button1.Clicked += OnQRScanClicked;
-            button2.Clicked += CheckButtonClicked;
-            label3 = new Label
+            button2.Background = new LinearGradientBrush
             {
-                //Text = "Version Name:" + DependencyService.Get<IAssemblyService>().GetVersionName() + "  Version Code:" + DependencyService.Get<IAssemblyService>().GetVersionCode().ToString(),
-                Text = "Version Name:" + AppInfo.VersionString.ToString(),
-                FontSize = 15,
-                BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                HorizontalOptions = LayoutOptions.Center,//中央に配置する（横方向）
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 0),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#3B82F6"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#2563EB"), Offset = 1.0f }
+                }
             };
+            button2.Clicked += CheckButtonClicked;
+
+            // 環境設定ボタン - アウトライン
             button3 = new Button
             {
-                Text = "環境設定",
-                FontSize = 20,
-                //TextColor = Colors.Black,
-                //BackgroundColor = Colors.DodgerBlue,
-                //BackgroundColor = Colors.Blue,
-
-                TextColor = GetTextColorParts(),
-                BackgroundColor = GetBackColorParts(),
-
+                Text = "Settings",
+                FontSize = 14,
+                TextColor = Color.FromArgb("#3B82F6"),
+                BackgroundColor = Colors.White,
+                BorderColor = Color.FromArgb("#3B82F6"),
+                BorderWidth = 1.5,
+                HeightRequest = 48,
+                CornerRadius = 12,
                 HorizontalOptions = LayoutOptions.Fill,
-                //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
+                Margin = new Thickness(0, 0, 0, 0)
             };
             button3.Clicked += ConfigButtonClicked;
 
+            // バージョンラベル
+            label3 = new Label
+            {
+                Text = "Version: " + AppInfo.VersionString,
+                FontSize = 13,
+                TextColor = Color.FromArgb("#64748B"),
+                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0, 16, 0, 4)
+            };
 
+            // コピーライト
             label2 = new Label
             {
-                //Text = "\n\nCopyright © ULVAC CRYOGENICS INC. All rights reserved.",
-                Text = "Copyright © Five Motion Systems,Inc. All rights reserved.",
-                //Text = "\n\n" + AppResources.FMESCPYL,//FMES用
-                //Text =  "\n\n" + AppResources.UMESCPYL,//UMES用
-                BackgroundColor = Colors.White,
-                TextColor = Colors.Black,
-                FontSize = 10,
-                HorizontalOptions = LayoutOptions.Center,//中央に配置する（横方向）
-                VerticalOptions = LayoutOptions.End // 中央に配置する（縦方向
+                Text = "Copyright © Five Motion Systems, Inc. All rights reserved.",
+                FontSize = 11,
+                TextColor = Color.FromArgb("#94A3B8"),
+                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0, 0, 0, 16)
             };
-            
 
-
+            // 月別フッター画像（既存ロジック維持）
             int iMonth = DateTime.Now.Month;
-#if IOS
             string imgFoot = "cal" + iMonth.ToString() + "m.png";
-#else
-            string imgFoot = "cal" + iMonth.ToString() +   "m.png";
-#endif
             Image imgFooter = new Image
             {
-                Margin = new Thickness(20, 20, 20, 20),
                 Source = ImageSource.FromFile(imgFoot),
-                Aspect = Aspect.AspectFill,
-                BackgroundColor = Colors.White,
-                //HorizontalOptions = LayoutOptions.Center,
+                Aspect = Aspect.AspectFit,
+                HeightRequest = 120,
                 HorizontalOptions = LayoutOptions.Center,
-                //VerticalOptions = LayoutOptions.End,
+                Margin = new Thickness(0, 0, 0, 20)
             };
 
-
-
-
-                this.Content = new ScrollView
+            // カード風フレーム（ログインフォーム）
+            var loginCard = new Frame
             {
+                CornerRadius = 16,
+                HasShadow = true,
+                BackgroundColor = Colors.White,
+                Padding = new Thickness(24, 20),
+                Margin = new Thickness(20, 0),
                 Content = new VerticalStackLayout
                 {
-                    //縦方向
-                    Spacing = 25,
-                    Padding = new Thickness(30, 0),
-                    VerticalOptions = LayoutOptions.Center,
-                    Children ={
-                        imgLogo,
+                    Spacing = 0,
+                    Children =
+                    {
                         Content3,
                         Content4,
-                        //user2,
                         button2,
-                        button3,
-                        label2,
-                        label3,
-                        imgFooter,
+                        button3
                     }
-
-
-
                 }
-                };
-            //user1.Visual = VisualMarker.Default;
-            //user2.Visual = VisualMarker.Default;
-            //user1.BackgroundColor = Colors.Gray;
-            //user2.BackgroundColor = Colors.Gray;
-            //user1.Opacity = 0;
-            //user1.FadeTo(1, 2000);
-            //user2.Opacity = 0;
-            //user2.FadeTo(1, 2000);
+            };
 
-
-
-
-
-
+            // メインレイアウト
+            this.Content = new ScrollView
+            {
+                Padding = new Thickness(0),
+                BackgroundColor = Colors.Transparent,
+                Content = new VerticalStackLayout
+                {
+                    Spacing = 12,
+                    Padding = new Thickness(20, 0, 20, 20),
+                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    BackgroundColor = Colors.Transparent,
+                    Children =
+                    {
+                        logoFrame,
+                        loginCard,
+                        label3,
+                        label2,
+                        imgFooter
+                    }
+                }
+            };
         }
+
         private void OnQRScanClicked(object sender, EventArgs e)
         {
-            //tako
-            //ここにQRSCAN実処理を入れる。
-            // ↓added for QRScan
             clsGlobalVar.g_BackPage = "MainPage";
             clsGlobalVar.g_QRRET = string.Empty;
             Application.Current.MainPage = new QRPage();
-            // ↑added for QRScan
-
-
-
-
-            //SCAN結果はuser1.textに入力する事
-
-            //user1.Text = "001";
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
         {
             count++;
-
             if (count == 1)
                 CounterBtn.Text = $"Clicked {count} time";
             else
@@ -287,17 +305,15 @@ namespace FMES
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }
+
         private Color GetBackColorParts()
         {
             Color wCol = Colors.White;
 #if IOS
-                //wCol = Colors.DodgerBlue;
-                wCol = Colors.Blue;
+            wCol = Colors.Blue;
 #else
             wCol = Colors.DodgerBlue;
-            //wCol = Colors.Blue;
 #endif
-
             return wCol;
         }
 
@@ -305,21 +321,27 @@ namespace FMES
         {
             Color wCol = Colors.White;
 #if IOS
-                //wCol = Colors.Black;
-                wCol = Colors.White;
+            wCol = Colors.White;
 #else
-            //wCol = Colors.White;
             wCol = Colors.Black;
-
 #endif
-
             return wCol;
         }
+
         private void subInit()
         {
-//            AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
-            // StackLayoutで2つの Entryコントロールを並べる
-            this.BackgroundColor = Colors.White;
+            // subInit でもページ背景を同じグラデーションに設定（背景のみ）
+            this.Background = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F8FAFC"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#EFF6FF"), Offset = 0.6f },
+                    new GradientStop { Color = Color.FromArgb("#E0F2FE"), Offset = 1.0f }
+                }
+            };
 
             user1 = new Entry
             {
@@ -327,7 +349,6 @@ namespace FMES
                 FontSize = 20,
                 BackgroundColor = Colors.White,
                 TextColor = Colors.Black,
-
                 Placeholder = "Login ID",
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Center,
@@ -336,68 +357,51 @@ namespace FMES
             {
                 user1.Text = clsGlobalVar.g_QRRET;
             }
-            // ↑added for QRScan
 
             button1 = new Button
             {
-                //Text = "ＱＲスキャン",
                 ImageSource = "QR100x100.png",
                 FontSize = 20,
-                //WidthRequest=80,
-                //HeightRequest=80,
                 BackgroundColor = Colors.White,
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Center,
             };
+
             Content2 = new StackLayout()
             {
                 Orientation = StackOrientation.Horizontal,
                 BackgroundColor = Colors.White,
-                Children = {
-                        user1,
-                        button1,
-                    }
+                Children = { user1, button1 }
             };
+
             user2 = new Entry
             {
                 Keyboard = Keyboard.Text,
                 FontSize = 20,
                 BackgroundColor = Colors.White,
                 TextColor = Colors.Black,
-
                 Placeholder = "Password",
-                IsPassword = true, // 入力された文字を隠す
+                IsPassword = true,
             };
+
             button2 = new Button
             {
                 Text = "Login",
                 FontSize = 20,
-                //TextColor = Colors.Black,
-                //BackgroundColor = Colors.DodgerBlue,
-                //BackgroundColor = Colors.Blue,
-
                 TextColor = GetTextColorParts(),
                 BackgroundColor = GetBackColorParts(),
-
                 HorizontalOptions = LayoutOptions.Center,
-                //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
             };
+
             button3 = new Button
             {
                 Text = "環境設定",
                 FontSize = 20,
-                //TextColor = Colors.Black,
-                //BackgroundColor = Colors.DodgerBlue,
-                //BackgroundColor = Colors.Blue,
-
                 TextColor = GetTextColorParts(),
                 BackgroundColor = GetBackColorParts(),
-
                 HorizontalOptions = LayoutOptions.Fill,
-                //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
             };
             button3.Clicked += ConfigButtonClicked;
-
 
             imgLogo = new Image
             {
@@ -405,45 +409,41 @@ namespace FMES
                 BackgroundColor = Colors.White,
                 HorizontalOptions = LayoutOptions.Center,
             };
+
             label3 = new Label
             {
-                //Text = "Version Name:" + DependencyService.Get<IAssemblyService>().GetVersionName() + "  Version Code:" + DependencyService.Get<IAssemblyService>().GetVersionCode().ToString(),
                 Text = "Version Name:" + AppInfo.VersionString.ToString(),
                 FontSize = 15,
                 BackgroundColor = Colors.White,
                 TextColor = Colors.Black,
-                HorizontalOptions = LayoutOptions.Center,//中央に配置する（横方向）
-                VerticalOptions = LayoutOptions.End // 中央に配置する（縦方向
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.End
             };
+
             label2 = new Label
             {
-                //Text = "\n\nCopyright © ULVAC CRYOGENICS INC. All rights reserved.",
-                //Text = "\n\n" + AppResources.FMESCPYL,//FMES用
-                Text = "\n\nCopyright © Five Motion Systems,Inc. All rights reserved.",//FMES用
-                //Text =  "\n\n" + AppResources.UMESCPYL,//UMES用
+                Text = "\n\nCopyright © Five Motion Systems,Inc. All rights reserved.",
                 BackgroundColor = Colors.White,
                 TextColor = Colors.Black,
                 FontSize = 10,
-                HorizontalOptions = LayoutOptions.Center,//中央に配置する（横方向）
-                VerticalOptions = LayoutOptions.End // 中央に配置する（縦方向
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.End
             };
+
             buttonOCR = new Button
             {
                 Text = "　OCR　",
                 FontSize = 20,
                 BackgroundColor = Colors.White,
-                HorizontalOptions = LayoutOptions.Center//,//中央に配置する（横方向）
-                                                        //VerticalOptions = LayoutOptions.CenterAndExpand // 中央に配置する（縦方向）
+                HorizontalOptions = LayoutOptions.Center
             };
         }
+
         async void ConfigButtonClicked(object sender, EventArgs s)
         {
-            //環境設定
-            //freeThis();
-            //await Navigation.PushAsync(new SashizuPage(yourData));
             Application.Current.MainPage = new configPage();
-
         }
+
         async void CheckButtonClicked(object sender, EventArgs s)
         {
             string ex_message = string.Empty;
@@ -456,36 +456,25 @@ namespace FMES
             }
 
             int iRetLogin = GetLoginVerify(user1.Text, user2.Text, ref ex_message);
-            if (iRetLogin > 0)
+            if(iRetLogin > 0)
             {
-                //_UserID = iRetLogin;
-                //Navigation.PushAsync(SashizuPage);
-                //string[] yourData = { _UserID.ToString(), clsGlobalVar.g_svUrl.ToString(), clsGlobalVar.g_language.ToString(), clsGlobalVar.g_logWrite.ToString(), clsGlobalVar.g_urlMsg.ToString() };
-                //freeThis();
-                //await Navigation.PushAsync(new SashizuPage(yourData));
                 Application.Current.MainPage = new SashizuPage();
-
-                //Application.Current.MainPage = new PageParts();
             }
             else if (iRetLogin == 0)
             {
-                //await Navigation.PopAsync();
-                //DisplayAlert(AppResources.IDM018, AppResources.IDM019, "OK");
-                DisplayAlert("ログインエラー", "ログインID又はパスワードを確認してください", "OK");
+                await DisplayAlert("ログインエラー", "ログインID又はパスワードを確認してください", "OK");
+                return;
             }
             else if (iRetLogin == -1)
             {
-                //await Navigation.PopAsync();
-                //await DisplayAlert(AppResources.IDM020, AppResources.IDM021, "OK");
                 await DisplayAlert("環境設定エラー", "サーバURLを確認してください", "OK");
             }
             else if (iRetLogin == -2)
             {
-                //await Navigation.PopAsync();
-                //await DisplayAlert(AppResources.IDM018, ex_message, "OK");
                 await DisplayAlert("ログインエラー", ex_message, "OK");
             }
         }
+
         private int GetLoginVerify(string wID, string wPW, ref string exmessage)
         {
             int iRet = 0;

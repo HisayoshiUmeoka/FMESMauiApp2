@@ -29,7 +29,22 @@ public partial class PageNo : ContentPage
 		InitializeComponent();
         Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page.SetUseSafeArea(this, true);
 
-        this.BackgroundColor = Colors.White;
+        //this.BackgroundColor = Color.FromArgb("#D1D5DB");
+        App.Current.UserAppTheme = AppTheme.Light;
+        Console.WriteLine($"Current Theme: {App.Current.UserAppTheme}");
+
+        // モダンなグラデーション背景
+        this.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops = new GradientStopCollection
+                {
+                    new GradientStop { Color = Color.FromArgb("#F0F4F8"), Offset = 0.0f },
+                    new GradientStop { Color = Color.FromArgb("#E2E8F0"), Offset = 1.0f }
+                }
+        };
+
 
         //AppResources.Culture = new CultureInfo(clsGlobalVar.GetLanguageSetting());
         clsGlobalVar.g_NowForm = 10;
@@ -39,7 +54,9 @@ public partial class PageNo : ContentPage
         labelUser = new Label
         {
             Text = clsGlobalVar.g_Operator,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
+
             TextColor = Colors.Black,
             FontSize = 22,
             VerticalOptions = LayoutOptions.Center,
@@ -52,7 +69,8 @@ public partial class PageNo : ContentPage
             //Text = "メニュー",
             ImageSource = "icon80x80.png",
             FontSize = 20,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             HorizontalOptions = LayoutOptions.End,
             //VerticalOptions = LayoutOptions.center // 中央に配置する（縦方向）
             VerticalOptions = LayoutOptions.Center // 中央に配置する（縦方向）
@@ -61,7 +79,8 @@ public partial class PageNo : ContentPage
         ContentMenu = new HorizontalStackLayout()
         {
             HorizontalOptions = LayoutOptions.End,
-            BackgroundColor = Colors.White,
+            //            BackgroundColor = Color.FromArgb("#D1D5DB"),
+            BackgroundColor = Colors.Transparent,          // ← 透過に変更
             Children = {
                         labelUser,
                         buttonMenu,
@@ -134,9 +153,16 @@ public partial class PageNo : ContentPage
         buttonFin = new Button
         {
             Text = "ＯＫ",
-            FontSize = 22,
-            Margin = new Thickness(15, 15, 15, 15),
-            Padding = new Thickness(0, 0, 0, 0),
+            //FontSize = 22,
+            //Margin = new Thickness(15, 15, 15, 15),
+            //Padding = new Thickness(0, 0, 0, 0),
+            FontSize = 14,
+            BorderColor = Colors.LightGray,
+            BorderWidth = 1.5,
+            HeightRequest = 48,
+            CornerRadius = 12,
+            Margin = new Thickness(20, 0, 20, 12),
+
             //VerticalOptions = LayoutOptions.Center,
             //            HorizontalOptions = LayoutOptions.Fill,
             HorizontalOptions = LayoutOptions.Fill,

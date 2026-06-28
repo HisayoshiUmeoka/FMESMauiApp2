@@ -1,0 +1,718 @@
+// LookFont.cpp : アプリケーション用クラスの機能定義を行います。
+//
+
+#include "stdafx.h"
+#include "LookFont.h"
+
+#include "MainFrm.h"
+#include "LookFontDoc.h"
+#include "LookFontView.h"
+#include <direct.h>
+#include <keylib.h>
+#include <Skca.h>
+#include "SerialKey.h"
+#include "ProKeyDlg.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+#define	LEAVE_DAYS_MAX	10
+/////////////////////////////////////////////////////////////////////////////
+// CLookFontApp
+
+BEGIN_MESSAGE_MAP(CLookFontApp, CWinApp)
+	//{{AFX_MSG_MAP(CLookFontApp)
+	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
+	ON_COMMAND(ID_MENU_PLUSS, OnMenuPluss)
+	ON_COMMAND(ID_MENU_SUPPORT, OnMenuSupport)
+	//}}AFX_MSG_MAP
+	// 標準のファイル基本ドキュメント コマンド
+	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
+	ON_COMMAND(ID_FILE_OPEN, CWinApp::OnFileOpen)
+	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
+	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CLookFontApp クラスの構築
+
+CLookFontApp::CLookFontApp()
+{
+	m_ProKey1 = "" ;	// LicenceID
+	m_ProKey2 = "" ;	// LicenceID
+	m_ProKey3 = "" ;	// LicenceID
+	m_ProKey4 = "" ;	// Password
+	m_ProKey5 = "" ;	// Password
+	memset (m_LicenseID, 0, sizeof (char) * 16) ;
+	memset (m_LicensePW, 0, sizeof (char) * 16) ;
+	m_lfhandle = 0 ;
+	m_ProKeyOK = FALSE ;
+	m_ActivatOK = FALSE ;
+	m_SoftMode = "" ;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// 唯一の CLookFontApp オブジェクト
+
+CLookFontApp theApp;
+
+/////////////////////////////////////////////////////////////////////////////
+// CLookFontApp クラスの初期化
+
+BOOL CLookFontApp::InitInstance()
+{
+	AfxEnableControlContainer();
+
+	// 標準的な初期化処理
+	// もしこれらの機能を使用せず、実行ファイルのサイズを小さく
+	// したければ以下の特定の初期化ルーチンの中から不必要なもの
+	// を削除してください。
+
+#ifdef _AFXDLL
+	Enable3dControls();		// 共有 DLL の中で MFC を使用する場合にはここを呼び出してください。
+#else
+	Enable3dControlsStatic();	// MFC と静的にリンクしている場合にはここを呼び出してください。
+#endif
+
+	// 設定が保存される下のレジストリ キーを変更します。
+	// TODO: この文字列を、会社名または所属など適切なものに
+	// 変更してください。
+	SetRegistryKey(_T("PLUSS"));
+
+//	LoadStdProfileSettings(0);  // 標準の INI ファイルのオプションをローﾄﾞします (MRU を含む)
+
+	CString strHelpPath = m_pszHelpFilePath;
+	free((void*)m_pszHelpFilePath);
+	int len = strHelpPath.GetLength();
+	strHelpPath.SetAt(len-3,'c');
+	strHelpPath.SetAt(len-2,'h');
+	strHelpPath.SetAt(len-1,'m');
+	m_pszHelpFilePath=_tcsdup(strHelpPath);
+
+//	pp_initlib(m_hInstance);
+	char buffer[_MAX_PATH];
+#ifdef _DEBUG
+	m_appPath.Format("%s", _getcwd(buffer, _MAX_PATH));
+#else
+	CString	csWrokPath (m_pszHelpFilePath) ;
+	int	iFund = csWrokPath.ReverseFind ('\\') ;
+	m_appPath = csWrokPath.Left (iFund) ;
+#endif
+	m_appPath.MakeUpper();
+	m_appBoot = m_appPath ;
+	m_appPath += CString("\\LookFont.lf");
+#ifdef _DEBUG
+	m_appPath = "D:\\LookFont\\Ver2.000_2005_P2\\Bin\\LookFont.lf";
+#endif
+//MessageBox (NULL, m_appPath, "debug", MB_OK) ;
+	m_compno = pp_compno(COMPNO_WINPRODID | COMPNO_HDSERIAL, "", "C");
+	
+	if (CheckProKey() == FALSE) {
+	}
+	StatusChanged () ;
+
+
+	// アプリケーション用のドキュメント テンプレートを登録します。ドキュメント テンプレート
+	//  はドキュメント、フレーム ウィンドウとビューを結合するために機能します。
+
+	// Initialize OLE libraries
+	if (!AfxOleInit())
+	{
+		AfxMessageBox(IDP_OLE_INIT_FAILED);
+		return FALSE;
+	}
+
+//	AfxInitRichEdit();
+//
+//	CSingleDocTemplate* pDocTemplate;
+//	pDocTemplate = new CSingleDocTemplate(
+//		IDR_MAINFRAME,
+//		RUNTIME_CLASS(CLookFontDoc),
+//		RUNTIME_CLASS(CMainFrame),       // メイン SDI フレーム ウィンドウ
+//		RUNTIME_CLASS(CLookFontView));
+//	AddDocTemplate(pDocTemplate);
+//
+//	// DDE、file open など標準のシェル コマンドのコマンドラインを解析します。
+//	CCommandLineInfo cmdInfo;
+//	ParseCommandLine(cmdInfo);
+//
+//	// コマンドラインでディスパッチ コマンドを指定します。
+//	if (!ProcessShellCommand(cmdInfo))
+//		return FALSE;
+//
+//	// メイン ウィンドウが初期化されたので、表示と更新を行います。
+//	m_pMainWnd->ShowWindow(SW_SHOW);
+//	m_pMainWnd->UpdateWindow();
+
+	return TRUE;
+}
+
+void CLookFontApp::ShowDemo(bool expired)
+{
+	if (m_ProKeyOK && m_ActivatOK) {
+		ShowMain(true);
+	}
+	else if (m_ProKeyOK == FALSE || m_ActivatOK == FALSE || expired == true) {
+//		LONG month, day, year, dow, hours, minutes, seconds, hseconds	;
+//		LONG month_hours, day_minutes, year_secs ;
+		LONG /* daysleft,*/ l_ret	;
+
+//		pp_getdate(&month, &day, &year, &dow) ;
+//		pp_gettime(&hours, &minutes, &seconds, &hseconds) ;
+
+//		l_ret = pp_getvardate(m_lfhandle, VAR_UDEF_DATE_2, &month_hours, &day_minutes, &year_secs) ;
+		CProKeyDlg	m_pProKey	;
+		l_ret = pp_daysleft(m_lfhandle, &m_pProKey.m_LeaveDays);
+//		m_pProKey.m_LeaveDays = CheckActDate();
+		if (pp_valdate (m_lfhandle) == PP_FALSE) {
+			MessageBox(NULL, "ライセンス・エラーが発生しました。\n時間を巻き戻しての御使用は出来ません。\n正規の時間に修正し、再度当アプリケーションを起動して下さい。\nそれ以外の場合は弊社サポートまでご連絡下さい。", "ライセンス・エラー", MB_OK | MB_ICONEXCLAMATION);
+			return ;
+		}
+		else {
+			m_pProKey.DoModal () ;
+		}
+	}
+	else {
+		ShowMain((m_ActivatOK == TRUE)? true : false);
+	}
+}
+
+int	CLookFontApp::CheckActDate2()
+{
+	int		i_ret	= -1	;
+	if (m_ProKeyOK == FALSE || m_ActivatOK == FALSE) {
+		LONG month, day, year, dow, hours, minutes, seconds, hseconds,	secs	;
+//		LONG month_hours, day_minutes, year_secs ;
+		LONG daysleft, l_ret	;
+		COleDateTime		cDate1	,	cDate2	,	cDate3	,	cDate4	;
+		COleDateTimeSpan	cDT1	,	cDT2	;
+
+		l_ret = pp_getvardate(m_lfhandle, VAR_UDEF_DATE_2, &month, &day, &year) ;
+		l_ret = pp_getvardate(m_lfhandle, VAR_UDEF_DATE_3, &hours, &minutes, &secs) ;
+		if (month == 0 &&  day == 0 && year == 0) {
+			/* 初回起動時の場合	*/
+			pp_getdate(&month, &day, &year, &dow) ;
+			pp_gettime(&hours, &minutes, &seconds, &hseconds) ;
+
+			l_ret = pp_setvardate(m_lfhandle, VAR_UDEF_DATE_2, month, day, year) ;
+			l_ret = pp_setvardate(m_lfhandle, VAR_UDEF_DATE_3, hours, minutes, secs) ;
+			
+			cDate1.SetDateTime (year, month, day, hours, minutes, secs) ;
+			cDT1.SetDateTimeSpan (LEAVE_DAYS_MAX, 0, 0, 0) ;
+			cDate2 = cDate1 + cDT1 ;
+			i_ret = cDate2.GetDay () ;
+			l_ret = pp_daysleft(m_lfhandle, &daysleft);
+		}
+		else {
+			/* 初回以降の起動時	*/
+			cDate1.SetDateTime (year, month, day, hours, minutes, secs) ;
+			pp_getdate(&month, &day, &year, &dow) ;
+			pp_gettime(&hours, &minutes, &seconds, &hseconds) ;
+			cDate3.SetDateTime (year, month, day, hours, minutes, secs) ;
+//MessageBox (NULL, cDate3.Format("%Y %m %d %H %M %S"), "debug", MB_OK) ;
+//CString	csWork1 = cDate3.Format("%y%m%d%H%M%S") ;
+			cDT1.SetDateTimeSpan (LEAVE_DAYS_MAX, 0, 0, 0) ;
+			cDate2 = cDate1 + cDT1 ;
+//			i_ret = cDate2.GetDay () ;
+
+			/* 最終利用日からの巻き戻しをチェック	*/
+			l_ret = pp_getvardate(m_lfhandle, VAR_LAST_DATE, &month, &day, &year) ;
+			l_ret = pp_getvardate(m_lfhandle, VAR_LAST_TIME, &hours, &minutes, &secs) ;
+			cDate4.SetDateTime (year, month, day, hours, minutes, secs) ;
+//MessageBox (NULL, cDate4.Format("%Y %m %d %H %M %S"), "debug", MB_OK) ;
+//CString	csWork2 = cDate4.Format("%y%m%d%H%M%S") ;
+
+//			if (atol (csWork2) > atol (csWork1)) {
+//				/* 巻き戻しがあった場合	*/
+//				i_ret = -2 ;
+//				return (i_ret) ;
+//			}
+			cDate3 = cDate2 - cDate3 ;
+			i_ret = cDate3.GetDay () ;
+			int	i_ret2 = pp_expired(m_lfhandle) ;
+			if ((i_ret2 = pp_valdate (m_lfhandle)) == PP_FALSE)	{
+				i_ret = -2 ;
+				return (i_ret) ;
+			}
+		}
+	}
+	return (i_ret) ;
+}
+
+void CLookFontApp::ShowMain(bool retail)
+{
+	AfxInitRichEdit();
+	LONG lret = pp_expired (m_lfhandle) ;
+	if (pp_expired (m_lfhandle) == PP_FALSE || (m_ProKeyOK == TRUE && m_ActivatOK == TRUE)) {
+		CSingleDocTemplate* pDocTemplate;
+		pDocTemplate = new CSingleDocTemplate(
+			IDR_MAINFRAME,
+			RUNTIME_CLASS(CLookFontDoc),
+			RUNTIME_CLASS(CMainFrame),       // メイン SDI フレーム ウィンドウ
+			RUNTIME_CLASS(CLookFontView));
+		AddDocTemplate(pDocTemplate);
+
+		// DDE、file open など標準のシェル コマンドのコマンドラインを解析します。
+		CCommandLineInfo cmdInfo;
+		ParseCommandLine(cmdInfo);
+
+		// コマンドラインでディスパッチ コマンドを指定します。
+		if (!ProcessShellCommand(cmdInfo))
+			return ;
+
+		// メイン ウィンドウが初期化されたので、表示と更新を行います。
+		m_pMainWnd->ShowWindow(SW_SHOW);
+		m_pMainWnd->UpdateWindow();
+	}
+	else {
+		pp_upddate(m_lfhandle, UPDDATE_FORCE);
+		MessageBox(NULL, "ライセンス認証有効期限切れの為、アプリケーションを起動する事が出来ませんでした。\n起動時に表示されるライセンス認証画面にて正規ライセンスの登録をして下さい。\nそれ以外の場合は弊社サポートまでご連絡下さい。", "ライセンス・エラー", MB_OK | MB_ICONEXCLAMATION);
+	}
+}
+
+int CLookFontApp::ExitInstance()
+{
+	UpdateBeforeExit() ;
+	return CWinApp::ExitInstance();
+}
+
+BOOL CLookFontApp::CheckProKey()
+{	BOOL	b_ret = FALSE	,
+			b_open = FALSE	;
+	bool	b_dec			;
+	long	l_ret			;
+	char	buffer[128]		;
+	CString	cs_work			;
+	CSerialKey	proChk		;
+	
+	memset (m_LicenseID, 0, sizeof (char) * 16) ;
+	memset (m_LicensePW, 0, sizeof (char) * 16) ;
+	if (m_lfhandle == 0) {
+		b_open = TRUE ;
+		if ((l_ret = pp_lfopen((char *)((const char *)m_appPath), LF_CREATE_NORMAL, LF_FILE, "pluss21", &m_lfhandle)) != PP_SUCCESS) {
+			return (b_ret) ;
+		}
+	}
+	/* OPEN成功の場合	*/
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if ((l_ret = pp_getvarchar(m_lfhandle, VAR_AUTOCL_URL_UNLOCK, buffer)) == PP_SUCCESS) {
+		m_UrlUnlock = buffer ;
+	}
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if ((l_ret = pp_getvarchar(m_lfhandle, VAR_UDEF_CHAR_1, buffer)) == PP_SUCCESS) {
+		cs_work = buffer ;
+		if (cs_work.GetLength () == 25) {
+			if ((b_dec = proChk.Decode (cs_work, m_LicenseID, m_LicensePW)) == true) {
+				m_ProKey1 = cs_work.Left (5) ;
+				m_ProKey2 = cs_work.Mid (5, 5) ;
+				m_ProKey3 = cs_work.Mid (10, 5) ;
+				m_ProKey4 = cs_work.Mid (15, 5) ;
+				m_ProKey5 = cs_work.Mid (20, 5) ;
+				m_ProKeyOK = TRUE ;
+				m_showMain = true ;
+				b_ret = TRUE ;
+			}
+		}
+	}
+	pp_getvarnum(m_lfhandle, VAR_UDEF_NUM_1, (LPLONG)&m_ActivatOK) ;
+	LONG	lWorkCompID	;
+	pp_getvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_2, (LPLONG)&lWorkCompID) ;
+	if (lWorkCompID == 0) {
+		pp_setvarnum(theApp.m_lfhandle, VAR_UDEF_NUM_2, (LONG)m_compno) ;
+	}
+	else if (abs (m_compno - lWorkCompID) > 256) {
+		if (m_ActivatOK) {
+			m_ActivatOK = FALSE ;
+			pp_setvarnum(m_lfhandle, VAR_UDEF_NUM_1, (LONG)m_ActivatOK) ;
+			m_showMain = false ;
+			memset (buffer, 0, sizeof (char) * 128) ;
+			if (pp_getvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, buffer) == PP_SUCCESS) {
+				if (buffer[0] == 'N') {
+					pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "D") ;
+				}
+			}
+			MessageBox(NULL, "ライセンス認証時のコンピュータＩＤから許容を超えた値を検出しました。\nライセンスの再認証が必要となります。\nそれ以外の場合は弊社サポートまでご連絡下さい。", "ライセンス・エラー", MB_OK | MB_ICONEXCLAMATION);
+		}
+	}
+	else {
+		m_compno = lWorkCompID ;
+	}
+	pp_getvarnum(m_lfhandle, VAR_UDEF_NUM_1, (LPLONG)&m_ActivatOK) ;
+	memset (buffer, 0, sizeof (char) * 128) ;
+	pp_getvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, buffer) ;
+	if (m_ActivatOK) {
+		if (buffer[0] != 'N') {
+			pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "N") ;
+		}
+	}
+	else {
+		if (buffer[0] == 'N') {
+			pp_setvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, "D") ;
+		}
+	}
+	memset (buffer, 0, sizeof (char) * 128) ;
+	pp_getvarchar(theApp.m_lfhandle, VAR_EXPIRE_TYPE, buffer) ;
+	m_SoftMode = buffer ;
+	if (b_open == TRUE) {
+		pp_lfclose(m_lfhandle) ;
+		m_lfhandle = 0 ;
+	}
+	return (b_ret) ;
+}
+
+
+BOOL CLookFontApp::UpdateProKey()
+{
+	BOOL	b_ret = FALSE	,
+			b_work = FALSE	,
+			b_open = FALSE	;
+	long	l_ret			;
+	char	buffer[60]		;
+	CString	cs_work			;
+	CSerialKey	proChk		;
+
+	if (m_lfhandle == 0) {
+		b_open = TRUE ;
+		if ((l_ret = pp_lfopen((char *)((const char *)m_appPath), LF_CREATE_NORMAL, LF_FILE, "pluss21", &m_lfhandle)) != PP_SUCCESS) {
+			return (b_ret) ;
+		}
+	}
+	/* OPEN成功の場合	*/
+	b_ret = TRUE ;
+	memset (buffer, 0, sizeof (char) * 60) ;
+	strcat (buffer, m_ProKey1) ;	// LicenceID
+	strcat (buffer, m_ProKey2) ;	// LicenceID
+	strcat (buffer, m_ProKey3) ;	// LicenceID
+	strcat (buffer, m_ProKey4) ;	// Password
+	strcat (buffer, m_ProKey5) ;	// Password
+	if (strlen (buffer) != 25) {
+		l_ret = pp_setvarchar(m_lfhandle, VAR_UDEF_CHAR_1, buffer) ;
+		b_ret = FALSE ;
+	}
+	else if ((l_ret = pp_setvarchar(m_lfhandle, VAR_UDEF_CHAR_1, buffer)) != PP_SUCCESS) {
+		b_ret = FALSE ;
+	}
+	if ((l_ret = pp_getvarnum(m_lfhandle, VAR_UDEF_NUM_1, (LPLONG)&b_work)) != PP_SUCCESS) {
+		b_ret = FALSE ;
+	}
+	if ((l_ret = pp_setvarnum(m_lfhandle, VAR_UDEF_NUM_1, (LONG)m_ActivatOK)) != PP_SUCCESS) {
+		b_ret = FALSE ;
+	}
+	if (b_work == FALSE) {
+		/* 初期インストールの場合	*/
+		LONG month, day, year, dow, hours, minutes, seconds, hseconds	;
+		LONG month_hours, day_minutes, year_secs ;
+		LONG daysleft	;
+
+		pp_getdate(&month, &day, &year, &dow) ;
+		pp_gettime(&hours, &minutes, &seconds, &hseconds) ;
+
+		l_ret = pp_getvardate(m_lfhandle, VAR_UDEF_DATE_2, &month_hours, &day_minutes, &year_secs) ;
+		l_ret = pp_daysleft(m_lfhandle, &daysleft);
+	}
+	if (b_open == TRUE) {
+		pp_lfclose(m_lfhandle) ;
+		m_lfhandle = 0 ;
+	}
+	return (b_ret) ;
+}
+
+
+void CLookFontApp::StatusChanged()
+{
+	long result;
+	long lfresult;
+	CString	csWType	;
+//	bool DemoForm = true;
+	// Default our options to off. A retail product wil have both the Tools and Help
+	// menus enabled. A demo will have the Help but not the Tools menu enabled. You can
+	// enable or disable any of your application features here. We are choosing these
+	// just as an example.
+	
+
+	// Now run pp_EZT_ELM() and see what mode we are running in
+	result = pp_eztrial1((char *)(const char *)m_appPath, "pluss21", &lfresult, &m_lfhandle);
+
+	m_showMain = false;
+	m_startOver = false;
+
+	char	buffer[128]		;
+	memset (buffer, 0, sizeof (char) * 128) ;
+	if (pp_getvarchar(m_lfhandle, VAR_EXPIRE_TYPE, buffer) == PP_SUCCESS) {
+//MessageBox (NULL, buffer, "debug", MB_OK) ;
+		csWType = buffer ;
+		if ((m_SoftMode == "D" || m_SoftMode == "S") && buffer[0] == 'N') {
+			if (m_ActivatOK == 0) {
+				pp_setvarchar(m_lfhandle, VAR_EXPIRE_TYPE, "D") ;
+			}
+		}
+	}
+	else {
+//MessageBox (NULL, "error", "debug", MB_OK) ;
+	}
+
+	// set the mod eof the application depending on our result from pp_EZT_ELM()
+//result = 1;//$$$ ディバッグ
+	switch(result)
+	{
+		case 0:
+		{
+			// We had an error - display a message - you can custimize the error
+			CString ErrorMsg;
+			char	buffer[60] ;
+			pp_errorstr(lfresult, buffer) ;
+			ErrorMsg.Format("ファイルエラー：#%d 発生！\n%s\n弊社サポートまでご連絡下さい。", lfresult, buffer);
+			MessageBox(NULL, ErrorMsg, "License Error!", MB_OK | MB_ICONEXCLAMATION);
+			break;
+		}
+		case 1:
+		{
+			// This is a retail product, turn on menu options
+//			MenuOptionsRetail();
+			if (m_ActivatOK == 0 && csWType == "N") {
+				ShowDemo (false);
+			}
+			else {
+				ShowMain(true);
+			}
+			break;
+		}
+		case 2:
+		{
+			// This is a demo that hasn't expired
+			// display a nag dialog, turn on the help menu (tools menu stays off for demos)
+//			MenuOptionsDemo();
+			ShowDemo (false);
+			break;
+		}
+		case 3:
+		{
+			// retail application failed software or hardware binding
+			MessageBox(NULL, "エラー：3 発生！\nこのアプリケーションをコピーして使用してませんか？\nご利用になるには正規インストール及び正規ライセンスの認証が必要です。", "Usage Error!", MB_OK | MB_ICONEXCLAMATION);
+			ShowDemo (true);
+			break;
+		}
+		case 4:
+		{
+			// demo that has expired
+			ShowDemo (true);
+			break;
+		}
+		case 5:
+		{
+			// clock has been turned back on demo
+			ShowDemo (true);
+			break;
+		}
+		case 6:
+        {
+            //Periodic Expiration Mode
+            MessageBox(NULL, "このアプリケーションは一定期間ご利用可能なモードで起動中です。", "Notification!", MB_OK | MB_ICONEXCLAMATION);
+			ShowMain(false);
+			break;
+        }
+        case 7:
+        {
+            //Exceeded # of network users
+            MessageBox(NULL,"現在ネットワークでアプリケーション利用者数が制限を超えている為、ご利用になれません。","Error",MB_OK | MB_ICONEXCLAMATION);
+            break;
+        }
+	}
+	if (m_startOver == true)
+	{
+		StatusChanged();
+		return;
+	}
+	if (m_showMain == true)
+	{
+		ShowMain(false);
+	}
+}
+
+// This function should be called before exiting the application
+void CLookFontApp::UpdateBeforeExit()
+{
+	// Update the last used date/time. pp_extrial() does this, but calling this function
+	// will also count the amount of time that they ran the application.
+	UpdateProKey() ;
+
+	pp_upddate(m_lfhandle, 0);
+
+	// Always close the handle so the memory resources are freed
+	pp_lfclose(m_lfhandle);
+}
+
+LONG CLookFontApp::CheckError(LONG errornum)
+{
+	// convert the error number to a string.
+	char Buffer[80];
+	char ErrorStr[200];
+	pp_errorstr(errornum, Buffer);
+
+	switch(errornum)
+	{
+		// ignore the first two cases
+		case PP_FAILURE:
+			break;
+		case PP_SUCCESS:
+			break;
+		case ERR_SLOT_ALREADY_ASSIGNED:
+			break;
+		default:
+			sprintf(ErrorStr, "Error #%ld 発生！-> %s", errornum, Buffer);
+			MessageBox(NULL, ErrorStr, "Error!", MB_OK | MB_ICONEXCLAMATION);
+			exit(1);
+			break;
+	}
+
+	return errornum;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// アプリケーションのバージョン情報で使われる CAboutDlg ダイアログ
+
+class CAboutDlg : public CDialog
+{
+public:
+	CAboutDlg();
+
+// ダイアログ データ
+	//{{AFX_DATA(CAboutDlg)
+	enum { IDD = IDD_ABOUTBOX };
+	CXTHyperLink	m_hyplURL;
+
+	//}}AFX_DATA
+
+	// ClassWizard 仮想関数のオーバーライドを生成します。
+	//{{AFX_VIRTUAL(CAboutDlg)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV のサポート
+	//}}AFX_VIRTUAL
+
+// インプリメンテーション
+protected:
+	//{{AFX_MSG(CAboutDlg)
+	virtual BOOL OnInitDialog();
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+	void	UpDateVersionInfo ()					;
+};
+
+CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
+{
+	//{{AFX_DATA_INIT(CAboutDlg)
+	//}}AFX_DATA_INIT
+}
+
+void CAboutDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CAboutDlg)
+	DDX_Control(pDX, IDC_STATIC_URL, m_hyplURL);
+	//}}AFX_DATA_MAP
+}
+
+BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
+	//{{AFX_MSG_MAP(CAboutDlg)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+BOOL CAboutDlg::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+	
+	// TODO: この位置に初期化の補足処理を追加してください
+	UpDateVersionInfo () ;
+	return TRUE;  // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります
+	              // 例外: OCX プロパティ ページの戻り値は FALSE となります
+}
+
+/************************************************************************************/
+/* 関数概要：バージョン情報表示関数													*/
+/* 引数：なし																		*/
+/* 戻り値：なし																		*/
+/* 備考：																			*/
+/************************************************************************************/
+void CAboutDlg::UpDateVersionInfo ()
+{
+	BYTE			block[2024]		;
+	DWORD	FAR		*translation	;
+	DWORD	FAR		*buffer			;
+	DWORD			handle			;
+	UINT			bytes			;
+	char			fileName[] = {"LookFont.exe"}	;
+	char			name[512]		;
+	char			data[256]		;
+	long			l_major			,
+					l_minor			,
+					l_revision		,
+					l_dmmy			;
+	CString			cs_ProKey		;
+
+
+	/* 情報ブロックの実際のサイズを取得する	*/
+	bytes = (UINT)GetFileVersionInfoSize (fileName, &handle) ;
+
+	if (bytes) {
+		/* バージョン情報の実際のブロックを取得する	*/
+		if (GetFileVersionInfo (fileName, handle, bytes, block)) {
+			if (VerQueryValue (block, "\\VarFileInfo\\Translation", (VOID FAR * FAR *)&translation, (UINT FAR *)&bytes)) {
+				/* このファイルのファイルバージョン	*/
+				memset (name, 0, sizeof (char) * 512) ;
+				memset (data, 0, sizeof (char) * 256) ;
+				wsprintf (name, "\\StringFileInfo\\%04x%04x\\FileVersion", LOWORD (*translation), HIWORD (*translation)) ;
+				if (VerQueryValue (block, name, (VOID FAR * FAR *)&buffer, (UINT FAR *)&bytes)) {
+					lstrcpy (data, (char far *)buffer) ;
+					sscanf (data, "%ld,%ld,%ld,%ld", &l_major, &l_minor, &l_revision, &l_dmmy) ;
+					memset (data, 0, sizeof (char) * 256) ;
+					sprintf (data, "%ld.%ld.%ld", l_major, l_minor, l_revision) ;
+					GetDlgItem (ID_FILE_VERSION)->SetWindowText (data) ;
+				}
+				memset (name, 0, sizeof (char) * 512) ;
+				memset (data, 0, sizeof (char) * 256) ;
+				wsprintf (name, "\\StringFileInfo\\%04x%04x\\CompanyName", LOWORD (*translation), HIWORD (*translation)) ;
+				if (VerQueryValue (block, name, (VOID FAR * FAR *)&buffer, (UINT FAR *)&bytes)) {
+					lstrcpy (data, (char far *)buffer) ;
+					GetDlgItem (IDC_STATIC_URL)->SetWindowText (data) ;
+					m_hyplURL.SetWindowText(data) ;
+					m_hyplURL.SetURL("http://www.pluss-inc.com/");
+				}
+			}
+			else {
+				MessageBox ("ﾊﾞｰｼﾞｮﾝ情報を取得出来ませんでした", "ｴﾗｰﾒｯｾｰｼﾞ", MB_OK) ;
+			}
+		}
+	}
+	cs_ProKey = theApp.m_ProKey1 + "-" + theApp.m_ProKey2 + "-" + theApp.m_ProKey3 + "-" + theApp.m_ProKey4 + "-" + theApp.m_ProKey5 ;
+	SetDlgItemText (IDC_STATIC_LICENCE_INFO, cs_ProKey) ;
+	SetDlgItemText (IDC_STATIC_ACT, (theApp.m_ActivatOK)? "認証済" : "未認証") ;
+}
+
+// ダイアログを実行するためのアプリケーション コマンド
+void CLookFontApp::OnAppAbout()
+{
+	CAboutDlg aboutDlg;
+	aboutDlg.DoModal();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CLookFontApp メッセージ ハンドラ
+
+
+void CLookFontApp::OnMenuPluss() 
+{
+	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+	CString	cs_web = "http://www.pluss-inc.com/" ;
+	ShellExecute (NULL, "open", cs_web, NULL, NULL, SW_SHOWNORMAL) ;
+}
+
+void CLookFontApp::OnMenuSupport() 
+{
+	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+	CString	cs_web = "http://www.ss.pluss-inc.com/" ;
+	ShellExecute (NULL, "open", cs_web, NULL, NULL, SW_SHOWNORMAL) ;
+}

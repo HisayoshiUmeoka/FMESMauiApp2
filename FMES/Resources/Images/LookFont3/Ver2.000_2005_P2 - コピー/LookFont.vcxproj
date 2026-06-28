@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>LookFont3</ProjectName>
+    <ProjectGuid>{24A271CC-B547-4101-82F9-A987C138E617}</ProjectGuid>
+    <RootNamespace>LookFont</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.26419.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Bin\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Bin\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/LookFont.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\include;c:\swkey\plus\include;C:\SWKey\PLUS\Include;C:\HTML Help Workshop\include;..\AutoUpdate\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/LookFont.pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/libpath:""C:\SWKey\PLUS\Library"" /libpath:""C:\Program /libpath:""C:\Program  /libpath:""C:\Program  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>skca32.lib;keylib32.lib;PSAui.lib;version.lib;htmlhelp.lib;comdlg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Bin/LookFont.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\lib;c:\swkey\plus\library;C:\HTML Help Workshop\lib;..\AutoUpdate\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\Release/LookFont.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>.\Release/LookFont.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/LookFont.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/LookFont.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\include;c:\swkey\plus\include;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v11.2.2\Source;C:\SWKey\PLUS\Include;C:\Program Files\HTML Help Workshop\include;..\AutoUpdate\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/LookFont.pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/libpath:""C:\SWKey\PLUS\Library"" /libpath:""C:\Program /libpath:""C:\Program  /libpath:""C:\Program  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>skca32.lib;keylib32.lib;PSAui.lib;version.lib;htmlhelp.lib;comdlg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>./Bin/LookFont.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\lib;c:\swkey\plus\library;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v11.2.2\lib\vc80;C:\Program Files\HTML Help Workshop\lib;..\AutoUpdate\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/LookFont.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>.\Debug/LookFont.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/LookFont.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BrowseFile.cpp" />
+    <ClCompile Include="BrowseFolder.cpp" />
+    <ClCompile Include="Cast128.cpp" />
+    <ClCompile Include="CharCode.cpp" />
+    <ClCompile Include="DialogFontInfo.cpp" />
+    <ClCompile Include="DialogUser.cpp" />
+    <ClCompile Include="FileName.cpp" />
+    <ClCompile Include="FindFontDlg.cpp" />
+    <ClCompile Include="FontList.cpp" />
+    <ClCompile Include="LookFont.cpp" />
+    <ClCompile Include="LookFontDoc.cpp" />
+    <ClCompile Include="LookFontView.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="NumberEdit.cpp" />
+    <ClCompile Include="ProKeyDlg.cpp" />
+    <ClCompile Include="ProKeyEdit.cpp" />
+    <ClCompile Include="Rtf.cpp" />
+    <ClCompile Include="SepLine.cpp" />
+    <ClCompile Include="SerialKey.cpp" />
+    <ClCompile Include="SettingDlg.cpp" />
+    <ClCompile Include="SettingUpdateDlg.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="UnlockDlg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LookFont.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BrowseFile.h" />
+    <ClInclude Include="BrowseFolder.h" />
+    <ClInclude Include="Cast128.h" />
+    <ClInclude Include="CharCode.h" />
+    <ClInclude Include="DialogFontInfo.h" />
+    <ClInclude Include="DialogUser.h" />
+    <ClInclude Include="FileName.h" />
+    <ClInclude Include="FindFontDlg.h" />
+    <ClInclude Include="FontList.h" />
+    <ClInclude Include="LookFont.h" />
+    <ClInclude Include="LookFontDoc.h" />
+    <ClInclude Include="LookFontSetting.h" />
+    <ClInclude Include="LookFontView.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="NumberEdit.h" />
+    <ClInclude Include="ProKeyDlg.h" />
+    <ClInclude Include="ProKeyEdit.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Rtf.h" />
+    <ClInclude Include="SepLine.h" />
+    <ClInclude Include="SerialKey.h" />
+    <ClInclude Include="SettingDlg.h" />
+    <ClInclude Include="SettingUpdateDlg.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="UnlockDlg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon_CAUTION.ico" />
+    <None Include="res\icon_licence.ico" />
+    <None Include="res\icon_loo.ico" />
+    <None Include="res\LookFont.bmp" />
+    <None Include="res\LookFont.ico" />
+    <None Include="res\LookFont.rc2" />
+    <None Include="res\LookFontDoc.ico" />
+    <None Include="res\sn_key.bmp" />
+    <None Include="res\tbar_preview.bmp" />
+    <None Include="res\Toolbar.bmp" />
+    <None Include="res\toolbar_fontselect.bmp" />
+    <None Include="res\toolbar_TAB.bmp" />
+    <None Include="res\unlock02.bmp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="LookFont.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
