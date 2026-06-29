@@ -1282,8 +1282,8 @@ public partial class Page4 : ContentPage
                 };
                 absLay = new AbsoluteLayout
                 {
-                    HorizontalOptions = LayoutOptions.StartAndExpand,
-                    VerticalOptions = LayoutOptions.StartAndExpand,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    VerticalOptions = LayoutOptions.Fill,
                     Margin = new Thickness(0),
                     ZIndex = 0,
                 };
@@ -1385,7 +1385,7 @@ public partial class Page4 : ContentPage
                         }
                 };
                 sv = new ScrollView {
-                    Orientation = ScrollOrientation.Both,
+                    //Orientation = ScrollOrientation.Both,
                     Content = layout1 
                 };
                 Content = sv;
